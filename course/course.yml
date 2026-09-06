@@ -20,9 +20,14 @@ sessions:
 - id: w02a
   title: RStudio 실습 환경 설정, R 문법 복습 및 데모
   date: '2026-09-07'
-  pages: []
-  labs: []
-  runtime_label: 자료 준비 중
+  pages:
+  - course/notion/w02a/w02a-rstudio-r-basics.md
+  labs:
+  - labs/student/w02a/w02a-r-basics.R
+  - labs/student/w02a/w02a-r-basics.qmd
+  - labs/student/w02a/w02a.Rproj
+  runtime_label: RStudio · R
+  quiz: course/quiz/w02a.yml
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
