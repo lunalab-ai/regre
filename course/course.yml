@@ -1,0 +1,34 @@
+schema_version: 1
+id: regression
+title: 회귀분석의 이해
+description: 회귀분석의 이해 강의자료 모음
+repository: lunalab-ai/regre
+semester: 2026-2
+language: ko
+runtime: r
+overview: course/overview.md
+sessions:
+- id: w01a
+  title: 강의 소개와 회귀분석의 개요
+  date: '2026-09-02'
+  pages:
+  - course/notion/week01/01_week01_orientation_regression_intro.md
+  quiz: course/quiz/week01.yml
+  labs: []
+  notion_url: https://app.notion.com/p/1-3ce7fd00109f81f79f4ae262b83e6ed8?source=copy_link
+  runtime_label: 이론 수업
+- id: w02a
+  title: RStudio 실습 환경 설정, R 문법 복습 및 데모
+  date: '2026-09-07'
+  pages: []
+  labs: []
+  runtime_label: 자료 준비 중
+hero: course/notion/week01/assets/hero_regression.png
+supplements:
+- id: week01-lab
+  title: 기존 1주차 실습 패키지 · 후속 실습에서도 활용
+  labs:
+  - labs/student/week01/week01_lab_student.qmd
+  - labs/student/week01/week01_lab_student.R
+  - labs/student/week01/week01_regression.Rproj
+  quiz: course/quiz/week01-lab.yml

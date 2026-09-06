@@ -1,0 +1,517 @@
+---
+title: "회귀분석의 이해"
+subtitle: "1주차 실습: R/Quarto 환경 점검과 첫 회귀 앱의 씨앗"
+author: "동덕여자대학교 데이터사이언스전공 유원상 교수"
+date: "2026-09-02"
+lang: ko
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: false
+    code-tools: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: source
+---
+
+# 수업 정보
+
+**회귀분석의 이해**  
+동덕여자대학교 데이터사이언스전공 유원상 교수  
+2026년 2학기
+
+## 해당 수업의 주제
+
+강의 소개, 평가 및 수업 운영 안내, 회귀분석의 개요, R/RStudio/Quarto 실습 환경 설정
+
+## 수업 개요
+
+이번 실습에서는 R과 Quarto 환경을 점검하고, 주교재에서 제공한 `Computer.Repair.txt`를 읽어 데이터의 구조를 확인합니다. `Units`와 `Minutes`의 산점도를 그리고, `lm()`을 **블랙박스 미리보기**로 사용해 회귀직선과 예측값을 확인합니다. 마지막에는 같은 모형을 사용하는 Shiny 웹 애플리케이션을 실행합니다.
+
+> 오늘은 최소제곱의 유도나 회귀계수 검정을 배우는 날이 아닙니다. “데이터 → 모형 → 예측 → 앱”의 전체 흐름을 먼저 경험합니다. 공식과 해석은 3–4주차에 단계적으로 배웁니다.
+
+## 학습목표
+
+실습을 마치면 다음을 수행할 수 있습니다.
+
+1. R, RStudio, Quarto와 R 패키지의 역할을 구분한다.
+2. R 객체를 만들고 `class()`, `dim()`, `names()`, `str()`로 확인한다.
+3. 프로젝트 상대경로로 텍스트 데이터를 읽는다.
+4. 컴퓨터 수리시간 데이터에서 반응변수와 설명변수를 구분한다.
+5. 산점도, 회귀직선과 예측값을 생성한다.
+6. 첫 Shiny 앱을 실행하고 입력–출력 연결을 설명한다.
+7. 경로, 대소문자와 자료형 관련 오류를 찾아 수정한다.
+
+## 실습 표기
+
+- **[실행]**: 제공된 코드를 실행하고 출력을 관찰합니다.
+- **[예측]**: 코드를 실행하기 전에 결과를 먼저 예상합니다.
+- **[직접 코딩]**: 빈칸을 채우거나 코드를 새로 작성합니다.
+- **[디버깅]**: 일부러 만든 오류의 원인을 찾아 수정합니다.
+
+# 0. 프로젝트 열기
+
+ZIP을 완전히 푼 뒤 `week01_regression.Rproj`를 더블클릭하여 RStudio 프로젝트를 엽니다. Console에서 현재 폴더를 확인합니다.
+
+```{r}
+getwd()
+list.files()
+```
+
+다음 파일이 보여야 합니다.
+
+```text
+week01_regression.Rproj
+week01_lab_student.qmd
+week01_lab_student.R
+data/
+app/
+scripts/
+```
+
+## [예측] 상대경로가 필요한 이유
+
+`C:/Users/내이름/Desktop/...`처럼 개인 컴퓨터의 전체 경로를 코드에 적으면 다른 사람의 컴퓨터에서는 작동하지 않습니다. 프로젝트 루트를 기준으로 `data/Computer.Repair.txt`처럼 적으면 같은 폴더 구조를 가진 모든 컴퓨터에서 재현할 수 있습니다.
+
+# 1. R/Quarto 환경 점검
+
+## 1.1 R과 작업 폴더
+
+```{r}
+cat("R 버전:", R.version.string, "\n")
+cat("플랫폼:", R.version$platform, "\n")
+cat("작업 폴더:", getwd(), "\n")
+```
+
+## 1.2 Quarto 명령 확인
+
+```{r}
+quarto_path <- Sys.which("quarto")
+quarto_path
+```
+
+빈 문자열이 나오지 않으면 Quarto 명령을 찾은 것입니다.
+
+## 1.3 필수 패키지 확인
+
+```{r}
+required_packages <- c("knitr", "rmarkdown", "shiny")
+package_status <- data.frame(
+  package = required_packages,
+  installed = vapply(
+    required_packages,
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
+  )
+)
+package_status
+```
+
+### [직접 코딩 1] 모든 패키지가 설치되어 있는가?
+
+아래 코드를 완성하여 하나라도 설치되지 않은 패키지가 있으면 `FALSE`가 나오게 하세요.
+
+```{r}
+#| eval: false
+all_installed <- all(__________________________)
+all_installed
+```
+
+설치되지 않은 패키지가 있으면 다음을 실행합니다.
+
+```{r}
+#| eval: false
+install.packages(c("knitr", "rmarkdown", "shiny"))
+```
+
+# 2. R 객체와 데이터프레임 복습
+
+주교재 Chapter 2의 기본 예제처럼 값을 객체에 저장하고 구조를 확인합니다.
+
+## 2.1 값과 벡터
+
+```{r}
+height <- 1.5
+height
+
+units <- c(1, 2, 3, 4, 4, 5)
+minutes <- c(23, 29, 49, 64, 74, 87)
+
+units
+minutes
+length(units)
+```
+
+## 2.2 데이터프레임
+
+```{r}
+repair_preview <- data.frame(
+  Units = units,
+  Minutes = minutes
+)
+
+repair_preview
+class(repair_preview)
+dim(repair_preview)
+names(repair_preview)
+str(repair_preview)
+```
+
+### [예측] `length()`와 `dim()`은 무엇이 다른가?
+
+- `length(units)`는 벡터의 원소 수를 반환합니다.
+- `dim(repair_preview)`는 데이터프레임의 행 수와 열 수를 반환합니다.
+
+### [직접 코딩 2] 새 열 만들기
+
+각 수리 건의 `Minutes / Units`를 계산한 `MinutesPerUnit` 열을 추가하세요.
+
+```{r}
+#| eval: false
+repair_preview$MinutesPerUnit <- ______________________________
+repair_preview
+```
+
+> 1개 부품당 시간이 일정하지 않더라도 계산은 가능합니다. 이 변동이 바로 데이터를 모형으로 분석해야 하는 이유 중 하나입니다.
+
+# 3. 제공 데이터 불러오기
+
+## 3.1 파일 존재 확인
+
+```{r}
+data_path <- file.path("data", "Computer.Repair.txt")
+file.exists(data_path)
+```
+
+`FALSE`라면 ZIP을 풀었는지, `.Rproj`로 프로젝트를 열었는지 확인합니다.
+
+## 3.2 데이터 읽기
+
+```{r}
+repair <- read.table(data_path, header = TRUE)
+head(repair, 5)
+str(repair)
+summary(repair)
+```
+
+### [직접 코딩 3] 데이터의 크기와 변수명 확인
+
+```{r}
+#| eval: false
+number_of_rows <- __________(repair)
+number_of_columns <- __________(repair)
+variable_names <- __________(repair)
+
+number_of_rows
+number_of_columns
+variable_names
+```
+
+# 4. 회귀문제로 읽기: Y, X, ε
+
+컴퓨터 수리시간 데이터의 질문은 다음과 같습니다.
+
+> 수리할 부품의 수(`Units`)가 증가할 때 수리 시간(`Minutes`)은 어떻게 달라지는가?
+
+- 반응변수 `Y`: `Minutes`
+- 설명변수 `X`: `Units`
+- 오차 `ε`: 같은 부품 수라도 수리시간이 완전히 같지 않게 만드는 여러 요인과 모형의 불완전성
+
+## 4.1 산점도
+
+```{r}
+plot(
+  Minutes ~ Units,
+  data = repair,
+  pch = 19,
+  xlab = "수리할 부품 수 (Units)",
+  ylab = "수리 시간 (Minutes)",
+  main = "컴퓨터 수리시간 데이터"
+)
+```
+
+### [예측]
+
+산점도를 보기 전에 다음을 생각해 보세요.
+
+1. 관계는 증가하는가, 감소하는가?
+2. 모든 점이 정확히 한 직선 위에 있는가?
+3. 부품 수가 같아도 수리시간이 다른 사례가 있는가?
+
+### [직접 코딩 4] 축 바꾸기 오류를 설명하라
+
+아래 그림이 왜 원래 질문과 다른지 한 문장으로 설명하세요.
+
+```{r}
+#| eval: false
+plot(Units ~ Minutes, data = repair, pch = 19)
+```
+
+답: ________________________________________________
+
+# 5. 회귀모형 블랙박스 미리보기
+
+## 5.1 모형 적합
+
+```{r}
+preview_model <- lm(Minutes ~ Units, data = repair)
+preview_model
+coef(preview_model)
+```
+
+`lm()`은 선형모형(linear model)을 적합합니다. 오늘은 함수의 내부 유도보다 입력과 출력의 구조만 확인합니다.
+
+## 5.2 적합값과 잔차
+
+```{r}
+repair$Fitted <- fitted(preview_model)
+repair$Residual <- residuals(preview_model)
+head(repair, 6)
+```
+
+관측값과 적합값의 차이가 잔차입니다.
+
+```text
+Residual = Minutes - Fitted
+```
+
+### [직접 코딩 5] 첫 번째 잔차 확인
+
+```{r}
+#| eval: false
+first_residual_by_hand <- repair$__________[1] - repair$__________[1]
+first_residual_from_model <- repair$__________[1]
+
+first_residual_by_hand
+first_residual_from_model
+```
+
+두 값이 거의 같아야 합니다.
+
+## 5.3 회귀직선과 잔차
+
+```{r}
+plot(
+  Minutes ~ Units,
+  data = repair,
+  pch = 19,
+  xlab = "수리할 부품 수 (Units)",
+  ylab = "수리 시간 (Minutes)",
+  main = "관측값, 회귀직선과 잔차"
+)
+abline(preview_model, lwd = 2)
+segments(
+  x0 = repair$Units,
+  y0 = repair$Fitted,
+  x1 = repair$Units,
+  y1 = repair$Minutes,
+  lty = 2
+)
+```
+
+점에서 직선까지의 세로선이 잔차를 나타냅니다.
+
+# 6. 새로운 입력값 예측하기
+
+수리할 부품 수가 7개와 11개인 새 작업을 생각합니다.
+
+```{r}
+new_jobs <- data.frame(Units = c(7, 11))
+predicted_minutes <- predict(preview_model, newdata = new_jobs)
+
+data.frame(new_jobs, PredictedMinutes = predicted_minutes)
+```
+
+### [직접 코딩 6] 12개 부품의 예측값
+
+```{r}
+#| eval: false
+my_job <- data.frame(__________ = 12)
+predict(preview_model, newdata = __________)
+```
+
+> `newdata`의 열 이름은 모형을 적합할 때 사용한 설명변수 이름과 정확히 같아야 합니다.
+
+# 7. 첫 Shiny 회귀 앱 실행
+
+Shiny는 R로 인터랙티브 웹 애플리케이션을 만드는 패키지입니다. 이번 앱은 사용자가 부품 수를 선택하면 수리시간 예측값과 그래프를 갱신합니다.
+
+```{r}
+#| eval: false
+shiny::runApp("app")
+```
+
+앱에서 다음을 확인하세요.
+
+1. 부품 수를 바꾸면 예측 시간이 바뀌는가?
+2. 그래프에 입력값에 해당하는 예측점이 표시되는가?
+3. 앱의 입력 ID와 서버의 `input$...` 이름은 어떻게 연결되는가?
+
+### [직접 코딩 7] 앱 수정
+
+`app/app.R`에서 다음 중 두 가지를 수정하세요.
+
+- 제목을 자신이 이해하기 쉬운 이름으로 바꾸기
+- 슬라이더 기본값을 7에서 다른 값으로 바꾸기
+- 도움말에 `Y = Minutes`, `X = Units`를 명시하기
+- 예측값의 소수점 자리수를 바꾸기
+- 그래프 제목에 자신의 설명을 추가하기
+
+# 8. 디버깅 클리닉
+
+오류 메시지는 실패가 아니라 원인에 대한 정보입니다. 코드를 실행하기 전에 오류를 예상하고, 실행 후 메시지를 읽어 수정합니다.
+
+## 8.1 파일 경로 오류
+
+```{r}
+#| eval: false
+repair_bug <- read.table("ComputerRepair.txt", header = TRUE)
+```
+
+- 예상 오류: ____________________________________
+- 수정 코드: ____________________________________
+
+## 8.2 대소문자 오류
+
+```{r}
+#| eval: false
+mean(repair$minutes)
+```
+
+- 예상 오류: ____________________________________
+- 수정 코드: ____________________________________
+
+## 8.3 자료형 오류
+
+```{r}
+#| eval: false
+values <- c("23", "29", "49")
+mean(values)
+```
+
+- 오류 원인: ____________________________________
+- `as.numeric()`을 사용한 수정 코드: ______________________________
+
+## 8.4 새 데이터의 변수명 오류
+
+```{r}
+#| eval: false
+wrong_newdata <- data.frame(Unit = 7)
+predict(preview_model, newdata = wrong_newdata)
+```
+
+- 오류 원인: ____________________________________
+- 수정 코드: ____________________________________
+
+## 8.5 디버깅 앱
+
+`app/debug_app.R`에는 경로, 입력 ID와 새 데이터 열 이름에 관련된 오류가 들어 있습니다. 파일을 복사해 `app/my_debug_app.R`로 저장한 뒤 오류를 수정해 실행하세요.
+
+# 9. 퀴즈
+
+## 문제 1 — 객관식
+
+RStudio의 역할로 가장 적절한 것은?
+
+A. 통계 계산을 수행하는 프로그래밍 언어 자체  
+B. R 코드, 콘솔, 파일, 그래프와 도움말을 통합하는 개발 환경  
+C. 웹 브라우저에서만 실행되는 통계 서비스  
+D. 회귀계수만 계산하는 R 패키지
+
+답: ______
+
+## 문제 2 — 객관식
+
+Quarto `.qmd` 문서의 가장 중요한 목적은?
+
+A. 코드만 저장한다.  
+B. 결과 그림만 저장한다.  
+C. 설명, 코드와 실행 결과를 함께 기록해 분석을 재현 가능하게 한다.  
+D. R을 설치하지 않고 모든 R 코드를 실행한다.
+
+답: ______
+
+## 문제 3 — 주관식
+
+컴퓨터 수리시간 데이터에서 반응변수와 설명변수를 쓰세요.
+
+- 반응변수 `Y`: ____________________
+- 설명변수 `X`: ____________________
+
+## 문제 4 — 주관식
+
+`ε`가 필요한 이유를 한 문장으로 설명하세요.
+
+답: __________________________________________________________
+
+## 문제 5 — 객관식
+
+`file.path("data", "Computer.Repair.txt")`를 쓰는 주된 이유는?
+
+A. 데이터 값을 자동으로 표준화하기 위해  
+B. 운영체제와 프로젝트 폴더 구조에 맞는 상대경로를 만들기 위해  
+C. 텍스트 파일을 Excel 파일로 변환하기 위해  
+D. 결측값을 제거하기 위해
+
+답: ______
+
+## 문제 6 — 주관식
+
+`str(repair)`에서 확인할 수 있는 정보를 두 가지 쓰세요.
+
+1. ____________________
+2. ____________________
+
+## 문제 7 — 객관식
+
+회귀분석을 반복적 과정이라고 하는 이유는?
+
+A. 같은 코드를 무조건 여러 번 실행해야 해서  
+B. 모형 진단과 평가 결과에 따라 변수, 가정과 모형을 다시 수정하기 때문에  
+C. R이 한 번에 계산하지 못해서  
+D. 모든 회귀모형이 비선형이어서
+
+답: ______
+
+## 문제 8 — 주관식
+
+오늘 실행한 앱에서 사용자 입력이 모형의 예측으로 연결되는 흐름을 한 문장으로 쓰세요.
+
+답: __________________________________________________________
+
+# 10. Take-home message
+
+1. R은 계산 엔진, RStudio는 작업 환경, Quarto는 설명과 코드를 결합하는 재현 가능한 문서 시스템이다.
+2. 데이터프레임의 행은 관측개체, 열은 변수다.
+3. 이 데이터에서 `Minutes`는 반응변수, `Units`는 설명변수다.
+4. 회귀직선은 데이터의 관계를 요약하지만 모든 관측값을 정확히 통과하지는 않는다.
+5. 관측값과 적합값의 차이가 잔차이며, 이후 회귀진단의 핵심 자료가 된다.
+6. Shiny 앱은 입력값을 모형에 전달하고 예측과 시각화를 사용자에게 돌려준다.
+7. 경로, 대소문자와 자료형은 R 오류의 흔한 원인이다.
+
+# 11. 실습 종료 체크
+
+```{r}
+cat("데이터 파일:", file.exists(file.path("data", "Computer.Repair.txt")), "\n")
+cat("행/열:", nrow(repair), "/", ncol(repair), "\n")
+cat("모형 클래스:", class(preview_model), "\n")
+cat("Shiny 설치:", requireNamespace("shiny", quietly = TRUE), "\n")
+```
+
+- [ ] 빈칸 문제를 직접 작성했다.
+- [ ] 디버깅 문제의 오류 메시지를 기록했다.
+- [ ] 앱을 실행하고 두 가지 이상 수정했다.
+- [ ] 퀴즈 8문제에 답했다.
+
+# 참고자료
+
+- Ali S. Hadi, Samprit Chatterjee, *Chatterjee 예제를 통한 회귀분석 제6판: R 활용*, Chapter 1–3의 도입 예제.
+- 주교재 제공 코드 `Chapter_02.R`, `Chapter_03.R`.
+- Quarto 공식 문서: <https://quarto.org/docs/get-started/hello/rstudio.html>
+- Shiny 공식 시작 문서: <https://shiny.posit.co/r/getstarted/>

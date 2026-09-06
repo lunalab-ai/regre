@@ -1,0 +1,7 @@
+project:
+  type: default
+
+lang: ko
+execute:
+  warning: false
+  message: false
