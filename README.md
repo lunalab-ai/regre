@@ -11,12 +11,6 @@
 | w01a | 2026-09-02 | 강의 소개와 회귀분석의 개요 | [MD](course/notion/week01/01_week01_orientation_regression_intro.md) · [PDF](course/handouts/01_week01_orientation_regression_intro.pdf) · [Notion](https://app.notion.com/p/1-3ce7fd00109f81f79f4ae262b83e6ed8?source=copy_link) | [MD](course/handouts/w01a-quiz.md) · [PDF](course/handouts/w01a-quiz.pdf) | — | 이론 수업 |
 | w02a | 2026-09-07 | RStudio 실습 환경 설정, R 문법 복습 및 데모 | [MD](course/notion/w02a/w02a-rstudio-r-basics.md) · [PDF](course/handouts/w02a-rstudio-r-basics.pdf) · [Notion](https://app.notion.com/p/W02a-RStudio-R-3d37fd00109f8176bd38ca5d95f40f67?source=copy_link) | [MD](course/handouts/w02a-quiz.md) · [PDF](course/handouts/w02a-quiz.pdf) | [R](labs/student/w02a/w02a-r-basics.R) · [qmd](labs/student/w02a/w02a-r-basics.qmd) · [Rproj](labs/student/w02a/w02a.Rproj) | RStudio · R |
 
-## 보충 실습 자료
-
-| 자료 | 실습 | 퀴즈 해설 |
-|---|---|---|
-| 기존 1주차 실습 패키지 · 후속 실습에서도 활용 | [qmd](labs/student/week01/week01_lab_student.qmd) · [R](labs/student/week01/week01_lab_student.R) · [Rproj](labs/student/week01/week01_regression.Rproj) | [MD](course/handouts/week01-lab-quiz.md) · [PDF](course/handouts/week01-lab-quiz.pdf) |
-
 > **2026년 2학기 · 동덕여자대학교 데이터사이언스전공**  
 > 담당교수: 유원상 · 수업: 월요일/수요일 13:30–14:45 · 연구실: 예지관 B553호
 

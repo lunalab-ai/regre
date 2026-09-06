@@ -38,3 +38,4 @@ supplements:
   - labs/student/week01/week01_lab_student.R
   - labs/student/week01/week01_regression.Rproj
   quiz: course/quiz/week01-lab.yml
+show_supplements: false
