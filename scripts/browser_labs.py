@@ -186,7 +186,7 @@ def render(root=ROOT):
 
 
 def check(root=ROOT, url=None):
-    from playwright.sync_api import sync_playwright
+    from playwright.sync_api import sync_playwright, expect
     manifest = json.loads((root / 'browser/manifest.json').read_text(encoding='utf-8'))
     server = None
     if not url:
@@ -213,13 +213,20 @@ def check(root=ROOT, url=None):
                 plots = [c for c in lesson['cells'] if not c['exercise'] and re.search(r'\bplot\(', c['code'])]
                 if plots:
                     plotcell = page.locator('.browser-cell#cell-' + plots[-1]['id'])
-                    plotcell.get_by_role('button', name='Run Code', exact=True).click()
+                    plotbutton = plotcell.get_by_role('button', name='Run Code', exact=True)
+                    expect(plotbutton).not_to_have_class(re.compile(r'\bdisabled\b'), timeout=60000)
+                    plotbutton.click()
                     plotcell.locator('canvas, img').first.wait_for(timeout=60000)
                 # Exercise the actual editable UI, not just the runtime API.
                 cell = page.locator('.browser-cell').first
                 editor = cell.locator('.cm-content').first
-                editor.fill('print(12345 + 5)')
-                cell.get_by_role('button', name='Run Code', exact=True).click()
+                editor.click()
+                editor.press('ControlOrMeta+A')
+                editor.press_sequentially('print(12345 + 5)', delay=20)
+                runbutton = cell.get_by_role('button', name='Run Code', exact=True)
+                # Quarto Live disables busy buttons with a CSS class, not a disabled attribute.
+                expect(runbutton).not_to_have_class(re.compile(r'\bdisabled\b'), timeout=60000)
+                runbutton.click()
                 cell.get_by_text('[1] 12350', exact=False).wait_for(timeout=60000)
                 with page.expect_download() as download:
                     page.locator('#download-code').click()
