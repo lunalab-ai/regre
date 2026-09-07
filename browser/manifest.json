@@ -1,0 +1,190 @@
+{
+  "pages": [
+    {
+      "id": "w01a",
+      "title": "1주차 · R 기초와 첫 회귀모형",
+      "cells": [
+        {
+          "id": "w01a-1",
+          "code": "getwd()\nlist.files(\"data\")",
+          "exercise": false
+        },
+        {
+          "id": "w01a-2",
+          "code": "R.version.string",
+          "exercise": false
+        },
+        {
+          "id": "w01a-3",
+          "code": "height <- 1.5\nheight\n\nunits <- c(1, 2, 3, 4, 4, 5)\nminutes <- c(23, 29, 49, 64, 74, 87)\n\nunits\nminutes\nlength(units)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-4",
+          "code": "repair_preview <- data.frame(\n  Units = units,\n  Minutes = minutes\n)\n\nrepair_preview\nclass(repair_preview)\ndim(repair_preview)\nnames(repair_preview)\nstr(repair_preview)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-5",
+          "code": "repair_preview$MinutesPerUnit <- ______________________________\nrepair_preview",
+          "exercise": true
+        },
+        {
+          "id": "w01a-6",
+          "code": "data_path <- file.path(\"data\", \"Computer.Repair.txt\")\nfile.exists(data_path)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-7",
+          "code": "repair <- read.table(data_path, header = TRUE)\nhead(repair, 5)\nstr(repair)\nsummary(repair)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-8",
+          "code": "number_of_rows <- __________(repair)\nnumber_of_columns <- __________(repair)\nvariable_names <- __________(repair)\n\nnumber_of_rows\nnumber_of_columns\nvariable_names",
+          "exercise": true
+        },
+        {
+          "id": "w01a-9",
+          "code": "plot(\n  Minutes ~ Units,\n  data = repair,\n  pch = 19,\n  xlab = \"Units\",\n  ylab = \"Minutes\",\n  main = \"Computer repair data\"\n)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-10",
+          "code": "plot(Units ~ Minutes, data = repair, pch = 19)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-11",
+          "code": "preview_model <- lm(Minutes ~ Units, data = repair)\npreview_model\ncoef(preview_model)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-12",
+          "code": "repair$Fitted <- fitted(preview_model)\nrepair$Residual <- residuals(preview_model)\nhead(repair, 6)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-13",
+          "code": "first_residual_by_hand <- repair$__________[1] - repair$__________[1]\nfirst_residual_from_model <- repair$__________[1]\n\nfirst_residual_by_hand\nfirst_residual_from_model",
+          "exercise": true
+        },
+        {
+          "id": "w01a-14",
+          "code": "plot(\n  Minutes ~ Units,\n  data = repair,\n  pch = 19,\n  xlab = \"Units\",\n  ylab = \"Minutes\",\n  main = \"Observed data, regression line and residuals\"\n)\nabline(preview_model, lwd = 2)\nsegments(\n  x0 = repair$Units,\n  y0 = repair$Fitted,\n  x1 = repair$Units,\n  y1 = repair$Minutes,\n  lty = 2\n)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-15",
+          "code": "new_jobs <- data.frame(Units = c(7, 11))\npredicted_minutes <- predict(preview_model, newdata = new_jobs)\n\ndata.frame(new_jobs, PredictedMinutes = predicted_minutes)",
+          "exercise": false
+        },
+        {
+          "id": "w01a-16",
+          "code": "my_job <- data.frame(__________ = 12)\npredict(preview_model, newdata = __________)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-17",
+          "code": "repair_bug <- read.table(\"ComputerRepair.txt\", header = TRUE)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-18",
+          "code": "mean(repair$minutes)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-19",
+          "code": "values <- c(\"23\", \"29\", \"49\")\nmean(values)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-20",
+          "code": "wrong_newdata <- data.frame(Unit = 7)\npredict(preview_model, newdata = wrong_newdata)",
+          "exercise": true
+        },
+        {
+          "id": "w01a-21",
+          "code": "stopifnot(file.exists(\"data/Computer.Repair.txt\"))\nnrow(repair)\nclass(preview_model)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(repair) > 0, all(c(\"Minutes\", \"Units\") %in% names(repair)), inherits(preview_model, \"lm\"), length(predict(preview_model, data.frame(Units=c(7,11)))) == 2)",
+        "stopifnot(isTRUE(all.equal(unname(coef(preview_model)), c(4.16165413533834, 15.5087719298246), tolerance=1e-10)))"
+      ]
+    },
+    {
+      "id": "w02a",
+      "title": "RStudio 실습 환경 설정, R 문법 복습 및 데모",
+      "cells": [
+        {
+          "id": "w02a-1",
+          "code": "R.version.string",
+          "exercise": false
+        },
+        {
+          "id": "w02a-2",
+          "code": "2 + 3\n10 / 4\nsqrt(16)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-3",
+          "code": "units <- 3\nminutes_per_unit <- 5\ntotal_minutes <- units * minutes_per_unit\ntotal_minutes\nprint(total_minutes)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-4",
+          "code": "score <- 80\nstudent_name <- \"Kim\"\npassed <- score >= 60\nclass(score)\nclass(student_name)\nclass(passed)\nas.numeric(\"80\") + 5",
+          "exercise": false
+        },
+        {
+          "id": "w02a-5",
+          "code": "score == 80\nscore > 80\nmeasurements <- c(10, NA, 30)\nmean(measurements)\nis.na(measurements)\nmean(measurements, na.rm = TRUE)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-6",
+          "code": "mixed <- c(10, \"20\", 30)\nclass(mixed)\nmixed",
+          "exercise": false
+        },
+        {
+          "id": "w02a-7",
+          "code": "minutes <- c(20, 30, 35, 45, 50, 60)\nlength(minutes)\nminutes[1]\nminutes[c(1, 3)]\nminutes[2:4]\nmean(minutes)\nsum(minutes)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-8",
+          "code": "minutes >= 40\nminutes[minutes >= 40]\nminutes + 5\nminutes",
+          "exercise": false
+        },
+        {
+          "id": "w02a-9",
+          "code": "demo <- data.frame(\n  units = 1:6,\n  minutes = c(20, 30, 35, 45, 50, 60)\n)\ndemo\nnrow(demo)\nncol(demo)\nnames(demo)\nstr(demo)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-10",
+          "code": "demo$minutes\ndemo[1, 2]\ndemo[demo$minutes >= 40, ]\nmean(demo$minutes)\nsummary(demo)",
+          "exercise": false
+        },
+        {
+          "id": "w02a-11",
+          "code": "plot(demo$units, demo$minutes,\n     xlab = \"Units\", ylab = \"Minutes\",\n     main = \"Synthetic practice data\", pch = 19)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(demo)==6, ncol(demo)==2, mean(demo$minutes)==40, total_minutes==15)"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "labs/student/week01/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
+    "labs/student/week01/week01_lab_student.qmd": "787599f606a36bdce26a89408ac7fef114b36d2cf0f8c4fa63354516d3b3ca98",
+    "labs/student/w02a/w02a-r-basics.qmd": "8978cdb6bcb8ac22c373d60a52a3dcb660f8d1f380c28376be0394a4835d0d07"
+  },
+  "quarto_live_tag": "v0.2.0",
+  "webr": "https://webr.r-wasm.org/v0.6.0/"
+}

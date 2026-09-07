@@ -1,0 +1,10 @@
+---
+title: "회귀분석 · 온라인 R 실습"
+---
+
+설치 없이 코드를 수정하고 실행합니다. 각 차시를 열고 로딩 완료 후 **Run Code**를 누르세요.
+
+- [1주차 · R 기초와 첫 회귀모형](w01a.qmd)
+- [RStudio 실습 환경 설정, R 문법 복습 및 데모](w02a.qmd)
+
+[강의자료·PDF·다운로드](https://github.com/lunalab-ai/regre)

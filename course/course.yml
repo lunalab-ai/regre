@@ -17,6 +17,57 @@ sessions:
   labs: []
   notion_url: https://app.notion.com/p/1-3ce7fd00109f81f79f4ae262b83e6ed8?source=copy_link
   runtime_label: 이론 수업
+  browser_source: labs/student/week01/week01_lab_student.qmd
+  browser_title: 1주차 · R 기초와 첫 회귀모형
+  browser_resources:
+  - labs/student/week01/data/Computer.Repair.txt
+  browser_checks:
+  - stopifnot(nrow(repair) > 0, all(c("Minutes", "Units") %in% names(repair)), inherits(preview_model,
+    "lm"), length(predict(preview_model, data.frame(Units=c(7,11)))) == 2)
+  - stopifnot(isTRUE(all.equal(unname(coef(preview_model)), c(4.16165413533834, 15.5087719298246),
+    tolerance=1e-10)))
+  browser_sections:
+    '# 0. 프로젝트 열기': '온라인에서는 필요한 데이터가 미리 준비됩니다. 브라우저의 R 작업 폴더를 확인하세요.
+
+
+      ```{r}
+
+      getwd()
+
+      list.files("data")
+
+      ```'
+    '# 1. R/Quarto 환경 점검': '브라우저판에서는 R·RStudio·Quarto를 설치할 필요가 없습니다. 아래에서 실행 중인 R
+      버전을 확인합니다. 데스크톱 프로젝트 사용법은 원본 다운로드 자료에 보존되어 있습니다.
+
+
+      ```{r}
+
+      R.version.string
+
+      ```'
+    '# 7. 첫 Shiny 회귀 앱 실행': '[코드 편집기와 Shiny 앱 열기](apps/week01/edit/index.html)
+
+
+      앱의 부품 수 슬라이더를 움직여 예측값과 그래프를 확인하세요. 코드 편집기에서 제목·기본값·소수점 자리수를 고친 뒤 Run으로 다시 실행합니다.
+      원본 app/app.R의 입력–모형–출력 관계를 그대로 사용합니다.'
+    '## 8.5 디버깅 앱': '[학생용 디버깅 앱 원본](https://github.com/lunalab-ai/regre/blob/main/labs/student/week01/app/debug_app.R)을
+      읽고 입력 ID와 변수 이름의 오류를 찾으세요. 온라인 앱의 편집기에 수정한 코드를 넣어 실행할 수 있습니다.'
+    '# 11. 실습 종료 체크': '내 R 코드 다운로드 버튼으로 작업 내용을 저장하세요. R 세션을 다시 시작한 뒤 위에서부터 재실행합니다.
+
+
+      ```{r}
+
+      stopifnot(file.exists("data/Computer.Repair.txt"))
+
+      nrow(repair)
+
+      class(preview_model)
+
+      ```'
+  browser_url: https://lunalab-ai.github.io/regre/w01a.html
+  announcement_guidance:
+  - 브라우저 실습 링크를 열고 Run Code로 실행하세요. R 설치나 로그인은 필요 없습니다. 기존 R·QMD 다운로드 자료도 계속 제공합니다.
 - id: w02a
   title: RStudio 실습 환경 설정, R 문법 복습 및 데모
   date: '2026-09-07'
@@ -30,8 +81,35 @@ sessions:
   quiz: course/quiz/w02a.yml
   notion_url: https://app.notion.com/p/W02a-RStudio-R-3d37fd00109f8176bd38ca5d95f40f67?source=copy_link
   announcement_guidance:
+  - 브라우저 실습 링크를 열고 Run Code로 실행하세요. R 설치나 로그인은 필요 없습니다. 기존 R·QMD 다운로드 자료도 계속 제공합니다.
   - 이번 시간에는 R 문법 복습의 전반부인 객체·자료형·벡터·데이터프레임 기초까지 진행합니다. 나머지는 2주차 2차시에 이어갑니다.
-  - 추가 데이터나 R 패키지 없이 실습할 수 있습니다. .qmd는 선택 자료이며 오늘은 .R 파일로 진행할 수 있습니다.
+  browser_checks:
+  - stopifnot(nrow(demo)==6, ncol(demo)==2, mean(demo$minutes)==40, total_minutes==15)
+  browser_sections:
+    '## 1. 설치하고 첫 화면 열기': '페이지 로딩 후 아래 Run Code를 누르면 이 브라우저에서 실행 중인 R 버전이 표시됩니다.
+
+
+      ```{r}
+
+      R.version.string
+
+      ```'
+    '## 2. 오늘의 폴더와 스크립트 만들기': '각 코드 셀을 수정하고 Run Code로 실행합니다. 코드와 출력은 화면에 함께 표시됩니다.
+
+
+      ```{r}
+
+      2 + 3
+
+      10 / 4
+
+      sqrt(16)
+
+      ```'
+    '## 7. 저장·재실행·오류 해결': 내 R 코드 다운로드 버튼으로 .R 파일을 저장하세요. 다른 PC로 옮길 때도 이 파일을 사용합니다.
+      R 세션 다시 시작을 누르면 객체가 초기화되므로 위에서부터 실행하세요. object not found 오류는 철자와 앞 셀 실행 여부를
+      확인합니다.
+  browser_url: https://lunalab-ai.github.io/regre/w02a.html
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -42,3 +120,20 @@ supplements:
   - labs/student/week01/week01_regression.Rproj
   quiz: course/quiz/week01-lab.yml
 show_supplements: false
+browser:
+  enabled: true
+  url: https://lunalab-ai.github.io/regre/
+  quarto_live_tag: v0.2.0
+  webr_url: https://webr.r-wasm.org/v0.6.0/
+  shinylive_assets: 0.10.12
+  shiny_apps:
+  - id: week01
+    source: labs/student/week01/app/app.R
+    data:
+    - labs/student/week01/data/Computer.Repair.txt
+  graph_labels:
+    수리할 부품 수 (Units): Units
+    수리 시간 (Minutes): Minutes
+    컴퓨터 수리시간 데이터: Computer repair data
+    관측값, 회귀직선과 잔차: Observed data, regression line and residuals
+    관측값, 회귀직선과 현재 예측: Observed data, regression line and prediction

@@ -1,0 +1,12 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+ const button = document.getElementById('download-code');
+ if (button) button.addEventListener('click', () => {
+  const cells = [...document.querySelectorAll('.browser-cell .cm-content')].map(x => x.innerText);
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(new Blob([cells.join('\n\n') + '\n'], {type:'text/plain;charset=utf-8'}));
+  link.download = location.pathname.split('/').pop().replace('.html', '') + '-practice.R';
+  link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+ });
+});
+</script>

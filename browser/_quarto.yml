@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+  - index.qmd
+  - w01a.qmd
+  - w02a.qmd
+website:
+  title: 회귀분석의 이해 · 온라인 실습
+  site-url: https://lunalab-ai.github.io/regre/
+  navbar:
+    left:
+    - text: 실습 홈
+      href: index.qmd
+    - text: w01a · 1주차 · R 기초와 첫 회귀모형
+      href: w01a.qmd
+    - text: w02a · RStudio 실습 환경 설정, R 문법 복습 및 데모
+      href: w02a.qmd
+lang: ko
+engine: knitr
+format:
+  live-html:
+    toc: true
+    embed-resources: false
+    css: course.css
+    include-after-body: course.js.html
+    webr:
+      engine-url: https://webr.r-wasm.org/v0.6.0/
