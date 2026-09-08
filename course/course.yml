@@ -110,6 +110,40 @@ sessions:
       R 세션 다시 시작을 누르면 객체가 초기화되므로 위에서부터 실행하세요. object not found 오류는 철자와 앞 셀 실행 여부를
       확인합니다.
   browser_url: https://lunalab-ai.github.io/regre/w02a.html
+- id: w02b
+  date: '2026-09-09'
+  title: R 문법 복습 (2)
+  pages:
+  - course/notion/w02b/w02b-r-syntax-2.md
+  labs:
+  - labs/student/w02b/w02b-r-syntax-2.R
+  - labs/student/w02b/w02b-r-syntax-2.qmd
+  - labs/student/w02b/w02b.Rproj
+  - labs/student/w02b/data/w02b-observations.csv
+  - labs/student/w02b/app/app.R
+  runtime_label: RStudio · R · Shiny
+  quiz: course/quiz/w02b.yml
+  browser_title: 2주차 2차시 · R 문법 복습 ②
+  browser_source: labs/student/w02b/w02b-r-syntax-2.qmd
+  browser_resources:
+  - labs/student/w02b/data/w02b-observations.csv
+  - labs/student/w02b/data/r-syntax-tools.R
+  browser_checks:
+  - stopifnot(nrow(observations)==8, ncol(design)==2, sum(is.na(observations$minutes))==1)
+  - stopifnot(identical(loop_result, vector_result), sum(observations$status=="fast",
+    na.rm=TRUE)==4)
+  - stopifnot(isTRUE(all.equal(unname(column_means), c(4.5, 45.4285714285714))))
+  browser_sections:
+    '## 3. 파일을 읽고, 점검하고, 다시 저장하기': 브라우저에서는 읽기와 구조 점검을 수행합니다. 실제 CSV 쓰기·재읽기는 다운로드한
+      RStudio 프로젝트에서 실행하세요.
+    '# 8. R 문법 실험실 앱': '[누적 앱 코드 편집기와 실행 화면 열기](apps/w02b/edit/index.html)\n\n첫 회귀
+      예측 기능을 확인한 뒤 R 문법 실험실 탭에서 임계값과 근무조를 바꾸세요. 기본 임계값 한 줄을 수정하고 Re-run app으로 다시 실행합니다.'
+    '# 9. 종료 체크': 내 R 코드 다운로드 버튼으로 작업을 저장하세요. R 세션 다시 시작 후 위에서부터 재실행하여 숨은 객체 의존성이
+      없는지 확인합니다.
+  browser_url: https://lunalab-ai.github.io/regre/w02b.html
+  announcement_guidance:
+  - 브라우저 실습은 설치나 로그인 없이 실행할 수 있습니다. 데스크톱 실습은 RStudio 프로젝트와 CSV를 같은 폴더 구조로 유지하세요.
+  - 마지막 R 문법 실험실 앱에서 임계값·근무조를 바꾸고 표와 그래프가 함께 갱신되는지 확인하세요.
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -131,6 +165,12 @@ browser:
     source: labs/student/week01/app/app.R
     data:
     - labs/student/week01/data/Computer.Repair.txt
+  - id: w02b
+    source: labs/student/w02b/app/app.R
+    data:
+    - labs/student/week01/data/Computer.Repair.txt
+    - labs/student/w02b/data/w02b-observations.csv
+    - labs/student/w02b/data/r-syntax-tools.R
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

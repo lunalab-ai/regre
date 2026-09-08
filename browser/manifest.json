@@ -178,12 +178,86 @@
       "checks": [
         "stopifnot(nrow(demo)==6, ncol(demo)==2, mean(demo$minutes)==40, total_minutes==15)"
       ]
+    },
+    {
+      "id": "w02b",
+      "title": "2주차 2차시 · R 문법 복습 ②",
+      "cells": [
+        {
+          "id": "w02b-1",
+          "code": "data_path <- file.path(\"data\", \"w02b-observations.csv\")\ntools_path <- file.path(\"..\", \"..\", \"..\", \"src\", \"r-syntax-tools.R\")\nif (!file.exists(tools_path)) tools_path <- file.path(\"data\", \"r-syntax-tools.R\")\nobservations <- read.csv(data_path, na.strings = \"\", stringsAsFactors = FALSE)\nsource(tools_path)\nstopifnot(nrow(observations) == 8)",
+          "exercise": false
+        },
+        {
+          "id": "w02b-2",
+          "code": "observations$minutes\nobservations[observations$units >= 5, c(\"id\", \"units\", \"minutes\")]",
+          "exercise": false
+        },
+        {
+          "id": "w02b-3",
+          "code": "design <- cbind(intercept = 1, units = observations$units)\ndesign[1:3, ]\ndim(design)\nstorage.mode(design)",
+          "exercise": false
+        },
+        {
+          "id": "w02b-4",
+          "code": "lesson_object <- list(\n  data = observations,\n  design = design,\n  note = \"synthetic practice data\"\n)\nnames(lesson_object)\nlesson_object$data$minutes",
+          "exercise": false
+        },
+        {
+          "id": "w02b-5",
+          "code": "observations$shift <- factor(\n  observations$shift,\n  levels = c(\"morning\", \"afternoon\", \"evening\")\n)\nlevels(observations$shift)\ntable(observations$shift)",
+          "exercise": false
+        },
+        {
+          "id": "w02b-6",
+          "code": "observed <- !is.na(observations$minutes)\nneeds_review <- is.na(observations$minutes) |\n  observations$minutes < 0 |\n  observations$minutes > 120\nsum(observed)\nwhich(needs_review)",
+          "exercise": false
+        },
+        {
+          "id": "w02b-7",
+          "code": "threshold <- 45\none_value <- 52\nif (is.na(one_value)) {\n  \"missing\"\n} else if (one_value <= threshold) {\n  \"fast\"\n} else {\n  \"slow\"\n}",
+          "exercise": false
+        },
+        {
+          "id": "w02b-8",
+          "code": "observations[\n  observations$minutes >= 40 && observations$minutes <= 70,\n  c(\"id\", \"minutes\")\n]",
+          "exercise": true
+        },
+        {
+          "id": "w02b-9",
+          "code": "loop_result <- numeric(nrow(observations))\nfor (i in seq_len(nrow(observations))) {\n  loop_result[i] <- observations$units[i] * 10\n}\nvector_result <- observations$units * 10\nstopifnot(identical(loop_result, vector_result))\nloop_result",
+          "exercise": false
+        },
+        {
+          "id": "w02b-10",
+          "code": "observations$status <- classify_minutes(observations$minutes, threshold)\ntable(observations$status)",
+          "exercise": false
+        },
+        {
+          "id": "w02b-11",
+          "code": "status_55 <- classify_minutes(observations$minutes, threshold = ___)\ntable(status_55)",
+          "exercise": true
+        },
+        {
+          "id": "w02b-12",
+          "code": "column_means <- sapply(\n  observations[c(\"units\", \"minutes\")],\n  mean,\n  na.rm = TRUE\n)\nrow_means <- apply(design, 1, mean)\nshift_summary <- summarize_by_shift(observations)\ncolumn_means\nhead(row_means)\nshift_summary",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(observations)==8, ncol(design)==2, sum(is.na(observations$minutes))==1)",
+        "stopifnot(identical(loop_result, vector_result), sum(observations$status==\"fast\", na.rm=TRUE)==4)",
+        "stopifnot(isTRUE(all.equal(unname(column_means), c(4.5, 45.4285714285714))))"
+      ]
     }
   ],
   "source_sha256": {
-    "labs/student/week01/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
+    "labs/student/week01/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
     "labs/student/week01/week01_lab_student.qmd": "787599f606a36bdce26a89408ac7fef114b36d2cf0f8c4fa63354516d3b3ca98",
-    "labs/student/w02a/w02a-r-basics.qmd": "8978cdb6bcb8ac22c373d60a52a3dcb660f8d1f380c28376be0394a4835d0d07"
+    "labs/student/w02a/w02a-r-basics.qmd": "de62797e80edd394947a4f828ee09290490a75c09fdfc73ce4ff2fc2e85abb61",
+    "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
+    "labs/student/w02b/data/r-syntax-tools.R": "d9a11f27218f7d09f6e7a40675677e2aa4fb0a7f9f42a2094f49608f46e2e398",
+    "labs/student/w02b/w02b-r-syntax-2.qmd": "0b8f28c0a977ad50da09cdff46472670411426fc4e1fb135ecedef484a7d8156"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

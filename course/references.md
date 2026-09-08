@@ -19,3 +19,13 @@ https://cran.r-project.org/
 https://cran.r-project.org/doc/manuals/r-release/R-intro.html
 
 https://docs.posit.co/ide/user/ide/get-started/
+
+## R 문법 복습 (2)
+
+[강의 원문](../course/notion/w02b/w02b-r-syntax-2.md)
+
+https://cran.r-project.org/doc/manuals/r-release/R-data.html
+
+https://cran.r-project.org/doc/manuals/r-release/R-intro.html
+
+https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/reactive-elements.html

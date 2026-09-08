@@ -29,6 +29,8 @@ PUBLIC_FILES = (
     "scripts/check_public_release.py",
     "scripts/validate_notion_bundle.py",
     "requirements.txt",
+    "requirements-lab.txt",
+    "scripts/execute_notebook.py",
     ".github/workflows/materials.yml",
     "scripts/vendor/tex-svg-full.js",
     "scripts/vendor/LICENSE.mathjax",
@@ -62,7 +64,7 @@ def load(root=ROOT):
     if len(set(ids)) != len(ids):
         raise ValueError("Duplicate session IDs")
     for s in config["sessions"]:
-        if not re.fullmatch(r"w\d{2}[a-z]?", s["id"]):
+        if not re.fullmatch(r"w\d{1,2}[a-z]?", s["id"]):
             raise ValueError("Invalid session ID")
         if s.get("date"):
             dt.date.fromisoformat(str(s["date"]))
@@ -242,6 +244,24 @@ def hub(root, config):
 
 
 def validate_course_contract(root, c):
+    policy = c.get("lesson_policy", {})
+    for session in c.get("sessions", []):
+        if session["id"] in policy.get("legacy_sessions", []):
+            continue
+        if policy.get("automatic_notebooks"):
+            if not any(p.endswith(".ipynb") for p in session.get("labs", [])) or not session.get("colab_url"):
+                raise ValueError("Notebook and Colab URL required: " + session["id"])
+        if policy.get("ask_assignment"):
+            assignment = session.get("assignment", {})
+            if type(assignment.get("requested")) is not bool:
+                raise ValueError("Record professor assignment decision: " + session["id"])
+            if assignment["requested"]:
+                rubric = assignment.get("rubric", [])
+                if not rubric or any(not isinstance(x.get("points"), (int, float)) or x["points"] <= 0 for x in rubric) or sum(x["points"] for x in rubric) != 10:
+                    raise ValueError("Assignment rubric must total 10: " + session["id"])
+                rel = assignment.get("page", "")
+                if not rel.startswith("course/notion/") or not safe(root, rel).is_file():
+                    raise ValueError("Missing student assignment: " + session["id"])
     if c.get("required_instructor_scripts"):
         for session in c["sessions"]:
             scripts = session.get("instructor_scripts", {})
@@ -392,6 +412,8 @@ def notices(root=ROOT, sid=None):
         if c.get("language") == "en":
             translations = {
                 "자료 안내": "Materials",
+                "일정 추후 안내": "Date to be announced",
+                "위에 연결된 자료를 이용해 학습하고, 퀴즈 해설이 제공되면 먼저 풀어 본 뒤 확인해 주세요.": "Study the linked materials. Attempt checkpoint questions before reading any available explanations.",
                 "강의자료와 실습 안내입니다. 아래 링크를 이용해 주세요.": "Please use the following lecture and practice materials.",
                 "Notion 강의노트: 링크 등록 후 안내합니다. 우선 아래 Markdown/PDF를 이용하세요.": "Notion: the link will follow. Use the Markdown/PDF below in the meantime.",
                 "Notion 강의노트": "Notion lecture notes",
@@ -399,12 +421,35 @@ def notices(root=ROOT, sid=None):
                 "PDF 강의노트": "PDF lecture notes",
                 "퀴즈 답안·해설": "Quiz answers and explanations",
                 "전체 강의자료": "All course materials",
+                "Colab 실습": "Colab practice",
+                "실습 파일": "Practice file",
+                "Colab에서 Drive에 사본을 저장한 뒤 설명을 읽고 한 셀씩 실행하세요.": "Save a copy in Drive, read the explanations, and run the Colab cells in order.",
                 "수강생 여러분의 요청을 반영해 강의노트를 PDF로도 제공하고, 강의 끝 퀴즈의 답안·해설을 별도로 제공합니다. 퀴즈를 먼저 풀어 본 뒤 해설로 확인해 주세요.": "Lecture notes are also available as PDFs, with separate checkpoint quiz answers and explanations as requested. Attempt the questions before consulting the explanations.",
             }
             for old, new in sorted(translations.items(), key=lambda item: -len(item[0])):
                 body = body.replace(old, new)
         destination = root / "instructor/announcements" / (s["id"] + "-smartclass.txt")
         write(destination, body)
+        assignment = s.get("assignment", {})
+        if assignment.get("requested"):
+            page = safe(root, assignment["page"])
+            assignment_body = page.read_text(encoding="utf-8")
+            if assignment.get("notice_summary"):
+                title = assignment_body.splitlines()[0].lstrip("# ")
+                assignment_body = (f"[{c['title']}] {title}\n\n"
+                    + "Total: 10 points\nDeadline: " + assignment.get("deadline", "As displayed in SmartClass") + "\n\n"
+                    + assignment["notice_summary"] + "\n\nRubric (10 points)\n"
+                    + "\n".join(f"- {item['criterion']}: {item['points']} points" for item in assignment["rubric"])
+                    + "\n\n" + assignment.get("submission_instructions", "Follow the full specification and submit through SmartClass.") + "\n")
+            assignment_body += "\n\nAssignment page\n" + base + "/blob/main/" + assignment["page"] + "\n"
+            pdf = "course/handouts/" + page.stem + ".pdf"
+            if safe(root, pdf).is_file():
+                assignment_body += "\nAssignment PDF\n" + base + "/blob/main/" + pdf + "\n"
+            if assignment.get("starter"):
+                assignment_body += "\nProject starter in Colab\nhttps://colab.research.google.com/github/" + c["repository"] + "/blob/main/" + assignment["starter"] + "\n"
+            if s.get("colab_url"):
+                assignment_body += "\nStarting Colab notebook\n" + s["colab_url"] + "\n"
+            write(root / "instructor/announcements/assignments" / (s["id"] + "-assignment-smartclass.md"), assignment_body)
         print("\n=== SmartClass 공지 초안: 배포 링크 확인 후 복사 ===")
         print(body)
         print("저장:", destination)
@@ -465,7 +510,7 @@ def stage(root=ROOT):
 
 
 def state_path(root, sid):
-    if not re.fullmatch(r"w\d{2}[a-z]?", sid):
+    if not re.fullmatch(r"w\d{1,2}[a-z]?", sid):
         raise ValueError("Invalid session ID")
     return root / "briefs" / sid / "workflow.json"
 
