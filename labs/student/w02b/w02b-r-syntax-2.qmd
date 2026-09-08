@@ -99,7 +99,7 @@ colSums(is.na(observations))
 
 ```{r}
 #| eval: false
-output_path <- file.path("data", "w02b-summary-output.csv")
+output_path <- file.path(tempdir(), "w02b-summary-output.csv")
 write.csv(observations, output_path, row.names = FALSE, na = "")
 round_trip <- read.csv(output_path, na.strings = "", stringsAsFactors = FALSE)
 stopifnot(nrow(round_trip) == nrow(observations))

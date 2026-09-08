@@ -149,7 +149,7 @@ colSums(is.na(observations))
 자료가 올바르게 읽힌 것은 아닙니다.
 
 ```r
-output_path <- file.path("data", "w02b-summary-output.csv")
+output_path <- file.path(tempdir(), "w02b-summary-output.csv")
 write.csv(observations, output_path, row.names = FALSE, na = "")
 round_trip <- read.csv(output_path, na.strings = "")
 stopifnot(nrow(round_trip) == nrow(observations))

@@ -257,7 +257,7 @@
     "labs/student/w02a/w02a-r-basics.qmd": "de62797e80edd394947a4f828ee09290490a75c09fdfc73ce4ff2fc2e85abb61",
     "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
     "labs/student/w02b/data/r-syntax-tools.R": "d9a11f27218f7d09f6e7a40675677e2aa4fb0a7f9f42a2094f49608f46e2e398",
-    "labs/student/w02b/w02b-r-syntax-2.qmd": "0b8f28c0a977ad50da09cdff46472670411426fc4e1fb135ecedef484a7d8156"
+    "labs/student/w02b/w02b-r-syntax-2.qmd": "df9d0aa86b7b13a7c30ea9f00fa367987672826b23b65c93addb74873c76d7d0"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
