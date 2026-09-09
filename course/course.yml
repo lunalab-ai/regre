@@ -144,6 +144,7 @@ sessions:
   announcement_guidance:
   - 브라우저 실습은 설치나 로그인 없이 실행할 수 있습니다. 데스크톱 실습은 RStudio 프로젝트와 CSV를 같은 폴더 구조로 유지하세요.
   - 마지막 R 문법 실험실 앱에서 임계값·근무조를 바꾸고 표와 그래프가 함께 갱신되는지 확인하세요.
+  notion_url: https://app.notion.com/p/W02b-R-3d57fd00109f81958c47c404c4050a99?source=copy_link
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
