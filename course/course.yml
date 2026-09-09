@@ -14,9 +14,11 @@ sessions:
   pages:
   - course/notion/week01/01_week01_orientation_regression_intro.md
   quiz: course/quiz/week01.yml
-  labs: []
+  labs:
+  - labs/student/week01/week01_lab_student.R
+  - labs/student/week01/week01_lab_student.qmd
   notion_url: https://app.notion.com/p/1-3ce7fd00109f81f79f4ae262b83e6ed8?source=copy_link
-  runtime_label: 이론 수업
+  runtime_label: 이론 수업 · 선택 R/QMD 복습 실습
   browser_source: labs/student/week01/week01_lab_student.qmd
   browser_title: 1주차 · R 기초와 첫 회귀모형
   browser_resources:

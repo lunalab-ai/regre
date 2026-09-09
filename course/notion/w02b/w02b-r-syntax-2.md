@@ -179,7 +179,7 @@ needs_review <- is.na(observations$minutes) |
 | `<`, `<=`, `>`, `>=` | 크기 비교 | `minutes <= 45` |
 | `!` | 부정 | `!is.na(minutes)` |
 | `&`, `|` | 원소별 그리고, 또는 | 벡터 조건 선택 |
-| `&&`, `||` | 첫 판단의 그리고, 또는 | 주로 `if` 조건 |
+| `&&`, `||` | 길이 1 단락 평가의 그리고, 또는 | 주로 `if` 조건 |
 
 `x == NA`는 원하는 결측 판정을 만들지 못합니다. `is.na(x)`를 사용합니다. 두 조건을
 동시에 만족해야 한다면 `&`, 하나라도 만족하면 `|`입니다. 괄호로 판단 단위를 명확히
@@ -324,3 +324,14 @@ apply(design, 2, mean)  # 각 열
 - [R 공식 입문서](https://cran.r-project.org/doc/manuals/r-release/R-intro.html): 자료구조, 제어문, 함수.
 - [R Data Import/Export](https://cran.r-project.org/doc/manuals/r-release/R-data.html): 표 형식 자료의 읽기와 쓰기.
 - [Posit Shiny 반응형 요소](https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/reactive-elements.html): 입력–계산–출력 연결.
+
+## 공통 R 파일을 읽는 순서
+
+`source(tools_path)`는 해당 R 파일의 함수 정의를 현재 실행 환경에 읽어 들이며, 함수 실행이나 학습을 대신하지 않는다. tools_path는 파일 경로 문자열이다. `classify_minutes(minutes, threshold=45)`를 그 다음 호출하면 숫자 벡터와 기준값으로 ordered factor를 반환한다. 결측은 실제 NA가 아닌 missing 범주로 표시한다. `summarize_by_shift(data)`는 shift/minutes 열의 표를 받아 shift/n_observed/mean_minutes 표를 새로 반환한다. minutes는 숫자이며 전부 결측인 집단 평균은 NaN이다. 두 함수는 원본 입력을 변경하지 않는다.
+
+- [classify_minutes 정의·인자·출력](https://github.com/lunalab-ai/regre/blob/main/src/r-syntax-tools.R#L15)
+- [summarize_by_shift 정의·인자·출력](https://github.com/lunalab-ai/regre/blob/main/src/r-syntax-tools.R#L36)
+
+![R 함수: 입력을 받아 새 결과 반환](assets/function-contract.svg)
+
+직접 설계한 코드 흐름도 · 기준을 55로 바꾸면 50분의 범주만 fast로 바뀐다.

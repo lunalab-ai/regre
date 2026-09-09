@@ -1,3 +1,9 @@
+# 공통 함수 안내: https://github.com/lunalab-ai/regre/blob/main/src/API.md
+# source(path)는 R 정의 파일을 현재 환경에 읽어 들입니다(모델 학습 아님).
+# classify_minutes(minutes, threshold=45): 숫자 벡터 -> fast/slow/missing ordered factor.
+# threshold 이하는 fast, 초과는 slow, NA/NaN은 missing이며 입력을 변경하지 않습니다.
+# summarize_by_shift(data): shift/minutes 열 -> shift/n_observed/mean_minutes 표.
+# 평균은 결측 제외, 전부 결측인 집단은 NaN. 작은 예: c(30,50,NA) -> fast,slow,missing.
 library(shiny)
 
 # 공개 공통 함수: 로컬 저장소와 브라우저 export 위치를 모두 지원합니다.

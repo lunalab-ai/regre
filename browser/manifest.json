@@ -252,12 +252,12 @@
     }
   ],
   "source_sha256": {
-    "labs/student/week01/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/week01/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
     "labs/student/week01/week01_lab_student.qmd": "787599f606a36bdce26a89408ac7fef114b36d2cf0f8c4fa63354516d3b3ca98",
-    "labs/student/w02a/w02a-r-basics.qmd": "de62797e80edd394947a4f828ee09290490a75c09fdfc73ce4ff2fc2e85abb61",
+    "labs/student/w02a/w02a-r-basics.qmd": "4d50d70aca6a6a68903d7807c13d86ce2c4c9aa798374d0ea4a7c4fe48d1d8bd",
     "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
-    "labs/student/w02b/data/r-syntax-tools.R": "d9a11f27218f7d09f6e7a40675677e2aa4fb0a7f9f42a2094f49608f46e2e398",
-    "labs/student/w02b/w02b-r-syntax-2.qmd": "df9d0aa86b7b13a7c30ea9f00fa367987672826b23b65c93addb74873c76d7d0"
+    "labs/student/w02b/data/r-syntax-tools.R": "cb2834855c0002375ddd222e023f86d83c2fdc6946483bf5f1f65aba88d5cd82",
+    "labs/student/w02b/w02b-r-syntax-2.qmd": "d167bd9bf1b0882386eb0bbe4b34696c9a41ee7510bfe4e0ac03c62dda282100"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

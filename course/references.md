@@ -28,4 +28,8 @@ https://cran.r-project.org/doc/manuals/r-release/R-data.html
 
 https://cran.r-project.org/doc/manuals/r-release/R-intro.html
 
+https://github.com/lunalab-ai/regre/blob/main/src/r-syntax-tools.R#L15
+
+https://github.com/lunalab-ai/regre/blob/main/src/r-syntax-tools.R#L36
+
 https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/reactive-elements.html
