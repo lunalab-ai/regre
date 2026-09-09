@@ -7,7 +7,7 @@ items:
   answer: C. 설명·코드·실행 결과를 함께 기록하는 문서입니다.
 - question: 컴퓨터 수리시간 데이터에서 반응변수와 설명변수를 쓰세요.
   answer: Y는 Minutes, X는 Units입니다.
-- question: '`ε`가 필요한 이유를 한 문장으로 설명하세요.'
+- question: '$\varepsilon$가 필요한 이유를 한 문장으로 설명하세요.'
   answer: 모형이 모든 요인과 우연한 변동을 완전히 설명하지 못하기 때문입니다.
 - question: '`file.path("data", "Computer.Repair.txt")`를 쓰는 주된 이유는?'
   answer: B. 운영체제와 프로젝트 구조에 맞는 상대경로를 만들기 위해서입니다.

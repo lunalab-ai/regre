@@ -36,7 +36,7 @@
 - 벡터와 데이터프레임 생성
 - `head()`, `class()`, `dim()`, `names()`, `str()`로 데이터 구조 확인
 - `Computer.Repair.txt` 불러오기
-- `Units`를 설명변수 `X`, `Minutes`를 반응변수 `Y`로 구분
+- `Units`를 설명변수 $X$, `Minutes`를 반응변수 $Y$로 구분
 - 산점도와 회귀직선 미리보기
 - 새 입력값의 수리시간 예측
 - Shiny 앱 실행과 간단한 수정

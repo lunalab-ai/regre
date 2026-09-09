@@ -5,14 +5,14 @@
 | 용어 | 영어 | 의미 |
 |---|---|---|
 | 회귀분석 | regression analysis | 변수들 사이의 함수적 관계를 탐색·요약·평가·예측하는 방법 |
-| 반응변수 | response variable | 설명하거나 예측하려는 결과 `Y` |
+| 반응변수 | response variable | 설명하거나 예측하려는 결과 $Y$ |
 | 종속변수 | dependent variable | 반응변수의 다른 이름 |
 | 목표변수 | target variable | 예측 관점에서 반응변수를 부르는 이름 |
-| 설명변수 | explanatory variable | 반응변수와 관련된 입력 `X` |
+| 설명변수 | explanatory variable | 반응변수와 관련된 입력 $X$ |
 | 예측변수 | predictor | 예측에 사용하는 설명변수 |
 | 공변량 | covariate | 설명변수를 가리키는 또 다른 용어 |
-| 회귀계수 | regression coefficient | 데이터로 추정하는 미지의 모수 `β` |
-| 오차 | random error | 모형의 체계적인 부분이 설명하지 못하는 불일치 `ε` |
+| 회귀계수 | regression coefficient | 데이터로 추정하는 미지의 모수 $\beta$ |
+| 오차 | random error | 모형의 체계적인 부분이 설명하지 못하는 불일치 $\varepsilon$ |
 | 적합값 | fitted value | 학습 데이터의 설명변수에 모형을 적용해 얻은 값 `ŷ` |
 | 예측값 | predicted value | 주어진 설명변수 값에서 모형으로 예측한 반응값 |
 | 잔차 | residual | 관측값과 적합값의 차이 `e = y − ŷ` |
@@ -42,13 +42,11 @@
 
 ## 기억할 표현
 
-```text
-Y = f(X1, X2, ..., Xp) + ε
-```
+$$
+Y=f(X_1,X_2,\ldots,X_p)+\varepsilon
+$$
 
-```text
-관측값 = 체계적인 관계 + 설명되지 않은 오차
-```
+관측값을 체계적인 관계와 설명되지 않은 오차의 합으로 표현한다는 뜻입니다.
 
 ```text
 회귀분석 = 문제 진술 → 데이터 → 모형 적합 → 진단 → 비판 → 수정 → 사용
