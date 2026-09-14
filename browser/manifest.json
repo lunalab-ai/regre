@@ -249,6 +249,55 @@
         "stopifnot(identical(loop_result, vector_result), sum(observations$status==\"fast\", na.rm=TRUE)==4)",
         "stopifnot(isTRUE(all.equal(unname(column_means), c(4.5, 45.4285714285714))))"
       ]
+    },
+    {
+      "id": "w03a",
+      "title": "3주차 1차시 · 산점도·공분산·상관계수",
+      "cells": [
+        {
+          "id": "w03a-1",
+          "code": "locations <- c(\"data\", \"../../labs/student/w03a/data\", \"labs/student/w03a/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"association-tools.R\"))][1]\nstopifnot(!is.na(data_dir))\nsource(file.path(data_dir,\"association-tools.R\"))\nrepair <- read.table(file.path(data_dir,\"Computer.Repair.txt\"),header=TRUE)\nhead(repair)",
+          "exercise": false
+        },
+        {
+          "id": "w03a-2",
+          "code": "x <- c(1,2,3,4)\ny <- c(2,4,4,6)\nsmall_summary <- association_summary(x,y)\nsmall_summary\nplot(x,y,pch=19,xlab=\"X\",ylab=\"Y\")\nabline(v=mean(x),h=mean(y),lty=2)",
+          "exercise": false
+        },
+        {
+          "id": "w03a-3",
+          "code": "seconds_try <- ...\nassociation_summary(repair$Units,seconds_try)",
+          "exercise": true
+        },
+        {
+          "id": "w03a-4",
+          "code": "repair_summary <- association_summary(repair$Units,repair$Minutes)\nrepair_summary\nplot(repair$Units,repair$Minutes,pch=19,xlab=\"Units\",ylab=\"Minutes\")\nabline(v=mean(repair$Units),h=mean(repair$Minutes),lty=2)",
+          "exercise": false
+        },
+        {
+          "id": "w03a-5",
+          "code": "covariance_try <- mean(x*y)\ncovariance_try",
+          "exercise": true
+        },
+        {
+          "id": "w03a-6",
+          "code": "curve_data <- association_data(repair,\"curve\")\ncurve_summary <- association_summary(curve_data$X,curve_data$Y)\ncurve_summary\nplot(curve_data$X,curve_data$Y,pch=19,xlab=\"X\",ylab=\"Y = X^2\")",
+          "exercise": false
+        },
+        {
+          "id": "w03a-7",
+          "code": "old_par <- par(mfrow=c(2,2))\nfor (k in 1:4) {\n  d <- association_data(repair,paste0(\"anscombe\",k))\n  plot(d$X,d$Y,pch=19,xlim=c(3,20),ylim=c(2,14),xlab=\"X\",ylab=\"Y\",\n       main=paste(\"Set\",k,\"r =\",round(cor(d$X,d$Y),4)))\n}\npar(old_par)",
+          "exercise": false
+        },
+        {
+          "id": "w03a-8",
+          "code": "stopifnot(nrow(repair)==14, nrow(small_summary)==1,\n          abs(small_summary$covariance-2)<1e-10,\n          abs(repair_summary$correlation-0.9936987461308753)<1e-10,\n          abs(curve_summary$correlation)<1e-10)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(repair)==14, abs(repair_summary$covariance-136)<1e-10, abs(curve_summary$correlation)<1e-10)"
+      ]
     }
   ],
   "source_sha256": {
@@ -257,7 +306,10 @@
     "labs/student/w02a/w02a-r-basics.qmd": "4d50d70aca6a6a68903d7807c13d86ce2c4c9aa798374d0ea4a7c4fe48d1d8bd",
     "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
     "labs/student/w02b/data/r-syntax-tools.R": "cb2834855c0002375ddd222e023f86d83c2fdc6946483bf5f1f65aba88d5cd82",
-    "labs/student/w02b/w02b-r-syntax-2.qmd": "d167bd9bf1b0882386eb0bbe4b34696c9a41ee7510bfe4e0ac03c62dda282100"
+    "labs/student/w02b/w02b-r-syntax-2.qmd": "d167bd9bf1b0882386eb0bbe4b34696c9a41ee7510bfe4e0ac03c62dda282100",
+    "labs/student/w03a/data/association-tools.R": "e28a78dbbc17e87823d147905f08fb8ffbebd186932dec5cd1febd76f1b41106",
+    "labs/student/w03a/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
+    "labs/student/w03a/w03a-association.qmd": "e574780a9898ead1d14c4fd89135c88a9cca124e32e8000aa23addcc50d3104c"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

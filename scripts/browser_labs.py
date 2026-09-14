@@ -241,6 +241,11 @@ def check(root=ROOT, url=None):
                 page.goto(url.rstrip('/') + '/apps/' + app['id'] + '/edit/index.html', wait_until='domcontentloaded')
                 frame = page.frame_locator('iframe').first
                 prediction = frame.locator('#prediction')
+                prediction.wait_for(state='attached', timeout=180000)
+                if not prediction.is_visible():
+                    panel = prediction.evaluate("el => el.closest('.tab-pane')?.id")
+                    if panel:
+                        frame.locator('a[data-toggle="tab"][href="#' + panel + '"]').click()
                 prediction.get_by_text('112.7', exact=False).wait_for(timeout=180000)
                 frame.locator('.irs-handle').click()
                 page.keyboard.press('ArrowRight')

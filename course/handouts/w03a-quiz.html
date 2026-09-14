@@ -1,0 +1,24 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><style>@page {size:A4;margin:16mm} body{font-family:'Noto Sans CJK KR','Malgun Gothic',sans-serif;font-size:10pt;line-height:1.65;color:#172333}
+h1{font-size:21pt} h2{font-size:15pt} h1,h2,h3{break-after:avoid} img{max-width:100%;max-height:220mm;display:block;margin:12px auto}
+table{width:100%;border-collapse:collapse;font-size:9pt} th,td{border:1px solid #ccd5df;padding:6px} th{background:#edf2f7}
+thead{display:table-header-group} tr,img{break-inside:avoid} pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f5f7;padding:10px}
+blockquote{border-left:3px solid #a4bbd4;margin-left:0;padding-left:12px} a{color:#185c99} p,li{orphans:3;widows:3}
+@page{size:A4;margin:15mm 16mm}body{font-size:10.5pt;line-height:1.68}h1{color:#19324b}h2{color:#2864b4;break-after:avoid}h2:first-of-type{break-before:auto}img{max-height:132mm;width:100%;object-fit:contain}mjx-container[display="true"]{break-inside:avoid;margin:1em 0}table{font-size:9.4pt;break-inside:avoid}p:has(img){break-after:avoid}blockquote{background:#f5f8fc;padding:8px 14px}</style><body><h1>산점도, 공분산, 상관계수와 회귀분석의 기본 아이디어 · 퀴즈 해설</h1>
+<p>W03A 본문 점검 퀴즈의 학생용 해설. 별도 실습의 완전 풀이와 구분한다.</p>
+<h2>1. 산점도에서 한 점은 무엇을 나타내는가?</h2>
+<p>같은 관측개체에서 얻은 두 변수의 값 한 쌍이다. 수리 사례에서는 한 수리 건의 부품 수와 수리시간이다.</p>
+<h2>2. 두 변수가 모두 평균보다 작은 관측의 편차 곱은 왜 양수인가?</h2>
+<p>두 편차가 모두 음수이므로 곱은 양수다. 평균보다 함께 작은 관측도 양의 동행에 기여한다.</p>
+<h2>3. 공분산이 양수이면 그 값이 회귀직선의 기울기를 뜻하는가?</h2>
+<p>아니다. 공분산은 편차 곱의 표본 요약이며 X와 Y의 단위를 곱한 단위를 갖는다. 기울기와 역할·단위가 다르다.</p>
+<h2>4. 시간을 분에서 초로 바꾸면 공분산과 상관계수는 각각 어떻게 달라지는가?</h2>
+<p>Y를 60배 하므로 공분산은 60배, Y의 표준편차도 60배다. 상관계수는 분자·분모의 배율이 약분되어 그대로다.</p>
+<h2>5. 상관계수가 0이어도 두 변수 사이에 관계가 있을 수 있는가?</h2>
+<p>그렇다. X=-2,-1,0,1,2와 Y=X²는 상관이 0이지만 Y가 X로 완전히 정해지는 곡선 관계다. 편차 곱이 양쪽에서 상쇄된다.</p>
+<h2>6. 상관계수가 거의 같더라도 산점도를 따로 살펴야 하는 이유는 무엇인가?</h2>
+<p>곡선, 특이한 점, 집단 구조처럼 숫자 하나에 담기지 않는 차이를 확인해야 한다. Anscombe 자료의 네 산점도가 대표적인 예다.</p>
+<h2>7. 한 변수의 모든 값이 같을 때 Pearson 상관계수는 정의되는가?</h2>
+<p>정의되지 않는다. 표준편차가 0이라 분모가 0이 된다. 관계가 없으므로 상관 0이라고 처리하면 안 된다.</p>
+<h2>8. 수리시간 사례에서 상관계수만으로 부품 7개의 수리시간을 바로 예측할 수 있는가?</h2>
+<p>아니다. 상관은 단위 없는 관계 요약이다. 분 단위의 예측에는 예측변수와 반응변수의 관계를 표현한 규칙이나 회귀모형이 필요하다.</p>
+</body></html>
