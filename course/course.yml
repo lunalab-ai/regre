@@ -199,6 +199,7 @@ sessions:
   - 기존 수리시간 14건으로 최소제곱, 계수 검정, 신뢰구간을 확인하고 마지막에 누적 앱의 입력을 직접 연결합니다.
   - 다운로드한 R/QMD는 동봉 data 폴더와 함께 사용하세요. 공통 코드 버전은 2026-fall-w03b입니다.
   - 별도 성적 반영 과제나 제출 기한은 없습니다.
+  notion_url: https://app.notion.com/p/W03b-3dc7fd00109f812bb7f5cd153db3045c?source=copy_link
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
