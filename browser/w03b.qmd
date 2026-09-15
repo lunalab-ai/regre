@@ -1,0 +1,207 @@
+---
+title: 3주차 2차시 · 회귀계수 추정·검정·신뢰구간
+resources: &id001
+- data/slr-tools.R
+- data/Computer.Repair.txt
+webr:
+  resources: *id001
+  packages: []
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+R 설치나 로그인이 필요 없습니다. 로딩이 끝나면 **Run Code**를 눌러 위에서부터 실행하세요. 앞 셀의 값을 바꾼 뒤에는 뒤의 계산도 다시 실행해야 합니다. 빈칸·디버깅 문제는 직접 고쳐 실행합니다.
+
+<button type="button" id="download-code" class="btn btn-primary">내 R 코드 다운로드</button> <button type="button" onclick="location.reload()" class="btn btn-outline-secondary">R 세션 다시 시작</button>
+
+실행한 코드는 이 브라우저에 보관됩니다. R 객체는 새로고침 후 다시 만들어야 합니다. 다른 컴퓨터로 옮기거나 제출할 때는 코드를 다운로드하세요.
+
+[기존 R·QMD 다운로드](https://github.com/lunalab-ai/regre/tree/main/labs/student/w03b)
+
+
+## 1. 준비: 앞에서 사용한 데이터와 같은 버전의 함수
+
+온라인에서는 설치·로그인·업로드 없이 실행한다. 다운로드판은 저장소 ZIP을 풀어 이 파일의 `data` 폴더를 함께 유지하고 QMD를 연다. `.R`은 이 QMD의 실행 코드와 연습 주석을 추출한 파일이다. 위에서부터 실행하고 마지막에 내 R 코드를 다운로드한다.
+
+`source()`는 동봉한 R 정의 파일을 읽고, `read.table(...,header=TRUE)`는 첫 행을 열 이름으로 읽어 표를 반환한다. 다음 코드는 공개 고정 버전 `2026-fall-w03b`의 사본을 사용한다. 새 데이터 다운로드나 패키지 설치를 수행하지 않는다.
+
+::: {#cell-w03b-1 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-1
+#| autorun: false
+#| persist: true
+locations <- c("data", "../../labs/student/w03b/data", "labs/student/w03b/data")
+data_dir <- locations[file.exists(file.path(locations,"slr-tools.R"))][1]
+stopifnot(!is.na(data_dir))
+source(file.path(data_dir,"slr-tools.R"))
+repair <- read.table(file.path(data_dir,"Computer.Repair.txt"),header=TRUE)
+stopifnot(nrow(repair)==14)
+head(repair)
+```
+
+:::
+
+공통 [fit_repair 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w03b/src/slr-tools.R#L7)는 숫자 `Units`(개), `Minutes`(분) 열을 가진 데이터프레임을 받아 절편 포함 `lm` 객체를 반환한다. 3행 이상, 결측·무한값 없음, Units의 변화가 필요하다. 데이터에서 절편과 기울기를 최소제곱으로 추정하고 관측 순서를 유지한다. 원자료를 변경하지 않는다.
+
+[coefficient_inference 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w03b/src/slr-tools.R#L29)는 적합된 같은 모형을 받아 추론만 수행한다. `level=0.95`는 신뢰수준, `null_slope=0`은 검정할 기울기(분/개)다. 반환은 절편·기울기 순 2행 표이고 `term/estimate/se/df/null/t_value/p_value/lower/upper/reject` 열을 갖는다. 절편 귀무값은 0이며 `reject`는 p값이 `1-level`보다 작은지 표시한다. 두 함수의 전체 설명은 [공통 API](https://github.com/lunalab-ai/regre/blob/2026-fall-w03b/src/slr-api.md)에 있다.
+
+## 2. 손계산 결과를 R로 확인
+
+::: {#cell-w03b-2 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-2
+#| autorun: false
+#| persist: true
+small <- data.frame(Units=1:4,Minutes=c(2,4,4,6))
+small_fit <- fit_repair(small)
+coef(small_fit)
+data.frame(small,fitted=fitted(small_fit),residual=residuals(small_fit))
+plot(Minutes~Units,data=small,pch=19,xlab="X (synthetic)",ylab="Y (synthetic)")
+abline(small_fit,col="#2864b4",lwd=2)
+```
+
+:::
+
+작은 자료는 합성 자료다. 예상 계수는 절편 1, 기울기 1.2다. `fitted()`는 평균 직선의 높이, `residuals()`는 관측값에서 그 높이를 뺀 값이다. `abline()`에 lm 객체를 주면 적합직선을 그린다.
+
+## 3. L1: 기울기의 분자와 분모 조립
+
+**목표:** 공분산의 편차 곱을 회귀계수 추정과 연결한다. 아래 두 빈칸을 채운다. **힌트:** 분모는 평균을 뺀 X의 제곱합, 분자는 같은 행의 X 편차와 Y 편차의 곱의 합이다. **자가 점검:** 계산한 기울기가 앞의 작은 모형과 같은지 확인하고 단위를 설명한다. 연습용 변수는 다음 셀에서 사용하지 않는다.
+
+::: {#cell-w03b-3 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-3
+#| autorun: false
+#| persist: true
+#| exercise: ex-w03b-3
+x_try <- small$Units
+y_try <- small$Minutes
+sxx_try <- ...
+sxy_try <- ...
+b1_try <- sxy_try/sxx_try
+b1_try
+```
+
+:::
+
+## 4. 실제 수리자료 적합 및 출력표 읽기
+
+::: {#cell-w03b-4 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-4
+#| autorun: false
+#| persist: true
+fit <- fit_repair(repair)
+summary(fit)
+inference <- coefficient_inference(fit)
+inference
+plot(Minutes~Units,data=repair,pch=19,xlab="Units",ylab="Minutes")
+abline(fit,col="#2864b4",lwd=2)
+segments(repair$Units,repair$Minutes,repair$Units,fitted(fit),col="#d25340")
+```
+
+:::
+
+`fit_repair()`의 핵심은 `lm(Minutes ~ Units, data=repair)`다. 기울기는 약 15.5088분/개이며 `summary()`의 SE·t·p 열은 기울기를 0과 비교한다. 가정이 자동 확인된 것은 아니다. 빨간 선은 수직 잔차이며 최단거리가 아니다.
+
+## 5. L2: 오차분산의 분모 디버깅
+
+**목표:** 계산 가능한 코드와 통계적으로 맞는 코드를 구별한다. 다음 코드는 실행은 되지만 이번 모형의 불편 오차분산 추정 공식을 사용하지 않는다. 분모를 고치고 `summary(fit)$sigma`와 비교한다. **힌트:** 추정한 계수는 두 개다. **자가 점검:** 올바른 자유도와 단위를 말하고, 수정 전 값이 더 작았는지 설명한다.
+
+::: {#cell-w03b-5 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-5
+#| autorun: false
+#| persist: true
+#| exercise: ex-w03b-5
+s_try <- sqrt(sum(residuals(fit)^2)/nrow(repair))
+s_try
+summary(fit)$sigma
+```
+
+:::
+
+## 6. L3: 기울기 12 검정 직접 조립
+
+**목표:** `summary()`의 기본 검정과 다른 귀무가설을 직접 계산한다. $H_0:\beta_1=12$와 양측 대립가설을 검정한다. **힌트:** 추정값에서 12를 뺀 다음 같은 표준오차로 나눈다. **자가 점검:** t값이 기본 기울기 0 검정보다 작아지는 이유와 p값의 올바른 의미를 설명한다.
+
+::: {#cell-w03b-6 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-6
+#| autorun: false
+#| persist: true
+#| exercise: ex-w03b-6
+ct_try <- summary(fit)$coefficients
+t12_try <- ...
+p12_try <- 2*pt(-abs(t12_try),df=df.residual(fit))
+c(t=t12_try,p=p12_try)
+```
+
+:::
+
+## 7. L4: 신뢰수준 비교와 검정의 대응
+
+먼저 99% 구간의 폭을 예상한 뒤 아래 셀을 실행한다. $\hat\beta\pm t_{1-\alpha/2,n-2}\operatorname{SE}$에서 신뢰수준을 바꾸면 무엇이 바뀌는지 생각한다.
+
+::: {#cell-w03b-7 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-7
+#| autorun: false
+#| persist: true
+levels <- c(.90,.95,.99)
+ci_comparison <- do.call(rbind,lapply(levels,function(level) {
+  ci <- confint(fit,parm="Units",level=level)
+  data.frame(level=level,lower=ci[1],upper=ci[2],width=ci[2]-ci[1])
+}))
+ci_comparison
+ci95 <- confint(fit)
+ci95
+```
+
+:::
+
+**목표:** 구간 폭과 정밀도를 구별한다. **질문:** (a) 무엇이 그대로이고 무엇이 바뀌는가? (b) 기울기 0·12 및 절편 0은 각 95% 구간 안에 있는가? (c) 이를 해당 5% 양측 검정과 연결하라. **힌트:** 기울기와 절편의 행을 혼동하지 않는다. **자가 점검:** 계수의 구간을 개별 수리시간 구간으로 설명하지 않는다. `confint()`는 lm 객체에서 t 기반 구간을 계산한다.
+
+## 8. L5: 누적 앱에 신뢰수준 입력 연결
+
+[앱 코드 편집기와 실행 화면](https://lunalab-ai.github.io/regre/apps/w03b/edit/index.html)을 연다. 데스크톱에서는 Shiny가 있는 기존 환경에서 `app/app.R`을 열어 실행한다. 이번 수업에서 설치를 필수로 요구하지 않는다.
+
+**목표:** 완성 앱을 실행하는 데서 멈추지 않고 입력과 결과를 연결한다. **계수 추론** 탭에서 기울기 귀무값을 0→12로, 신뢰수준을 95%→99%로 바꿔 본다. 회귀계수는 그대로이고 t·p 또는 구간이 바뀌는지 관찰한다.
+
+**직접 조립:** 편집기의 UI에서 `# L5-UI`를 찾는다. 바로 다음에 `selectInput("ci_custom", "내 신뢰수준", choices=c("90%"="0.90","95%"="0.95","99%"="0.99"), selected="0.99"),`를 추가한다. 마지막 쉼표는 다음 UI 요소와 구분하므로 남긴다. `# L5-SERVER` 아래의 `input$ci_level` 참조 두 곳을 `input$ci_custom`으로 바꾼다. **Re-run app**을 누르고 새 입력을 바꾸어 표와 구간 폭이 함께 달라지는지 확인한다. 입력 이름이 일치하지 않으면 반응형 계산이 준비되지 않는다.
+
+**힌트:** 기존 표준 입력은 남겨 둬도 되지만, 계산은 새 입력을 읽어야 한다. **자가 점검:** 새 90%와 99%에서 계수 추정값은 같은가? 현재 신뢰수준 안내와 구간도 같이 바뀌는가? 두 입력의 이름·서버 연결을 한 문장으로 설명하라. 교수자 완성판은 별도로 제공한다.
+
+## 9. 재시작·저장·수치 확인
+
+기본 셀들은 미완성 연습과 독립적이다. **R 세션 다시 시작**으로 객체를 초기화한 후 위에서부터 실행한다. 편집한 코드는 **내 R 코드 다운로드**로 저장한다. 브라우저 저장은 과제 제출이나 서버 백업이 아니다.
+
+::: {#cell-w03b-8 .browser-cell}
+
+```{webr}
+#| label: cell-w03b-8
+#| autorun: false
+#| persist: true
+stopifnot(nrow(repair)==14,df.residual(fit)==12,
+          abs(unname(coef(fit)["Units"])-15.5087719298246)<1e-9,
+          abs(sum(residuals(small_fit)^2)-.8)<1e-10,
+          max(abs(as.matrix(inference[,c("lower","upper")])-ci95))<1e-9,
+          all(diff(ci_comparison$width)>0))
+```
+
+:::
+
+참고: 주교재 3.4–3.7 및 [R lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html), [summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html), [confint](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html). 실제 회사의 14건과 작은 합성 자료를 구별한다.
+
+```{ojs}
+//| echo: false
+//| output: false
+courseRuntime = { window.courseR = await webROjs.webRPromise; return true; }
+```

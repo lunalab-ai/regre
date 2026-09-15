@@ -298,18 +298,70 @@
       "checks": [
         "stopifnot(nrow(repair)==14, abs(repair_summary$covariance-136)<1e-10, abs(curve_summary$correlation)<1e-10)"
       ]
+    },
+    {
+      "id": "w03b",
+      "title": "3주차 2차시 · 회귀계수 추정·검정·신뢰구간",
+      "cells": [
+        {
+          "id": "w03b-1",
+          "code": "locations <- c(\"data\", \"../../labs/student/w03b/data\", \"labs/student/w03b/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"slr-tools.R\"))][1]\nstopifnot(!is.na(data_dir))\nsource(file.path(data_dir,\"slr-tools.R\"))\nrepair <- read.table(file.path(data_dir,\"Computer.Repair.txt\"),header=TRUE)\nstopifnot(nrow(repair)==14)\nhead(repair)",
+          "exercise": false
+        },
+        {
+          "id": "w03b-2",
+          "code": "small <- data.frame(Units=1:4,Minutes=c(2,4,4,6))\nsmall_fit <- fit_repair(small)\ncoef(small_fit)\ndata.frame(small,fitted=fitted(small_fit),residual=residuals(small_fit))\nplot(Minutes~Units,data=small,pch=19,xlab=\"X (synthetic)\",ylab=\"Y (synthetic)\")\nabline(small_fit,col=\"#2864b4\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w03b-3",
+          "code": "x_try <- small$Units\ny_try <- small$Minutes\nsxx_try <- ...\nsxy_try <- ...\nb1_try <- sxy_try/sxx_try\nb1_try",
+          "exercise": true
+        },
+        {
+          "id": "w03b-4",
+          "code": "fit <- fit_repair(repair)\nsummary(fit)\ninference <- coefficient_inference(fit)\ninference\nplot(Minutes~Units,data=repair,pch=19,xlab=\"Units\",ylab=\"Minutes\")\nabline(fit,col=\"#2864b4\",lwd=2)\nsegments(repair$Units,repair$Minutes,repair$Units,fitted(fit),col=\"#d25340\")",
+          "exercise": false
+        },
+        {
+          "id": "w03b-5",
+          "code": "s_try <- sqrt(sum(residuals(fit)^2)/nrow(repair))\ns_try\nsummary(fit)$sigma",
+          "exercise": true
+        },
+        {
+          "id": "w03b-6",
+          "code": "ct_try <- summary(fit)$coefficients\nt12_try <- ...\np12_try <- 2*pt(-abs(t12_try),df=df.residual(fit))\nc(t=t12_try,p=p12_try)",
+          "exercise": true
+        },
+        {
+          "id": "w03b-7",
+          "code": "levels <- c(.90,.95,.99)\nci_comparison <- do.call(rbind,lapply(levels,function(level) {\n  ci <- confint(fit,parm=\"Units\",level=level)\n  data.frame(level=level,lower=ci[1],upper=ci[2],width=ci[2]-ci[1])\n}))\nci_comparison\nci95 <- confint(fit)\nci95",
+          "exercise": false
+        },
+        {
+          "id": "w03b-8",
+          "code": "stopifnot(nrow(repair)==14,df.residual(fit)==12,\n          abs(unname(coef(fit)[\"Units\"])-15.5087719298246)<1e-9,\n          abs(sum(residuals(small_fit)^2)-.8)<1e-10,\n          max(abs(as.matrix(inference[,c(\"lower\",\"upper\")])-ci95))<1e-9,\n          all(diff(ci_comparison$width)>0))",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(coef(fit)[2]-15.5087719298246)<1e-9,all(diff(ci_comparison$width)>0))"
+      ]
     }
   ],
   "source_sha256": {
-    "labs/student/week01/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
+    "labs/student/week01/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
     "labs/student/week01/week01_lab_student.qmd": "5b349fc9da2a144a101d3a23e3fef4d828bdaeae0228de11ce84c34bcf353fcf",
     "labs/student/w02a/w02a-r-basics.qmd": "4d50d70aca6a6a68903d7807c13d86ce2c4c9aa798374d0ea4a7c4fe48d1d8bd",
     "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
     "labs/student/w02b/data/r-syntax-tools.R": "cb2834855c0002375ddd222e023f86d83c2fdc6946483bf5f1f65aba88d5cd82",
     "labs/student/w02b/w02b-r-syntax-2.qmd": "d167bd9bf1b0882386eb0bbe4b34696c9a41ee7510bfe4e0ac03c62dda282100",
     "labs/student/w03a/data/association-tools.R": "e28a78dbbc17e87823d147905f08fb8ffbebd186932dec5cd1febd76f1b41106",
-    "labs/student/w03a/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
-    "labs/student/w03a/w03a-association.qmd": "e574780a9898ead1d14c4fd89135c88a9cca124e32e8000aa23addcc50d3104c"
+    "labs/student/w03a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/w03a/w03a-association.qmd": "e574780a9898ead1d14c4fd89135c88a9cca124e32e8000aa23addcc50d3104c",
+    "labs/student/w03b/data/slr-tools.R": "1fe6a67b20e2cc0950ced1db370ea63314dcbdbbd487e6f916f14c6a6aced9e3",
+    "labs/student/w03b/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/w03b/w03b-simple-regression.qmd": "123694b0a7666b692339019d5a0158372d5abf8bbbbb8b83420b322a86e29b7d"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

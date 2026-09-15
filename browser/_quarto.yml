@@ -7,6 +7,7 @@ project:
   - w02a.qmd
   - w02b.qmd
   - w03a.qmd
+  - w03b.qmd
 website:
   title: 회귀분석의 이해 · 온라인 실습
   site-url: https://lunalab-ai.github.io/regre/
@@ -22,6 +23,8 @@ website:
       href: w02b.qmd
     - text: w03a · 3주차 1차시 · 산점도·공분산·상관계수
       href: w03a.qmd
+    - text: w03b · 3주차 2차시 · 회귀계수 추정·검정·신뢰구간
+      href: w03b.qmd
 lang: ko
 engine: knitr
 format:

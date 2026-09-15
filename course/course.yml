@@ -174,6 +174,31 @@ sessions:
       적용됩니다.'
   browser_url: https://lunalab-ai.github.io/regre/w03a.html
   notion_url: https://fancy-ballcap-a15.notion.site/w03a-association-e08dc88a-3db7fd00109f819795aee9dbae9e1211
+- id: w03b
+  date: '2026-09-16'
+  title: '단순선형회귀모형: 회귀계수 추정·검정·신뢰구간과 R 실습'
+  pages:
+  - course/notion/w03b/w03b-simple-regression.md
+  labs:
+  - labs/student/w03b/w03b-simple-regression.R
+  - labs/student/w03b/w03b-simple-regression.qmd
+  - labs/student/w03b/app/app.R
+  quiz: course/quiz/w03b.yml
+  runtime_label: R · 계수 추정·검정·신뢰구간
+  browser_source: labs/student/w03b/w03b-simple-regression.qmd
+  browser_title: 3주차 2차시 · 회귀계수 추정·검정·신뢰구간
+  browser_resources:
+  - labs/student/w03b/data/slr-tools.R
+  - labs/student/w03b/data/Computer.Repair.txt
+  browser_checks:
+  - stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(coef(fit)[2]-15.5087719298246)<1e-9,all(diff(ci_comparison$width)>0))
+  browser_url: https://lunalab-ai.github.io/regre/w03b.html
+  announcement_guidance:
+  - 온라인 R 페이지를 열고 위에서부터 실행하세요. 설치·로그인·API 키는 필요 없습니다.
+  - 첫 접속은 R 런타임을 내려받으므로 인터넷이 필요합니다. 편집한 코드는 내 R 코드 다운로드로 보관하세요.
+  - 기존 수리시간 14건으로 최소제곱, 계수 검정, 신뢰구간을 확인하고 마지막에 누적 앱의 입력을 직접 연결합니다.
+  - 다운로드한 R/QMD는 동봉 data 폴더와 함께 사용하세요. 공통 코드 버전은 2026-fall-w03b입니다.
+  - 별도 성적 반영 과제나 제출 기한은 없습니다.
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -208,6 +233,14 @@ browser:
     - labs/student/w03a/data/Computer.Repair.txt
     - labs/student/w03a/data/r-syntax-tools.R
     - labs/student/w03a/data/w02b-observations.csv
+  - id: w03b
+    source: labs/student/w03b/app/app.R
+    data:
+    - labs/student/w03b/data/Computer.Repair.txt
+    - labs/student/w03b/data/slr-tools.R
+    - labs/student/w03b/data/association-tools.R
+    - labs/student/w03b/data/r-syntax-tools.R
+    - labs/student/w03b/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

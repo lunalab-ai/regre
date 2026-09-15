@@ -50,3 +50,26 @@ https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/anscombe.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html
 
 https://www.itl.nist.gov/div898/handbook/eda/section3/scatterp.htm
+
+## 단순선형회귀모형: 회귀계수 추정·검정·신뢰구간과 R 실습
+
+[강의 원문](../course/notion/w03b/w03b-simple-regression.md)
+
+- Ali S. Hadi·Samprit Chatterjee, 『Chatterjee 예제를 통한 회귀분석 제6판: R 활용』, 자유아카데미, 2024, 3.4–3.7, pp.100–114. 모형·추정·계수 검정·신뢰구간과 수리시간 사례를 참고했다.
+- [R lm 공식 문서](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html), [summary.lm 공식 문서](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html), [confint 공식 문서](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html), 2026-09-15 확인.
+- 수리시간 수치는 기존 수업의 14행 데이터를 R로 재계산했다. 그림 5와 9는 교재 그림 3.5·3.6의 수학적 관계를 새 배치로 독립 제작했다. 원본 스캔은 포함하지 않았다.
+- 그림 1·6·12는 독립 개념도, 2–4·8은 설명용 도식/합성 자료, 7·11은 참 계수를 명시한 정규오차 시뮬레이션, 10은 실제 수리자료의 계산이다. 시뮬레이션을 실제 회사의 추가 관측으로 해석하지 않는다.
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w03b/src/slr-api.md
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w03b/src/slr-tools.R
+
+https://lunalab-ai.github.io/regre/apps/w03b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w03b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
