@@ -347,21 +347,89 @@
       "checks": [
         "stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(coef(fit)[2]-15.5087719298246)<1e-9,all(diff(ci_comparison$width)>0))"
       ]
+    },
+    {
+      "id": "w04a",
+      "title": "4주차 1차시 · 예측·적합성·특수 회귀모형",
+      "cells": [
+        {
+          "id": "w04a-1",
+          "code": "locations <- c(\"data\",\"../../labs/student/w04a/data\",\"labs/student/w04a/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"prediction-tools.R\"))][1]\nstopifnot(!is.na(data_dir))\nsource(file.path(data_dir,\"slr-tools.R\"))\nsource(file.path(data_dir,\"prediction-tools.R\"))\nrepair <- read.table(file.path(data_dir,\"Computer.Repair.txt\"),header=TRUE)\nhead(repair)",
+          "exercise": false
+        },
+        {
+          "id": "w04a-2",
+          "code": "fit <- fit_repair(repair)\ncoef(fit)\nmean4 <- prediction_intervals(fit,4)\nnew4 <- prediction_intervals(fit,4,interval=\"prediction\")\nrbind(mean4,new4)",
+          "exercise": false
+        },
+        {
+          "id": "w04a-3",
+          "code": "newdata_try <- data.frame(Units=...)\nmean_try <- predict(fit,newdata=newdata_try,interval=...)\nsingle_try <- predict(fit,newdata=newdata_try,interval=...)\nrbind(mean_try,single_try)",
+          "exercise": true
+        },
+        {
+          "id": "w04a-4",
+          "code": "positions <- c(4,6,10,11)\ninterval_comparison <- rbind(prediction_intervals(fit,positions),\n                             prediction_intervals(fit,positions,interval=\"prediction\"))\ninterval_comparison\ngrid <- prediction_intervals(fit,seq(1,11,length.out=101))\nplot(Minutes~Units,data=repair,pch=19,xlim=c(1,11),ylim=c(0,195),\n     xlab=\"Units\",ylab=\"Minutes\",main=\"Pointwise mean-response CI\")\nlines(grid$Units,grid$fit,col=\"#2864b4\",lwd=2)\nlines(grid$Units,grid$lower,col=\"#168c82\",lty=2)\nlines(grid$Units,grid$upper,col=\"#168c82\",lty=2)\nabline(v=10,col=\"#d25340\",lty=3)",
+          "exercise": false
+        },
+        {
+          "id": "w04a-5",
+          "code": "broken_try <- predict(fit,newdata=data.frame(units=4),interval=\"confidence\")\nbroken_try",
+          "exercise": true
+        },
+        {
+          "id": "w04a-6",
+          "code": "fit_summary <- regression_fit_summary(fit)\nfit_summary\ncor(repair$Units,repair$Minutes)^2",
+          "exercise": false
+        },
+        {
+          "id": "w04a-7",
+          "code": "y_try <- repair$Minutes\nyhat_try <- fitted(fit)\nsst_try <- ...\nssr_try <- ...\nsse_try <- ...\nr2_try <- ...\nc(SST=sst_try,SSR=ssr_try,SSE=sse_try,R2=r2_try)",
+          "exercise": true
+        },
+        {
+          "id": "w04a-8",
+          "code": "origin_fit <- lm(Minutes~0+Units,data=repair)\norigin_summary <- regression_fit_summary(origin_fit)\nrbind(intercept=fit_summary,origin=origin_summary)",
+          "exercise": false
+        },
+        {
+          "id": "w04a-9",
+          "code": "mean_fit <- lm(Minutes~1,data=repair)\ncoef(mean_fit)\nmean(repair$Minutes)",
+          "exercise": false
+        },
+        {
+          "id": "w04a-10",
+          "code": "before_try <- c(9,11,10,12,13,8)\nafter_try <- c(8,9,6,9,8,6)\nd_try <- ...\npaired_fit_try <- lm(...)\nsummary(paired_fit_try)\nt.test(before_try,after_try,paired=TRUE,mu=0,alternative=\"two.sided\")",
+          "exercise": true
+        },
+        {
+          "id": "w04a-11",
+          "code": "stopifnot(nrow(repair)==14,df.residual(fit)==12,\n          abs(mean4$fit-66.1967418546366)<1e-8,\n          new4$width>mean4$width,\n          abs(fit_summary$R_squared-cor(repair$Units,repair$Minutes)^2)<1e-10,\n          origin_summary$baseline==\"zero\",df.residual(mean_fit)==13)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(mean4$fit-66.1967418546366)<1e-8,new4$width>mean4$width,abs(fit_summary$R_squared-.987437198062)<1e-10,origin_summary$baseline==\"zero\")"
+      ]
     }
   ],
   "source_sha256": {
-    "labs/student/week01/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/week01/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
     "labs/student/week01/week01_lab_student.qmd": "5b349fc9da2a144a101d3a23e3fef4d828bdaeae0228de11ce84c34bcf353fcf",
     "labs/student/w02a/w02a-r-basics.qmd": "4d50d70aca6a6a68903d7807c13d86ce2c4c9aa798374d0ea4a7c4fe48d1d8bd",
     "labs/student/w02b/data/w02b-observations.csv": "f6ebba26b6ed30c41394497feb2f056f4baee5410581f855552d47a5f2a481cf",
     "labs/student/w02b/data/r-syntax-tools.R": "cb2834855c0002375ddd222e023f86d83c2fdc6946483bf5f1f65aba88d5cd82",
     "labs/student/w02b/w02b-r-syntax-2.qmd": "d167bd9bf1b0882386eb0bbe4b34696c9a41ee7510bfe4e0ac03c62dda282100",
     "labs/student/w03a/data/association-tools.R": "e28a78dbbc17e87823d147905f08fb8ffbebd186932dec5cd1febd76f1b41106",
-    "labs/student/w03a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/w03a/data/Computer.Repair.txt": "988b0a5d0a7e60feabe098268fa1dc2e5d452c430b7bf14016c213e50c3ced62",
     "labs/student/w03a/w03a-association.qmd": "e574780a9898ead1d14c4fd89135c88a9cca124e32e8000aa23addcc50d3104c",
     "labs/student/w03b/data/slr-tools.R": "1fe6a67b20e2cc0950ced1db370ea63314dcbdbbd487e6f916f14c6a6aced9e3",
     "labs/student/w03b/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
-    "labs/student/w03b/w03b-simple-regression.qmd": "123694b0a7666b692339019d5a0158372d5abf8bbbbb8b83420b322a86e29b7d"
+    "labs/student/w03b/w03b-simple-regression.qmd": "123694b0a7666b692339019d5a0158372d5abf8bbbbb8b83420b322a86e29b7d",
+    "labs/student/w04a/data/slr-tools.R": "1fe6a67b20e2cc0950ced1db370ea63314dcbdbbd487e6f916f14c6a6aced9e3",
+    "labs/student/w04a/data/prediction-tools.R": "e21ad4b01d75a72825db3d2338c4b972d74834b7c8fa1dfa73ae58120de7c755",
+    "labs/student/w04a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
+    "labs/student/w04a/w04a-prediction.qmd": "46dd54e026b29f2baf691f7765c0338a8c4bbbbecba1465706b61cdb2903c4bf"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

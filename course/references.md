@@ -73,3 +73,30 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+## 단순선형회귀모형 마무리: 예측·적합성·특수 회귀모형
+
+[강의 원문](../course/notion/w04a/w04a-prediction.md)
+
+- 주교재: Hadi·Chatterjee, 『Chatterjee 예제를 통한 회귀분석 제6판: R 활용』, 자유아카데미(2024), 3.8–3.12, pp.115–126. 용어·수식 관계와 장 순서를 따르며 설명은 수업용으로 새로 작성했다.
+- R 공식 문서: [predict.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html), [summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html), [lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html), [t.test](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html). 2026-09-20 확인.
+- 수리자료는 이전 차시와 동일한 공개 수업 자료를 재사용했다. 수치와 그림은 반올림 전 14행으로 다시 계산했다. 작은 네 점, 곡선 예시, 대응표본은 별도로 만든 합성 자료다.
+- 모든 그림은 수학적 관계와 실제 계산을 바탕으로 독립 제작했다. 교재 스캔을 사용하지 않았다. 외삽·인과성·R² 비교의 주의, F와 t의 연결, 웹앱 활동은 이해를 돕기 위한 수업의 추가 설명이다.
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w04a/src/prediction-api.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w04a-quiz.md
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w04a/labs/student/w04a
+
+https://lunalab-ai.github.io/regre/apps/w04a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w04a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html

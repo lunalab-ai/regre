@@ -200,6 +200,33 @@ sessions:
   - 다운로드한 R/QMD는 동봉 data 폴더와 함께 사용하세요. 공통 코드 버전은 2026-fall-w03b입니다.
   - 별도 성적 반영 과제나 제출 기한은 없습니다.
   notion_url: https://app.notion.com/p/W03b-3dc7fd00109f812bb7f5cd153db3045c?source=copy_link
+- id: w04a
+  date: '2026-09-21'
+  title: '단순선형회귀모형 마무리: 예측·적합성·특수 회귀모형'
+  pages:
+  - course/notion/w04a/w04a-prediction.md
+  labs:
+  - labs/student/w04a/w04a-prediction.R
+  - labs/student/w04a/w04a-prediction.qmd
+  - labs/student/w04a/app/app.R
+  quiz: course/quiz/w04a.yml
+  runtime_label: R · 예측구간·적합성·특수 회귀모형
+  browser_source: labs/student/w04a/w04a-prediction.qmd
+  browser_title: 4주차 1차시 · 예측·적합성·특수 회귀모형
+  browser_resources:
+  - labs/student/w04a/data/slr-tools.R
+  - labs/student/w04a/data/prediction-tools.R
+  - labs/student/w04a/data/Computer.Repair.txt
+  browser_checks:
+  - stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(mean4$fit-66.1967418546366)<1e-8,new4$width>mean4$width,abs(fit_summary$R_squared-.987437198062)<1e-10,origin_summary$baseline=="zero")
+  browser_url: https://lunalab-ai.github.io/regre/w04a.html
+  announcement_guidance:
+  - 주교재 3.8–3.12를 다루며 지난 단순회귀의 기초를 복습하고 마무리합니다.
+  - 온라인 R은 설치·로그인 없이 실행합니다. 첫 접속에는 R 런타임 다운로드를 위한 인터넷이 필요합니다.
+  - 편집한 코드는 내 R 코드 다운로드로 보관하고, R 세션 다시 시작 후 기본 셀을 위에서부터 실행하세요.
+  - 마지막 누적 앱에서 구간 종류 입력을 직접 연결합니다. 다운로드판은 data 폴더를 함께 유지하세요. 공통 코드 버전은 2026-fall-w04a입니다.
+  - 별도 성적 반영 과제나 제출 기한은 없습니다.
+  notion_url: https://fancy-ballcap-a15.notion.site/W04A-2026-09-21-3e17fd00109f81168b6ccf9faa2e8245
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -242,6 +269,15 @@ browser:
     - labs/student/w03b/data/association-tools.R
     - labs/student/w03b/data/r-syntax-tools.R
     - labs/student/w03b/data/w02b-observations.csv
+  - id: w04a
+    source: labs/student/w04a/app/app.R
+    data:
+    - labs/student/w04a/data/association-tools.R
+    - labs/student/w04a/data/Computer.Repair.txt
+    - labs/student/w04a/data/prediction-tools.R
+    - labs/student/w04a/data/r-syntax-tools.R
+    - labs/student/w04a/data/slr-tools.R
+    - labs/student/w04a/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
