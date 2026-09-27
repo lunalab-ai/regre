@@ -514,8 +514,8 @@
     "labs/student/w04a/data/prediction-tools.R": "e21ad4b01d75a72825db3d2338c4b972d74834b7c8fa1dfa73ae58120de7c755",
     "labs/student/w04a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
     "labs/student/w04a/w04a-prediction.qmd": "46dd54e026b29f2baf691f7765c0338a8c4bbbbecba1465706b61cdb2903c4bf",
-    "labs/student/w05a/data/mlr-tools.R": "3dded38fb690f9f9ad08a0e3c66ba2f389184d9e9ef5bb8bd5096723e45cf8ba",
-    "labs/student/w05a/w05a-multiple-regression.qmd": "a7863a6c94ba907bc671d8ecb4628410d6eb63180e3b12d4ea3d750e0b2e014f"
+    "labs/student/w05a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
+    "labs/student/w05a/w05a-multiple-regression.qmd": "7139343ef1f86ce16bc9294961f49f0ab47894b478d1cdcb6f2547a830a32a35"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

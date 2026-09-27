@@ -4,7 +4,7 @@
 
 주교재 **4.1 소개, 4.2 데이터와 모형에 대한 서술, 4.3 감독자 직무수행능력 데이터, 4.4 모수 추정, 4.5 회귀계수에 대한 해석**을 다룹니다. 모형을 읽고, 추정하고, 다른 조건이 같은 비교를 해석하는 것이 이번 시간의 목표입니다.
 
-[별도 보강: 설명편차에서 R²까지](https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-r2-remediation.md) · [온라인 R](https://lunalab-ai.github.io/regre/w05a.html) · [Colab B: 다중회귀](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a/notebooks/student/w05a_multiple_regression.ipynb) · [누적 웹 앱](https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html)
+[별도 보강: 설명편차에서 R²까지](https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-r2-remediation.md) · [온라인 R](https://lunalab-ai.github.io/regre/w05a.html) · [Colab B: 다중회귀](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a-v2/notebooks/student/w05a_multiple_regression.ipynb) · [누적 웹 앱](https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html)
 
 ## 1. 오늘의 연결: 비교 기준은 그대로, 설명변수는 여러 개
 
@@ -336,7 +336,7 @@ $$
 | `predict(fit2, newdata=...)` | 적합 모형·새 조건 표 → 예측값 | 같은 조건 비교 |
 | `model.matrix(fit2)` | 적합 모형 → 설계행렬 | 절편 열과 설명변수 열 확인 |
 
-[공통 함수 정의와 입력·출력 설명](https://github.com/lunalab-ai/regre/blob/2026-fall-w05a/src/mlr-api.md)을 실습 옆에 두었습니다. 각 이름은 실제 정의 줄로 연결됩니다. 코드와 링크는 같은 고정 버전 `2026-fall-w05a`를 사용합니다.
+[공통 함수 정의와 입력·출력 설명](https://github.com/lunalab-ai/regre/blob/2026-fall-w05a-v2/src/mlr-api.md)을 실습 옆에 두었습니다. 각 이름은 실제 정의 줄로 연결됩니다. 코드와 링크는 같은 고정 버전 `2026-fall-w05a-v2`를 사용합니다.
 
 ![데이터를 모형에 적합하고 같은 공통 계산을 표와 그래프와 앱으로 연결하는 구조](assets/m11-lab-flow.png)
 

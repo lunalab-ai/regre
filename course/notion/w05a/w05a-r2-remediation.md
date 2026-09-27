@@ -4,7 +4,7 @@
 
 **이 자료의 목표는 공식을 외우는 것이 아니라, 세 제곱합이 무엇을 비교하는지 말로 설명하는 것입니다.** 지난 단순회귀에서 배운 내용을 다시 연결합니다. 먼저 1~5절을 읽고, 계산을 확인할 때 6~8절로 돌아오세요. 마지막 선택 보충은 증명이 궁금할 때 읽습니다.
 
-[온라인 R 실습](https://lunalab-ai.github.io/regre/w05a.html) · [Colab A: 편차와 R²](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a/notebooks/student/w05a_deviations.ipynb) · [직접 조작하는 웹 앱](https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html) · [본 강의노트](https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-multiple-regression.md)
+[온라인 R 실습](https://lunalab-ai.github.io/regre/w05a.html) · [Colab A: 편차와 R²](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a-v2/notebooks/student/w05a_deviations.ipynb) · [직접 조작하는 웹 앱](https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html) · [본 강의노트](https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-multiple-regression.md)
 
 ## 1. 출발점: 설명변수 없이 예측한다면?
 

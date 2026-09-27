@@ -41,7 +41,7 @@ origin_model <- lm(Minutes~0+Units,data=repair)
 mean_model <- lm(Minutes~1,data=repair)
 
 
-# W05A API: https://github.com/lunalab-ai/regre/blob/2026-fall-w05a/src/mlr-api.md
+# W05A API: https://github.com/lunalab-ai/regre/blob/2026-fall-w05a-v2/src/mlr-api.md
 # Each helper links to the exact definition. Percentage changes are percentage points.
 source(file.path(dirname(slr_path), "mlr-tools.R"))
 attitude_data <- datasets::attitude
@@ -65,7 +65,7 @@ ui <- fluidPage(
           numericInput("dev_intercept","후보 절편",value=1,step=.2),
           numericInput("dev_slope","후보 기울기",value=1.2,step=.1),
           helpText("후보의 SSE와 최소제곱 SSE=0.8을 비교하세요. 후보를 바꾸어도 오른쪽 OLS 편차 정의는 바뀌지 않습니다."),
-          tags$a(href="https://github.com/lunalab-ai/regre/blob/2026-fall-w05a/src/mlr-api.md",target="_blank","공통 함수 설명·정의 바로가기")
+          tags$a(href="https://github.com/lunalab-ai/regre/blob/2026-fall-w05a-v2/src/mlr-api.md",target="_blank","공통 함수 설명·정의 바로가기")
         ),
         mainPanel(
           textOutput("dev_message"),

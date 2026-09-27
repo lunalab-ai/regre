@@ -1,6 +1,6 @@
-# W05A regression helpers | version: 2026-fall-w05a
+# W05A regression helpers | version: 2026-fall-w05a-v2
 # Pure computations use base R; no downloads, package installation or input mutation.
-# Canonical source: https://github.com/lunalab-ai/regre/blob/2026-fall-w05a/src/mlr-tools.R
+# Canonical source: https://github.com/lunalab-ai/regre/blob/2026-fall-w05a-v2/src/mlr-tools.R
 
 # Numeric complete data guard. Returns the original data invisibly; errors are explicit.
 validate_numeric_frame <- function(data, columns) {
