@@ -100,3 +100,51 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html
+
+## 다중선형회귀모형과 모수 추정: 평균 예측에서 여러 설명변수로
+
+[강의 원문](../course/notion/w05a/w05a-multiple-regression.md)
+
+- 주교재: 『Chatterjee 예제를 통한 회귀분석 제6판: R 활용』, 4.1–4.5, pp.136–145(4.6 시작 전). 표4.2는 선별 원본 발췌, 나머지 도식·그래프는 실제 계산과 명시한 합성 자료로 제작했습니다. 3.9절 보강은 별도 자료입니다.
+- [R attitude](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html), [lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html), [summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html), [predict.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html), [model.matrix](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/model.matrix.html). 2026-09-28 확인.
+- 퍼센트포인트 해석, 평균 기준 손실 비교, 고정 단면, 인과성·외삽의 주의와 앱 조립 활동은 이해를 돕는 추가 설명입니다. 이번 범위 이후의 검정·예측구간을 이미 학습한 것으로 전제하지 않습니다.
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a/notebooks/student/w05a_multiple_regression.ipynb
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w05a/src/mlr-api.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w05a-quiz.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-r2-remediation.md
+
+https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w05a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/model.matrix.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+[강의 원문](../course/notion/w05a/w05a-r2-remediation.md)
+
+- 주교재 3.9, pp.117–121, 식3.44–3.47 및 그림3.7을 기준으로 용어와 관계를 설명했습니다. 그림3.7은 원본 발췌, 나머지는 독립 제작입니다.
+- [R 공식 summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html): R²의 기준과 잔차분산. [lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html): 최소제곱 적합과 절편. 2026-09-28 확인.
+- 네 점은 수업용 합성 자료입니다. 실제 조사 자료나 새로운 실험 결과로 해석하지 않습니다. 방향 화살표·단계적 비교·오해 점검은 수업을 위해 추가한 설명입니다.
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a/notebooks/student/w05a_deviations.ipynb
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-multiple-regression.md
+
+https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w05a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html

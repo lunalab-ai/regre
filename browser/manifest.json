@@ -411,6 +411,90 @@
       "checks": [
         "stopifnot(nrow(repair)==14,df.residual(fit)==12,abs(mean4$fit-66.1967418546366)<1e-8,new4$width>mean4$width,abs(fit_summary$R_squared-.987437198062)<1e-10,origin_summary$baseline==\"zero\")"
       ]
+    },
+    {
+      "id": "w05a",
+      "title": "5주차 1차시 · 편차에서 다중회귀까지",
+      "cells": [
+        {
+          "id": "w05a-1",
+          "code": "locations <- c(\"data\", \"src\", \"../../labs/student/w05a/data\", \"labs/student/w05a/data\")\ndata_dir <- locations[file.exists(file.path(locations, \"mlr-tools.R\"))][1]\nstopifnot(!is.na(data_dir))\nsource(file.path(data_dir, \"mlr-tools.R\"))\nR.version.string",
+          "exercise": false
+        },
+        {
+          "id": "w05a-2",
+          "code": "toy <- four_points()\nmean_fit <- lm(y ~ 1, data=toy)\ntoy_fit <- lm(y ~ x, data=toy)\ncoef(mean_fit)\ncoef(toy_fit)\nplot_deviation_story(selected=4, mode=\"three\")",
+          "exercise": false
+        },
+        {
+          "id": "w05a-3",
+          "code": "toy_ss <- ss_decomposition(toy_fit)\nround(toy_ss$points, 3)\nround(toy_ss$summary, 4)\nplot_deviation_story(selected=2, mode=\"three\")",
+          "exercise": false
+        },
+        {
+          "id": "w05a-4",
+          "code": "# L1: 아래 줄의 #를 지우고 직접 완성하세요.\n# point2 <- toy_ss$points[2, ]\n# point2[c(\"total\", \"explained\", \"residual\")]\n# sum(toy_ss$points$cross_term)\ninvisible(NULL)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-5",
+          "code": "candidate <- candidate_line(intercept=4, slope=0)\ncandidate$SSE\n# L2: 다른 절편과 기울기로 candidate_line(...)을 실행하세요.\n# chosen <- candidate_line(intercept=..., slope=...)\n# chosen$SSE\ninvisible(NULL)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-6",
+          "code": "d <- datasets::attitude\nstr(d)\nhead(d)\nfit2 <- lm(rating ~ complaints + privileges, data=d)\ncoef(fit2)\nhead(model.matrix(fit2))\nfit_helper <- fit_attitude(d)\nstopifnot(isTRUE(all.equal(coef(fit2), coef(fit_helper))))",
+          "exercise": false
+        },
+        {
+          "id": "w05a-7",
+          "code": "conditions <- predict_conditions(fit2, c(60,70), c(50,50))\nconditions\ndelta <- diff(conditions$rating_hat)\ndelta\n10*coef(fit2)[\"complaints\"]\nplot_conditional_slice(fit2, privileges=50)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-8",
+          "code": "# L3: 아래는 의도와 다른 코드입니다. 실행 전에 수정하세요.\n# wrong <- predict_conditions(fit2, c(60,70), c(50,60))\n# diff(wrong$rating_hat)\ninvisible(NULL)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-9",
+          "code": "residual_table <- data.frame(department=seq_len(nrow(d)),\n  actual=d$rating, fitted=fitted(fit2), residual=residuals(fit2))\nhead(residual_table)\nSSE <- sum(resid(fit2)^2)\nresidual_df <- df.residual(fit2)\nsigma2 <- SSE/residual_df\nc(SSE=SSE, df=residual_df, sigma2=sigma2, sigma=sqrt(sigma2))\nround(ss_decomposition(fit2)$summary, 4)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-10",
+          "code": "# L4: 추정한 계수 수를 반영하여 분모를 수정하세요.\n# variance_try <- SSE / nrow(d)\n# crossprod(model.matrix(fit2), resid(fit2))\ninvisible(NULL)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-11",
+          "code": "partial <- partial_regression(d)\ncoef(partial$residual_fit)\ncoef(fit2)[\"privileges\"]\nplot(partial$points$rx,partial$points$ry,pch=19,col=\"#087f8c\",\n     xlab=\"Residual privileges\",ylab=\"Residual rating\")\nabline(partial$residual_fit,col=\"#d95d52\",lwd=2)\nabline(h=0,v=0,col=\"gray70\",lty=2)\nraw_slope <- coef(lm(rating ~ privileges,data=d))[2]\nc(raw=unname(raw_slope), adjusted=partial$slope)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-12",
+          "code": "comparison <- compare_attitude_models(d)\ncomparison\nbarplot(comparison$SSE,names.arg=comparison$model,col=\"#087f8c\",\n        ylab=\"Training SSE\",main=\"Same response and same rows\")",
+          "exercise": false
+        },
+        {
+          "id": "w05a-13",
+          "code": "# L5: 같은 complaints로 양쪽을 잔차화하세요.\n# ry <- resid(lm(..., data=d))\n# rx <- resid(lm(..., data=d))\n# coef(lm(ry ~ rx))\ninvisible(NULL)",
+          "exercise": false
+        },
+        {
+          "id": "w05a-14",
+          "code": "cat(\"웹 앱: https://lunalab-ai.github.io/regre/apps/w05a/edit/index.html\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w05a-15",
+          "code": "stopifnot(nrow(toy)==4, abs(coef(toy_fit)[2]-1.2)<1e-10,\n  abs(toy_ss$summary$SST-8)<1e-10, abs(toy_ss$summary$SSR-7.2)<1e-10,\n  abs(toy_ss$summary$SSE-.8)<1e-10, abs(toy_ss$summary$R2-.9)<1e-10,\n  max(abs(with(toy_ss$points,total-explained-residual)))<1e-10)\ncat(\"W05A_DEVIATIONS_CHECKS_PASSED\n\")\nstopifnot(nrow(d)==30, ncol(d)==7, df.residual(fit2)==27,\n  abs(coef(fit2)[\"complaints\"]-.780343397617943)<1e-8,\n  abs(SSE-1361.8638524)<1e-5,\n  abs(partial$slope-coef(fit2)[\"privileges\"])<1e-10,\n  abs(delta-10*coef(fit2)[\"complaints\"])<1e-10,\n  all(diff(comparison$SSE)<=1e-8),\n  max(abs(crossprod(model.matrix(fit2),resid(fit2))))<1e-8)\ncat(\"W05A_MULTIPLE_CHECKS_PASSED\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(d)==30,df.residual(fit2)==27,abs(SSE-1361.8638524)<1e-5,abs(toy_ss$summary$R2-.9)<1e-10,abs(partial$slope-coef(fit2)[\"privileges\"])<1e-10)"
+      ]
     }
   ],
   "source_sha256": {
@@ -429,7 +513,9 @@
     "labs/student/w04a/data/slr-tools.R": "1fe6a67b20e2cc0950ced1db370ea63314dcbdbbd487e6f916f14c6a6aced9e3",
     "labs/student/w04a/data/prediction-tools.R": "e21ad4b01d75a72825db3d2338c4b972d74834b7c8fa1dfa73ae58120de7c755",
     "labs/student/w04a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
-    "labs/student/w04a/w04a-prediction.qmd": "46dd54e026b29f2baf691f7765c0338a8c4bbbbecba1465706b61cdb2903c4bf"
+    "labs/student/w04a/w04a-prediction.qmd": "46dd54e026b29f2baf691f7765c0338a8c4bbbbecba1465706b61cdb2903c4bf",
+    "labs/student/w05a/data/mlr-tools.R": "3dded38fb690f9f9ad08a0e3c66ba2f389184d9e9ef5bb8bd5096723e45cf8ba",
+    "labs/student/w05a/w05a-multiple-regression.qmd": "a7863a6c94ba907bc671d8ecb4628410d6eb63180e3b12d4ea3d750e0b2e014f"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
