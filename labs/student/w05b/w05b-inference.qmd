@@ -37,7 +37,7 @@ predict(fit2,newdata=conditions)
 
 ### L1 · 예측–실행–설명
 
-learning=55로 고정하고 complaints를60에서65로 바꾼 예측 차이를 구하세요. 계수와 단위를 포함해 문장으로 쓰세요.
+learning=55로 고정하고 complaints를 60에서 65로 바꾼 예측 차이를 구하세요. 계수와 단위를 포함해 문장으로 쓰세요.
 
 ```{r}
 # new_rows <- data.frame(complaints=c(60,65),learning=c(55,55))
@@ -89,9 +89,9 @@ training_scale
 # pred_back <- ...
 ```
 
-## 4. 반복표본: 오차 규모와 계수의 흔들림
+## 4. 반복 표본: 오차 규모와 계수의 흔들림
 
-[mlr_simulate 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L130)는 고정X, 참 계수(10,.65,.20), 독립 정규오차로 B개 모의 자료를 적합합니다. B=1000, sigma_error=7, seed=730이 기본입니다. draws는 B×3 계수표, summary는 이론·경험 표준편차입니다. 실제 rating을 다시 수집하지 않으며 난수 상태를 복원합니다.
+[mlr_simulate 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L130)는 고정 X, 참 계수(10,.65,.20), 독립 정규오차로 B개 모의 자료를 적합합니다. B=1000, sigma_error=7, seed=730이 기본입니다. draws는 B×3 계수표, summary는 이론·경험 표준편차입니다. 실제 rating을 다시 수집하지 않으며 난수 상태를 복원합니다.
 
 ```{r}
 simulation <- mlr_simulate(B=1000,sigma_error=7,seed=730)
@@ -103,7 +103,7 @@ abline(v=.65,col="#d95d52",lwd=3)
 
 ### L4 · 예측–실행–설명
 
-같은seed에서 오차 표준편차를14로 바꾸세요. 계수 분포의 중심과 폭은 각각 어떻게 달라질까요? 추정 오차와 표준오차를 구분해 설명하세요.
+같은 seed에서 오차 표준편차를 14로 바꾸세요. 계수 분포의 중심과 폭은 각각 어떻게 달라질까요? 추정 오차와 표준오차를 구분해 설명하세요.
 
 ```{r}
 # larger_noise <- mlr_simulate(B=1000,sigma_error=...,seed=730)
@@ -112,7 +112,7 @@ abline(v=.65,col="#d95d52",lwd=3)
 
 ## 5. R, R²와 수정 R²
 
-y와 ŷ의 상관과 전체 손실 감소를 비교합니다. 절편 포함 OLS이며 두 모형 모두 동일30행을 씁니다. 평균만 모형은 ŷ가상수이므로 상관계수식의 예외입니다.
+y와 ŷ의 상관과 전체 손실 감소를 비교합니다. 절편 포함 OLS이며 두 모형 모두 동일한 30행을 씁니다. 평균만 모형은 ŷ가 상수이므로 상관계수식의 예외입니다.
 
 ```{r}
 fit_comparison <- do.call(rbind,lapply(list(two=fit2,six=fit6),function(m)
@@ -126,7 +126,7 @@ stopifnot(abs(cor(d$rating,fitted(fit2))^2-summary(fit2)$r.squared)<1e-10)
 
 ## 6. 계수표와 부분 F검정
 
-[mlr_coefficient_table 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L21)는 적합된 lm을 받아 계수순서의 estimate/SE/t/p/CI 표를 만듭니다. level=.95, null=0이 기본이며 재적합하지 않습니다. [mlr_nested_f 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L37)는 두 lm의 반응·행 순서·내포성을 확인하고 q, df_full, SSE, F, p 한 행을 반환합니다.
+[mlr_coefficient_table 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L21)는 적합된 lm을 받아 계수 순서의 estimate/SE/t/p/CI 표를 만듭니다. level=.95, null=0이 기본이며 재적합하지 않습니다. [mlr_nested_f 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L37)는 두 lm의 반응·행 순서·내포성을 확인하고 q, df_full, SSE, F, p 한 행을 반환합니다.
 
 ```{r}
 coefficient_table <- mlr_coefficient_table(fit6)
@@ -138,7 +138,7 @@ anova(fit2,fit6)
 
 ### L5 · 예측–실행–설명
 
-부분 F의분자와분모를 직접 만들고 q=4,분모자유도23을확인하세요. 이어 두변수모형에서learning=0인 한 제약에대해F=t²를확인하세요.
+부분 F의 분자와 분모를 직접 만들고 q=4, 분모 자유도=23을 확인하세요. 이어 두 변수 모형에서 learning의 계수가 0이라는 한 제약에 대해 F=t²를 확인하세요.
 
 ```{r}
 # manual_F <- ((deviance(fit2)-deviance(fit6))/...)/(deviance(fit6)/...)
@@ -146,9 +146,9 @@ anova(fit2,fit6)
 # t_value <- ...
 ```
 
-## 7. 동일성·합제약: 어느 계수를 묶었는가
+## 7. 동일성·합 제약: 어느 계수를 묶었는가
 
-[mlr_linear_test 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L59)는 적합lm, q×k 제약행렬L, 귀무값r(기본 0)을 받아 F표를 반환합니다. L의 열은 coef 순서와 같아야 합니다. `vcov()`의 공분산을 포함합니다. 아래 L=(0,1,-1)은두 기울기 차이=0입니다.
+[mlr_linear_test 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L59)는 적합된 lm, q×k 제약행렬 L, 귀무값 r(기본 0)을 받아 F 표를 반환합니다. L의 열은 coef 순서와 같아야 합니다. `vcov()`의 공분산을 포함합니다. 아래 L=(0,1,-1)은 두 기울기 차이=0입니다.
 
 ```{r}
 names(coef(fit2))
@@ -160,7 +160,7 @@ sum_test
 
 ### L6 · 예측–실행–설명
 
-합 제약을 변환 반응 회귀로 적합한 뒤 원래 rating의 예측과 SSE로 복원하세요. 일반 선형 가설과 F가 같은 지검 산하세요. 두 반응의 모형을 anova로 직접 비교하지 마세요.
+합 제약을 변환 반응 회귀로 적합한 뒤 원래 rating의 예측과 SSE로 복원하세요. 일반 선형 가설과 F가 같은지 검산하세요. 두 반응의 모형을 anova로 직접 비교하지 마세요.
 
 ```{r}
 # constrained <- lm(I(rating-learning)~I(complaints-learning),data=d)
@@ -168,9 +168,9 @@ sum_test
 # restricted_SSE <- ...
 ```
 
-## 8. 같은조건의평균CI와새부서PI
+## 8. 같은 조건의 평균 CI와 새 부서 PI
 
-[mlr_interval_comparison 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L77)는 lm과 원 단위 새 조건 data.frame을 받아 조건마다 confidence/prediction 두 행을 반환합니다. fit/lower/upper/width/h0/level을 읽으세요. level =.95,noise _multiplier =1이 기본이며 배율을 바꾸면 실제 재적합이 아닌 가상 오차 시나리오입니다.
+[mlr_interval_comparison 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L77)는 lm과 원 단위 새 조건 data.frame을 받아 조건마다 confidence/prediction 두 행을 반환합니다. fit/lower/upper/width/h0/level을 읽으세요. level=.95, noise_multiplier=1이 기본이며 배율을 바꾸면 실제 재적합이 아닌 가상 오차 시나리오입니다.
 
 ```{r}
 new_department <- data.frame(complaints=mean(d$complaints),learning=mean(d$learning))
@@ -184,7 +184,7 @@ segments(intervals$lower,2:1,intervals$upper,2:1,lwd=4,col=c("#087f8c","#d95d52"
 
 ### L7 · 예측–실행–설명
 
-level =.99의 두 구간을 계산하고 중심과 폭을 95%와 비교하세요. 다음 부서 하나에 해당하는 행을 선택하세요.
+level=.99의 두 구간을 계산하고 중심과 폭을 95%와 비교하세요. 다음 부서 하나에 해당하는 행을 선택하세요.
 
 ```{r}
 # intervals99 <- mlr_interval_comparison(fit2,new_department,level=...)
@@ -193,7 +193,7 @@ level =.99의 두 구간을 계산하고 중심과 폭을 95%와 비교하세요
 
 ## 9. 마지막: 웹 앱에서 내 코드 연결하기
 
-[누적 Shiny 편집기](https://lunalab-ai.github.io/regre/apps/w05b/edit/index.html)를 엽니다. W05B 예측 탭에서 구간 종류를 바꿔 보고, 코드의`W05B-L8`표식을 찾으세요. 입력→`selected_interval()`→출력의 연결을 수정합니다. Colab 안에서 별도 Shiny 서버를 띄울 필요는 없습니다. 편집기에서 재실행하고 수정 코드를 다운로드합니다.
+[누적 Shiny 편집기](https://lunalab-ai.github.io/regre/apps/w05b/edit/index.html)를 엽니다. W05B 예측 탭에서 구간 종류를 바꿔 보고, 코드의 `W05B-L8` 표식을 찾으세요. 입력→`selected_interval()`→출력의 연결을 수정합니다. Colab 안에서 별도 Shiny 서버를 띄울 필요는 없습니다. 편집기에서 재실행하고 수정 코드를 다운로드합니다.
 
 ```{r}
 # 웹 앱은 위 링크의 편집기에서 실행합니다. 여기서는 같은 계산을 다시 확인합니다.

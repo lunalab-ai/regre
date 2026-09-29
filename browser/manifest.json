@@ -622,7 +622,7 @@
     "labs/student/w05a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
     "labs/student/w05a/w05a-multiple-regression.qmd": "7139343ef1f86ce16bc9294961f49f0ab47894b478d1cdcb6f2547a830a32a35",
     "labs/student/w05b/data/mlr-inference.R": "b4daddb8278f5c298c3f95e7c7a8ba68591c3b8e72bc5267420ae645fdce5633",
-    "labs/student/w05b/w05b-inference.qmd": "4043632cd3e513b614aa1f30078a856cc6f5d2267065934aed68ed2f1dc6be40"
+    "labs/student/w05b/w05b-inference.qmd": "0c4650d2f23d8bae625d0f95b7ca49b74bf597adca0921796cb32043d99601b4"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

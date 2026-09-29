@@ -278,7 +278,7 @@ sessions:
   browser_resources:
   - labs/student/w05b/data/mlr-inference.R
   browser_url: https://lunalab-ai.github.io/regre/w05b.html
-  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05b/notebooks/student/w05b_interpretation.ipynb
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05b-r1/notebooks/student/w05b_interpretation.ipynb
   announcement_guidance:
   - 본문 A→B 순서로 읽고 비교 기록지에 예측·실행·설명을 적으세요. 수학 보충은 상세 유도와 제약 검산입니다.
   - 온라인 R 또는 R Colab A/B 중 한 환경을 선택하세요. 모두 R 코드이며 데이터는 자동 준비됩니다.
