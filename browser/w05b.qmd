@@ -1,0 +1,366 @@
+---
+title: 5주차 2차시 · 해석에서 추론과 예측까지
+resources: &id001
+- data/mlr-inference.R
+webr:
+  resources: *id001
+  packages: []
+---
+
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+
+R 설치나 로그인이 필요 없습니다. 로딩이 끝나면 **Run Code**를 눌러 위에서부터 실행하세요. 앞 셀의 값을 바꾼 뒤에는 뒤의 계산도 다시 실행해야 합니다. 빈칸·디버깅 문제는 직접 고쳐 실행합니다.
+
+<button type="button" id="download-code" class="btn btn-primary">내 R 코드 다운로드</button> <button type="button" onclick="location.reload()" class="btn btn-outline-secondary">R 세션 다시 시작</button>
+
+실행한 코드는 이 브라우저에 보관됩니다. R 객체는 새로고침 후 다시 만들어야 합니다. 다른 컴퓨터로 옮기거나 제출할 때는 코드를 다운로드하세요.
+
+[기존 R·QMD 다운로드](https://github.com/lunalab-ai/regre/tree/main/labs/student/w05b)
+
+
+
+**R 실습**입니다. 온라인 R 또는 R Colab A/B 중 한 환경을 선택하세요. 먼저 예상하고, 실행한 뒤 단위와 비교 조건을 포함해 설명합니다. 학생 연습 셀은 주석으로 되어 있어 기본 흐름을 막지 않습니다. `#`를 지우고 필요한 부분을 완성하세요. 데이터는 R 내장 attitude로 자동 준비되며 파일 업로드·API 키·패키지 설치가 필요 없습니다. 다운로드 R/QMD는 data 폴더를 함께 보관하세요.
+
+공통 소스는 고정 버전 **2026-fall-w05b**입니다. `source()`는 정의를 읽고, `lm()`은 모형을 적합하며, 표와 구간 함수는 그 적합 결과를 읽습니다. [API 전체 안내](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference-api.md). 세션을 재시작하면 준비 셀부터 다시 실행하세요.
+
+::: {#cell-w05b-1 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-1
+#| autorun: false
+#| persist: true
+locations <- c("data", "src", "../../labs/student/w05b/data", "labs/student/w05b/data")
+data_dir <- locations[file.exists(file.path(locations,"mlr-inference.R"))][1]
+if (is.na(data_dir)) stop("data 폴더를 R/QMD와 함께 보관한 뒤 다시 실행하세요.")
+source(file.path(data_dir,"mlr-inference.R"))
+d <- datasets::attitude
+fit2 <- lm(rating~complaints+learning,data=d)
+fit6 <- lm(rating~.,data=d)
+cat(R.version.string,"\n30 departments; original percentage units\n")
+```
+
+:::
+
+## 1. 같은 데이터, 다른 두 변수 모형
+
+한 행은 부서이고 값은 긍정 응답 비율(%)입니다. 지난 차시 complaints+privileges와 오늘 complaints+learning을 구별합니다. 다른 변수가 같은 조건의 차이를 읽으세요.
+
+::: {#cell-w05b-2 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-2
+#| autorun: false
+#| persist: true
+head(d,3)
+coef(fit2)
+conditions <- data.frame(complaints=c(60,70),learning=c(55,55))
+predict(fit2,newdata=conditions)
+```
+
+:::
+
+### L1 · 예측–실행–설명
+
+learning=55로 고정하고 complaints를60에서65로 바꾼 예측 차이를 구하세요. 계수와 단위를 포함해 문장으로 쓰세요.
+
+::: {#cell-w05b-3 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-3
+#| autorun: false
+#| persist: true
+# new_rows <- data.frame(complaints=c(60,65),learning=c(55,55))
+# change <- ...
+# change
+```
+
+:::
+
+## 2. 중심화와 원래 예측 비교
+
+[mlr_scaling 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L101)는 rating/complaints/learning 숫자 열을 받아 네 모형과 계수표·원래 단위 복원 예측·학습 중심/척도를 반환합니다. 원본 자료를 바꾸지 않습니다. 예: `mlr_scaling(d)$coefficients`. 절편 포함 모형이며 상수 열과 결측은 거부합니다.
+
+::: {#cell-w05b-4 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-4
+#| autorun: false
+#| persist: true
+scaling <- mlr_scaling(d)
+scaling$coefficients
+sapply(scaling$fitted_original_units,function(x) max(abs(x-fitted(fit2))))
+c(SD_z=sd(scaling$standardized$complaints),
+  sum_z2=sum(scaling$standardized$complaints^2),
+  sum_unit2=sum(scaling$unit_length$complaints^2))
+```
+
+:::
+
+### L2 · 예측–실행–설명
+
+X만 중심화한 모형의 절편·기울기·SSE를 원래 모형과 비교하세요. Y까지 표준화한 예측은 어떤 변환 뒤 비교해야 하나요?
+
+::: {#cell-w05b-5 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-5
+#| autorun: false
+#| persist: true
+# centered <- scaling$models$centered
+# c(original=deviance(fit2),centered=...)
+# restored <- ...
+```
+
+:::
+
+## 3. 새 자료를 학습 좌표로 옮기기
+
+새 부서 한 행에 `scale()`을 다시 하면 분산을 구할 수 없습니다. 학습 때 저장한 평균·표준편차를 씁니다. 기본 R의 [scale 문서](https://stat.ethz.ch/R-manual/R-devel/library/base/html/scale.html)에서 center=FALSE일 때의 정의도 읽으세요.
+
+::: {#cell-w05b-6 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-6
+#| autorun: false
+#| persist: true
+training_center <- scaling$centers[c("complaints","learning")]
+training_scale <- scaling$scales[c("complaints","learning")]
+new_raw <- data.frame(complaints=70,learning=60)
+training_center
+training_scale
+```
+
+:::
+
+### L3 · 예측–실행–설명
+
+오류 생각 실험: `scale(new_raw)`로 새 행을 변환하려던 코드를 고치세요. 학습 좌표로 옮긴 예측을 원래 단위로 복원하면 직접 예측과 같은지 검사하세요.
+
+::: {#cell-w05b-7 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-7
+#| autorun: false
+#| persist: true
+# new_z <- as.data.frame(sweep(sweep(as.matrix(new_raw),2,...,"-"),2,...,"/"))
+# pred_back <- ...
+```
+
+:::
+
+## 4. 반복표본: 오차 규모와 계수의 흔들림
+
+[mlr_simulate 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L130)는 고정X, 참 계수(10,.65,.20), 독립 정규오차로 B개 모의 자료를 적합합니다. B=1000, sigma_error=7, seed=730이 기본입니다. draws는 B×3 계수표, summary는 이론·경험 표준편차입니다. 실제 rating을 다시 수집하지 않으며 난수 상태를 복원합니다.
+
+::: {#cell-w05b-8 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-8
+#| autorun: false
+#| persist: true
+simulation <- mlr_simulate(B=1000,sigma_error=7,seed=730)
+simulation$summary
+hist(simulation$draws$complaints,breaks=25,col="#9ed3d5",
+     main="Fixed X, new Gaussian errors",xlab="Estimated complaints slope")
+abline(v=.65,col="#d95d52",lwd=3)
+```
+
+:::
+
+### L4 · 예측–실행–설명
+
+같은seed에서 오차 표준편차를14로 바꾸세요. 계수 분포의 중심과 폭은 각각 어떻게 달라질까요? 추정 오차와 표준오차를 구분해 설명하세요.
+
+::: {#cell-w05b-9 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-9
+#| autorun: false
+#| persist: true
+# larger_noise <- mlr_simulate(B=1000,sigma_error=...,seed=730)
+# larger_noise$summary
+```
+
+:::
+
+## 5. R, R²와 수정 R²
+
+y와 ŷ의 상관과 전체 손실 감소를 비교합니다. 절편 포함 OLS이며 두 모형 모두 동일30행을 씁니다. 평균만 모형은 ŷ가상수이므로 상관계수식의 예외입니다.
+
+::: {#cell-w05b-10 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-10
+#| autorun: false
+#| persist: true
+fit_comparison <- do.call(rbind,lapply(list(two=fit2,six=fit6),function(m)
+  data.frame(SSE=deviance(m),df=df.residual(m),R=cor(d$rating,fitted(m)),
+             R2=summary(m)$r.squared,adjusted_R2=summary(m)$adj.r.squared)))
+fit_comparison
+plot(d$rating,fitted(fit2),pch=19,col="#087f8c",xlab="Observed rating",ylab="Fitted rating")
+abline(0,1,lty=2)
+stopifnot(abs(cor(d$rating,fitted(fit2))^2-summary(fit2)$r.squared)<1e-10)
+```
+
+:::
+
+## 6. 계수표와 부분 F검정
+
+[mlr_coefficient_table 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L21)는 적합된 lm을 받아 계수순서의 estimate/SE/t/p/CI 표를 만듭니다. level=.95, null=0이 기본이며 재적합하지 않습니다. [mlr_nested_f 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L37)는 두 lm의 반응·행 순서·내포성을 확인하고 q, df_full, SSE, F, p 한 행을 반환합니다.
+
+::: {#cell-w05b-11 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-11
+#| autorun: false
+#| persist: true
+coefficient_table <- mlr_coefficient_table(fit6)
+coefficient_table
+partial_F <- mlr_nested_f(fit2,fit6)
+partial_F
+anova(fit2,fit6)
+```
+
+:::
+
+### L5 · 예측–실행–설명
+
+부분 F의분자와분모를 직접 만들고 q=4,분모자유도23을확인하세요. 이어 두변수모형에서learning=0인 한 제약에대해F=t²를확인하세요.
+
+::: {#cell-w05b-12 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-12
+#| autorun: false
+#| persist: true
+# manual_F <- ((deviance(fit2)-deviance(fit6))/...)/(deviance(fit6)/...)
+# single_F <- mlr_nested_f(lm(rating~complaints,data=d),fit2)
+# t_value <- ...
+```
+
+:::
+
+## 7. 동일성·합제약: 어느 계수를 묶었는가
+
+[mlr_linear_test 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L59)는 적합lm, q×k 제약행렬L, 귀무값r(기본 0)을 받아 F표를 반환합니다. L의 열은 coef 순서와 같아야 합니다. `vcov()`의 공분산을 포함합니다. 아래 L=(0,1,-1)은두 기울기 차이=0입니다.
+
+::: {#cell-w05b-13 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-13
+#| autorun: false
+#| persist: true
+names(coef(fit2))
+equal_test <- mlr_linear_test(fit2,L=matrix(c(0,1,-1),nrow=1))
+sum_test <- mlr_linear_test(fit2,L=matrix(c(0,1,1),nrow=1),r=1)
+equal_test
+sum_test
+```
+
+:::
+
+### L6 · 예측–실행–설명
+
+합 제약을 변환 반응 회귀로 적합한 뒤 원래 rating의 예측과 SSE로 복원하세요. 일반 선형 가설과 F가 같은 지검 산하세요. 두 반응의 모형을 anova로 직접 비교하지 마세요.
+
+::: {#cell-w05b-14 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-14
+#| autorun: false
+#| persist: true
+# constrained <- lm(I(rating-learning)~I(complaints-learning),data=d)
+# restored_y <- ...
+# restricted_SSE <- ...
+```
+
+:::
+
+## 8. 같은조건의평균CI와새부서PI
+
+[mlr_interval_comparison 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w05b/src/mlr-inference.R#L77)는 lm과 원 단위 새 조건 data.frame을 받아 조건마다 confidence/prediction 두 행을 반환합니다. fit/lower/upper/width/h0/level을 읽으세요. level =.95,noise _multiplier =1이 기본이며 배율을 바꾸면 실제 재적합이 아닌 가상 오차 시나리오입니다.
+
+::: {#cell-w05b-15 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-15
+#| autorun: false
+#| persist: true
+new_department <- data.frame(complaints=mean(d$complaints),learning=mean(d$learning))
+intervals <- mlr_interval_comparison(fit2,new_department)
+intervals
+plot(intervals$fit,2:1,xlim=range(c(intervals$lower,intervals$upper)),ylim=c(.5,2.5),
+     yaxt="n",pch=19,xlab="Predicted rating",ylab="")
+axis(2,at=2:1,labels=c("Mean CI","New PI"),las=1)
+segments(intervals$lower,2:1,intervals$upper,2:1,lwd=4,col=c("#087f8c","#d95d52"))
+```
+
+:::
+
+### L7 · 예측–실행–설명
+
+level =.99의 두 구간을 계산하고 중심과 폭을 95%와 비교하세요. 다음 부서 하나에 해당하는 행을 선택하세요.
+
+::: {#cell-w05b-16 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-16
+#| autorun: false
+#| persist: true
+# intervals99 <- mlr_interval_comparison(fit2,new_department,level=...)
+# new_case <- intervals99[intervals99$kind==...,]
+```
+
+:::
+
+## 9. 마지막: 웹 앱에서 내 코드 연결하기
+
+[누적 Shiny 편집기](https://lunalab-ai.github.io/regre/apps/w05b/edit/index.html)를 엽니다. W05B 예측 탭에서 구간 종류를 바꿔 보고, 코드의`W05B-L8`표식을 찾으세요. 입력→`selected_interval()`→출력의 연결을 수정합니다. Colab 안에서 별도 Shiny 서버를 띄울 필요는 없습니다. 편집기에서 재실행하고 수정 코드를 다운로드합니다.
+
+::: {#cell-w05b-17 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-17
+#| autorun: false
+#| persist: true
+# 웹 앱은 위 링크의 편집기에서 실행합니다. 여기서는 같은 계산을 다시 확인합니다.
+chosen <- intervals[intervals$kind=="prediction",]
+cat("선택 구간의 대상:",chosen$kind,"\n")
+```
+
+:::
+
+### L8 · 예측–실행–설명
+
+앱의 W05B-L8 출력문을 수정하여 선택한 구간의 폭을 소수 둘째자리까지 표시하세요. 평균/새 관측 선택을 바꿨을 때 숫자도 변하는지 재실행으로 확인하세요.
+
+::: {#cell-w05b-18 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-18
+#| autorun: false
+#| persist: true
+# 앱 편집기에서 바꿀 문장:
+# sprintf("선택 구간 폭: %.2f %%p", ...)
+# 이 셀의 주석은 앱 코드로 자동 전송되지 않습니다.
+```
+
+:::
+
+::: {#cell-w05b-19 .browser-cell}
+
+```{webr}
+#| label: cell-w05b-19
+#| autorun: false
+#| persist: true
+stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)
+stopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)
+```
+
+:::
+
+```{ojs}
+//| echo: false
+//| output: false
+courseRuntime = { window.courseR = await webROjs.webRPromise; return true; }
+```

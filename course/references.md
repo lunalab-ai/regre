@@ -148,3 +148,53 @@ https://lunalab-ai.github.io/regre/w05a.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+## 다중회귀의 해석·추론·예측: 계수에서 불확실성으로
+
+[강의 원문](../course/notion/w05b/w05b-interpretation.md)
+
+- 주교재 §4.5 연결 및 §4.6–4.8, pp.144–151. 교재 용어와 범위를 유지했습니다. 그림 A1–A7은 수업용 원본 도식 또는 R 계산 그래프입니다.
+- [R attitude](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html), [scale](https://stat.ethz.ch/R-manual/R-devel/library/base/html/scale.html), [summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html). 2026-09-29 본문 확인.
+- 좌표 변경 비유, 모의 반복표본, 가정 단계도, 과잉 해석을 막는 비교 문장은 이해를 돕는 추가 설명입니다. 행렬 유도는 [수학 보충](w05b-math.md)에 있습니다.
+
+https://fancy-ballcap-a15.notion.site/R-3e87fd00109f811d9e0cc8890bf2a0b0
+
+https://lunalab-ai.github.io/regre/w05b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/scale.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+[강의 원문](../course/notion/w05b/w05b-inference.md)
+
+- 주교재 §4.9–4.12, pp.152–171. 표4.4만 선별 원본 발췌; 나머지 그림은 명시한 R 자료와 수업용 도식으로 제작했습니다. 표4.7의 두 변수 계수는 전체 정밀도의 R 결과를 사용합니다.
+- [R summary.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html), [anova.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html), [predict.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html), [vcov](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/vcov.html). 2026-09-29 본문 확인.
+- 비기각의 해석, 동일 반응·동일 행의 비교, 공동 관측 영역, 앱 입력/출력 활동은 개념 이해를 돕는 보완 설명입니다. 행렬과 제약 계산의 상세 유도는 수학 보충에서 확인하세요.
+
+https://lunalab-ai.github.io/regre/apps/w05b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w05b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/vcov.html
+
+[강의 원문](../course/notion/w05b/w05b-workbook.md)
+
+https://lunalab-ai.github.io/regre/w05b.html
+
+[강의 원문](../course/notion/w05b/w05b-math.md)
+
+주교재 §4.6–4.11의 식과 제약 사례를 R 내장 attitude로 검산했습니다. [R vcov](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/vcov.html), [anova.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html), [predict.lm](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html), 2026-09-29 확인. 재매개화와 가정 구분, 잘못된 반응 비교의 교정은 수업용 추가 해설입니다.
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/vcov.html

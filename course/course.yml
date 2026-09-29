@@ -257,6 +257,38 @@ sessions:
   colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05a-v2/notebooks/student/w05a_multiple_regression.ipynb
   remediation_notion_url: https://fancy-ballcap-a15.notion.site/R-3e87fd00109f811d9e0cc8890bf2a0b0
   notion_url: https://fancy-ballcap-a15.notion.site/W05A-2026-09-28-3e87fd00109f8112b11fda197e1a26d9
+- id: w05b
+  date: '2026-09-30'
+  title: '다중회귀의 해석·추론·예측: 계수에서 불확실성으로'
+  pages:
+  - course/notion/w05b/w05b-interpretation.md
+  - course/notion/w05b/w05b-inference.md
+  - course/notion/w05b/w05b-workbook.md
+  - course/notion/w05b/w05b-math.md
+  labs:
+  - labs/student/w05b/w05b-inference.R
+  - labs/student/w05b/w05b-inference.qmd
+  - labs/student/w05b/app/app.R
+  - notebooks/student/w05b_interpretation.ipynb
+  - notebooks/student/w05b_inference.ipynb
+  quiz: course/quiz/w05b.yml
+  runtime_label: R · webR · R Colab · 누적 Shiny
+  browser_source: labs/student/w05b/w05b-inference.qmd
+  browser_title: 5주차 2차시 · 해석에서 추론과 예측까지
+  browser_resources:
+  - labs/student/w05b/data/mlr-inference.R
+  browser_url: https://lunalab-ai.github.io/regre/w05b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w05b/notebooks/student/w05b_interpretation.ipynb
+  announcement_guidance:
+  - 본문 A→B 순서로 읽고 비교 기록지에 예측·실행·설명을 적으세요. 수학 보충은 상세 유도와 제약 검산입니다.
+  - 온라인 R 또는 R Colab A/B 중 한 환경을 선택하세요. 모두 R 코드이며 데이터는 자동 준비됩니다.
+  - 마지막 누적 앱에서 단위·검정·예측을 비교하고 L8 출력문을 직접 수정해 재실행하세요.
+  - 공통 함수와 정의 바로가기는 고정 버전2026-fall-w05b를 사용합니다. 내려받은 R/QMD는 data 폴더를 함께 유지하세요.
+  - 별도 성적 반영 과제나 제출 기한은 없습니다. 편집한 코드는 개인 파일로 저장하세요.
+  browser_checks:
+  - stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)
+  - stopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)
+  notion_url: https://fancy-ballcap-a15.notion.site/W05B-2026-09-30-3ea7fd00109f814ab0e9caa5ac72f039
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -318,6 +350,18 @@ browser:
     - labs/student/w05a/data/r-syntax-tools.R
     - labs/student/w05a/data/slr-tools.R
     - labs/student/w05a/data/w02b-observations.csv
+  - id: w05b
+    source: labs/student/w05b/app/app.R
+    data:
+    - labs/student/w05b/data/association-tools.R
+    - labs/student/w05b/data/Computer.Repair.txt
+    - labs/student/w05b/data/mlr-inference.R
+    - labs/student/w05b/data/mlr-tools.R
+    - labs/student/w05b/data/prediction-tools.R
+    - labs/student/w05b/data/r-syntax-tools.R
+    - labs/student/w05b/data/README.md
+    - labs/student/w05b/data/slr-tools.R
+    - labs/student/w05b/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

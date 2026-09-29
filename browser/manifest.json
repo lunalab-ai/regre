@@ -495,6 +495,111 @@
       "checks": [
         "stopifnot(nrow(d)==30,df.residual(fit2)==27,abs(SSE-1361.8638524)<1e-5,abs(toy_ss$summary$R2-.9)<1e-10,abs(partial$slope-coef(fit2)[\"privileges\"])<1e-10)"
       ]
+    },
+    {
+      "id": "w05b",
+      "title": "5주차 2차시 · 해석에서 추론과 예측까지",
+      "cells": [
+        {
+          "id": "w05b-1",
+          "code": "locations <- c(\"data\", \"src\", \"../../labs/student/w05b/data\", \"labs/student/w05b/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"mlr-inference.R\"))][1]\nif (is.na(data_dir)) stop(\"data 폴더를 R/QMD와 함께 보관한 뒤 다시 실행하세요.\")\nsource(file.path(data_dir,\"mlr-inference.R\"))\nd <- datasets::attitude\nfit2 <- lm(rating~complaints+learning,data=d)\nfit6 <- lm(rating~.,data=d)\ncat(R.version.string,\"\\n30 departments; original percentage units\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w05b-2",
+          "code": "head(d,3)\ncoef(fit2)\nconditions <- data.frame(complaints=c(60,70),learning=c(55,55))\npredict(fit2,newdata=conditions)",
+          "exercise": false
+        },
+        {
+          "id": "w05b-3",
+          "code": "# new_rows <- data.frame(complaints=c(60,65),learning=c(55,55))\n# change <- ...\n# change",
+          "exercise": false
+        },
+        {
+          "id": "w05b-4",
+          "code": "scaling <- mlr_scaling(d)\nscaling$coefficients\nsapply(scaling$fitted_original_units,function(x) max(abs(x-fitted(fit2))))\nc(SD_z=sd(scaling$standardized$complaints),\n  sum_z2=sum(scaling$standardized$complaints^2),\n  sum_unit2=sum(scaling$unit_length$complaints^2))",
+          "exercise": false
+        },
+        {
+          "id": "w05b-5",
+          "code": "# centered <- scaling$models$centered\n# c(original=deviance(fit2),centered=...)\n# restored <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w05b-6",
+          "code": "training_center <- scaling$centers[c(\"complaints\",\"learning\")]\ntraining_scale <- scaling$scales[c(\"complaints\",\"learning\")]\nnew_raw <- data.frame(complaints=70,learning=60)\ntraining_center\ntraining_scale",
+          "exercise": false
+        },
+        {
+          "id": "w05b-7",
+          "code": "# new_z <- as.data.frame(sweep(sweep(as.matrix(new_raw),2,...,\"-\"),2,...,\"/\"))\n# pred_back <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w05b-8",
+          "code": "simulation <- mlr_simulate(B=1000,sigma_error=7,seed=730)\nsimulation$summary\nhist(simulation$draws$complaints,breaks=25,col=\"#9ed3d5\",\n     main=\"Fixed X, new Gaussian errors\",xlab=\"Estimated complaints slope\")\nabline(v=.65,col=\"#d95d52\",lwd=3)",
+          "exercise": false
+        },
+        {
+          "id": "w05b-9",
+          "code": "# larger_noise <- mlr_simulate(B=1000,sigma_error=...,seed=730)\n# larger_noise$summary",
+          "exercise": false
+        },
+        {
+          "id": "w05b-10",
+          "code": "fit_comparison <- do.call(rbind,lapply(list(two=fit2,six=fit6),function(m)\n  data.frame(SSE=deviance(m),df=df.residual(m),R=cor(d$rating,fitted(m)),\n             R2=summary(m)$r.squared,adjusted_R2=summary(m)$adj.r.squared)))\nfit_comparison\nplot(d$rating,fitted(fit2),pch=19,col=\"#087f8c\",xlab=\"Observed rating\",ylab=\"Fitted rating\")\nabline(0,1,lty=2)\nstopifnot(abs(cor(d$rating,fitted(fit2))^2-summary(fit2)$r.squared)<1e-10)",
+          "exercise": false
+        },
+        {
+          "id": "w05b-11",
+          "code": "coefficient_table <- mlr_coefficient_table(fit6)\ncoefficient_table\npartial_F <- mlr_nested_f(fit2,fit6)\npartial_F\nanova(fit2,fit6)",
+          "exercise": false
+        },
+        {
+          "id": "w05b-12",
+          "code": "# manual_F <- ((deviance(fit2)-deviance(fit6))/...)/(deviance(fit6)/...)\n# single_F <- mlr_nested_f(lm(rating~complaints,data=d),fit2)\n# t_value <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w05b-13",
+          "code": "names(coef(fit2))\nequal_test <- mlr_linear_test(fit2,L=matrix(c(0,1,-1),nrow=1))\nsum_test <- mlr_linear_test(fit2,L=matrix(c(0,1,1),nrow=1),r=1)\nequal_test\nsum_test",
+          "exercise": false
+        },
+        {
+          "id": "w05b-14",
+          "code": "# constrained <- lm(I(rating-learning)~I(complaints-learning),data=d)\n# restored_y <- ...\n# restricted_SSE <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w05b-15",
+          "code": "new_department <- data.frame(complaints=mean(d$complaints),learning=mean(d$learning))\nintervals <- mlr_interval_comparison(fit2,new_department)\nintervals\nplot(intervals$fit,2:1,xlim=range(c(intervals$lower,intervals$upper)),ylim=c(.5,2.5),\n     yaxt=\"n\",pch=19,xlab=\"Predicted rating\",ylab=\"\")\naxis(2,at=2:1,labels=c(\"Mean CI\",\"New PI\"),las=1)\nsegments(intervals$lower,2:1,intervals$upper,2:1,lwd=4,col=c(\"#087f8c\",\"#d95d52\"))",
+          "exercise": false
+        },
+        {
+          "id": "w05b-16",
+          "code": "# intervals99 <- mlr_interval_comparison(fit2,new_department,level=...)\n# new_case <- intervals99[intervals99$kind==...,]",
+          "exercise": false
+        },
+        {
+          "id": "w05b-17",
+          "code": "# 웹 앱은 위 링크의 편집기에서 실행합니다. 여기서는 같은 계산을 다시 확인합니다.\nchosen <- intervals[intervals$kind==\"prediction\",]\ncat(\"선택 구간의 대상:\",chosen$kind,\"\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w05b-18",
+          "code": "# 앱 편집기에서 바꿀 문장:\n# sprintf(\"선택 구간 폭: %.2f %%p\", ...)\n# 이 셀의 주석은 앱 코드로 자동 전송되지 않습니다.",
+          "exercise": false
+        },
+        {
+          "id": "w05b-19",
+          "code": "stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)\nstopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)",
+        "stopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)"
+      ]
     }
   ],
   "source_sha256": {
@@ -515,7 +620,9 @@
     "labs/student/w04a/data/Computer.Repair.txt": "d23ae501ab7e42e6848efca511015586ae41f0f503c9ebb5567a7c8cdc086dcc",
     "labs/student/w04a/w04a-prediction.qmd": "46dd54e026b29f2baf691f7765c0338a8c4bbbbecba1465706b61cdb2903c4bf",
     "labs/student/w05a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
-    "labs/student/w05a/w05a-multiple-regression.qmd": "7139343ef1f86ce16bc9294961f49f0ab47894b478d1cdcb6f2547a830a32a35"
+    "labs/student/w05a/w05a-multiple-regression.qmd": "7139343ef1f86ce16bc9294961f49f0ab47894b478d1cdcb6f2547a830a32a35",
+    "labs/student/w05b/data/mlr-inference.R": "b4daddb8278f5c298c3f95e7c7a8ba68591c3b8e72bc5267420ae645fdce5633",
+    "labs/student/w05b/w05b-inference.qmd": "4043632cd3e513b614aa1f30078a856cc6f5d2267065934aed68ed2f1dc6be40"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
