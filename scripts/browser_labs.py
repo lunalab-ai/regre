@@ -160,6 +160,24 @@ def binary(name):
     return str(found)
 
 
+def patch_shinylive_utf8_export(target):
+    """Preserve Unicode in ZIP text entries; leave binary entries untouched.
+
+    Pinned Shinylive assets use a byte-string converter for editor text, which
+    truncates Korean characters. Patch only that reviewed expression and fail
+    closed if a future assets version changes the export implementation.
+    """
+    path = target / 'shinylive/Editor.js'
+    text = path.read_text(encoding='utf-8')
+    old = 'res[file.name] = stringToUint8Array(file.ref.editorState.doc.toString());'
+    new = 'res[file.name] = new TextEncoder().encode(file.ref.editorState.doc.toString());'
+    if text.count(new) == 1 and old not in text:
+        return
+    if text.count(old) != 1 or new in text:
+        raise ValueError('Review changed Shinylive ZIP text encoding: ' + str(path))
+    path.write_text(text.replace(old, new), encoding='utf-8')
+
+
 def render(root=ROOT):
     manifest = generate(root)
     if manifest is None: return
@@ -180,6 +198,7 @@ def render(root=ROOT):
             # Export assets only to ignored build output, never to the student Git tree.
             expression = 'shinylive::export(' + json.dumps(temp.as_posix()) + ', ' + json.dumps(target.as_posix()) + ', assets_version="' + config['browser']['shinylive_assets'] + '", template_params=list(components=c("editor", "viewer")))'
             subprocess.run([binary('Rscript'), '-e', expression], check=True)
+            patch_shinylive_utf8_export(target)
     commit = os.environ.get('GITHUB_SHA') or subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
     write(root / 'browser/_site/build-info.json', {'commit': commit, 'sources': manifest['source_sha256']})
     print('Browser render complete:', root / 'browser/_site')
