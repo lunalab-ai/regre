@@ -289,6 +289,40 @@ sessions:
   - stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)
   - stopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)
   notion_url: https://fancy-ballcap-a15.notion.site/W05B-2026-09-30-3ea7fd00109f814ab0e9caa5ac72f039
+- id: w06a
+  date: '2026-10-05'
+  title: '회귀진단: 모형위반의 검출'
+  pages:
+  - course/notion/w06a/w06a-assumptions.md
+  - course/notion/w06a/w06a-residuals.md
+  - course/notion/w06a/w06a-graphs.md
+  - course/notion/w06a/w06a-workbook.md
+  - course/notion/w06a/w06a-math.md
+  labs:
+  - labs/student/w06a/w06a-diagnostics.R
+  - labs/student/w06a/w06a-diagnostics.qmd
+  - labs/student/w06a/app/app.R
+  - notebooks/student/w06a_residuals.ipynb
+  - notebooks/student/w06a_graphs.ipynb
+  quiz: course/quiz/w06a.yml
+  runtime_label: R · webR · R Colab · 누적 Shiny
+  browser_source: labs/student/w06a/w06a-diagnostics.qmd
+  browser_title: '6주차 1차시 · 회귀진단: 무엇이 남았는가?'
+  browser_resources:
+  - labs/student/w06a/data/diagnostics.R
+  - labs/student/w06a/data/hamilton.csv
+  browser_url: https://lunalab-ai.github.io/regre/w06a.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_residuals.ipynb
+  announcement_guidance:
+  - 본문 A→B→C 순서로 가정·잔차·적합 전후 그래프를 읽고, 비교 기록지에 예상·관찰·설명을 적으세요.
+  - 설치 없는 온라인 R 또는 독립 R Colab A/B 중 한 환경을 선택하세요. 데이터와 함수는 자동 준비됩니다.
+  - 마지막 누적 앱에서 같은 점을 여러 그림으로 연결하고, L8 출력문을 직접 수정·재실행·다운로드하세요.
+  - 공통 함수 정의는 고정 버전2026-fall-w06a의 실제 선언줄과 연결됩니다. R/QMD를 내려받으면 data 폴더도 함께 보관하세요.
+  - 별도 성적 반영 과제나 제출 기한은 없습니다. 한 그림만으로 원인을 확정하거나 관측을 자동 삭제하지 않습니다.
+  browser_checks:
+  - stopifnot(nrow(res)==30,df.residual(fit)==27,max(abs(res$internal-rstandard(fit)))<1e-10,max(abs(res$external-rstudent(fit)))<1e-10,nrow(ans_summary)==4)
+  - stopifnot(nrow(ham)==15,ham$X2[4]==6.64,ham_summary$rank[3]==3,abs(ham_summary$R2[3]-.999847)<1e-6,nrow(projection)==15,length(patterns)==4)
+  notion_url: https://fancy-ballcap-a15.notion.site/W06A-2026-10-05-3f07fd00109f8167ad03d7f1fb84b341
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -362,6 +396,20 @@ browser:
     - labs/student/w05b/data/README.md
     - labs/student/w05b/data/slr-tools.R
     - labs/student/w05b/data/w02b-observations.csv
+  - id: w06a
+    source: labs/student/w06a/app/app.R
+    data:
+    - labs/student/w06a/data/association-tools.R
+    - labs/student/w06a/data/Computer.Repair.txt
+    - labs/student/w06a/data/diagnostics.R
+    - labs/student/w06a/data/hamilton.csv
+    - labs/student/w06a/data/mlr-inference.R
+    - labs/student/w06a/data/mlr-tools.R
+    - labs/student/w06a/data/prediction-tools.R
+    - labs/student/w06a/data/r-syntax-tools.R
+    - labs/student/w06a/data/README.md
+    - labs/student/w06a/data/slr-tools.R
+    - labs/student/w06a/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

@@ -1,0 +1,60 @@
+[W06a] 회귀진단: 모형위반의 검출
+
+회귀분석의 이해 | 2026년 10월 5일(월) | 6주차 1차시
+주교재: 5.1~5.6절 (188~203쪽)
+
+이번 수업에서는 “회귀식이 자료에서 무엇을 놓쳤는가?”를 공부합니다. R²와 계수가 비슷해도 그림은 왜 다른지 살펴보고, 같은 부서의 보통·내적·외적 표준화잔차를 직접 비교합니다. 마지막에는 웹 앱에서 선택한 관측과 잔차를 연결하는 코드를 수정합니다.
+
+1. 읽을 자료
+
+Notion 강의노트 모음
+https://fancy-ballcap-a15.notion.site/W06A-2026-10-05-3f07fd00109f8167ad03d7f1fb84b341
+
+A(가정과 진단의 목적) → B(다양한 잔차) → C(적합 전후 그래프) 순서로 읽으세요. 그림의 축과 강조된 관측을 먼저 보고, 캡션의 질문에 답한 뒤 식과 코드를 확인하면 됩니다. 비교 기록지와 수학 보충, 개념 점검 10문항 해설도 위 모음에 있습니다.
+
+PDF 내려받기
+A · 가정과 진단의 목적
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-assumptions.pdf
+B · 다양한 잔차
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-residuals.pdf
+C · 적합 전후 그래프
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-graphs.pdf
+예상–관찰–설명 기록지
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-workbook.pdf
+선택 수학 보충
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-math.pdf
+개념 점검 10문항 해설
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w06a-quiz.pdf
+
+2. 실습은 한 경로를 선택하세요
+
+설치 없는 온라인 R
+https://lunalab-ai.github.io/regre/w06a.html
+
+또는 R Colab A · 가정과 잔차
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_residuals.ipynb
+R Colab B · 그래프와 웹 앱
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_graphs.ipynb
+
+온라인 R과 Colab을 중복 수행할 필요는 없습니다. Colab A/B는 각각 새 R 런타임에서 독립 실행됩니다. 준비 셀부터 실행하세요. 데이터 업로드나 API 키는 필요 없습니다. 파일을 수정하려면 본인 Drive에 사본을 저장하세요.
+
+RStudio에서 실행할 학생용 R/QMD와 data 폴더
+https://github.com/lunalab-ai/regre/tree/2026-fall-w06a/labs/student/w06a
+
+공통 함수의 입력·출력과 실제 정의 바로가기
+https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics-api.md
+
+3. 마지막 웹 앱 활동
+
+누적 Shiny 편집기
+https://lunalab-ai.github.io/regre/apps/w06a/edit/index.html
+
+W06A 잔차에서 같은 부서를 원자료·잔차표·잔차그림으로 확인하고, W06A 회전에서 같은 Hamilton 관측을 다른 방향으로 보세요. 코드의 W06A-L8을 찾아 선택한 잔차값이 표시되도록 출력 한 곳을 수정합니다. Run으로 재실행한 뒤 잔차 종류를 바꿔 숫자도 바뀌는지 확인하고, Download로 수정 코드를 저장하세요.
+
+4. 복습과 실행 도움말
+
+먼저 예상하고 → 한 조건만 바꾸어 실행하고 → 관찰한 사실·가능한 설명·추가 확인을 나누어 기록하세요. 높은 R²나 잔차합0만으로 가정이 맞다고 결론내리지 않습니다. 그림 하나를 근거로 관측을 자동 삭제하지 않습니다.
+
+함수나 객체를 찾지 못하면 준비 셀부터 다시 실행하세요. 내려받은 R/QMD는 data 폴더와 함께 보관하세요. 웹 실행은 처음에 R 환경을 내려받느라 시간이 걸릴 수 있습니다. 편집한 코드는 새로고침이나 재시작 전에 다운로드해 두세요.
+
+별도 성적 반영 과제나 제출 기한은 없습니다. 수학 보충은 상세 유도가 필요할 때 선택해서 읽으세요. 질문할 때는 실행 환경, 셀·탭 이름, 오류 문구, 마지막으로 바꾼 입력을 함께 알려 주세요.

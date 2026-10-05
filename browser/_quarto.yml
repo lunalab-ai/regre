@@ -11,6 +11,7 @@ project:
   - w04a.qmd
   - w05a.qmd
   - w05b.qmd
+  - w06a.qmd
 website:
   title: 회귀분석의 이해 · 온라인 실습
   site-url: https://lunalab-ai.github.io/regre/
@@ -34,6 +35,8 @@ website:
       href: w05a.qmd
     - text: w05b · 5주차 2차시 · 해석에서 추론과 예측까지
       href: w05b.qmd
+    - text: 'w06a · 6주차 1차시 · 회귀진단: 무엇이 남았는가?'
+      href: w06a.qmd
 lang: ko
 engine: knitr
 format:

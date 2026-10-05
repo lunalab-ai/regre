@@ -1,0 +1,171 @@
+# **먼저 예상→실행→설명** 순서로 진행합니다. R/QMD/webR와 Colab은 대체 환경이므로 한 경로만 선택하세요. 예제 코드는 바로 실행되며 연습 셀은 주석으로 되어 있어 기본 흐름을 막지 않습니다. 연습 때 `#`를 지우고 완성하세요.
+# 
+# 데이터 역할을 구별하세요: Anscombe/Hamilton은 설명용 구성 자료, attitude는30개 부서의 실제 설문 집계, 잔차 패턴은 조건을 정한 모의 자료입니다. 수업 질문은 `주어진 회귀식에 무엇이 남았는가?`입니다.
+# 
+# 공통 코드 고정 버전: **2026-fall-w06a**. [함수 입력·출력·정의 안내](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics-api.md). `source()`는 정의를 읽고, `lm()`은 모형을 적합하며, 진단 함수는 그 결과를 읽습니다. 캐시 재사용 때도 파일 동일성을 확인합니다. 런타임 재시작 후 준비 셀부터 다시 실행하세요.
+
+locations <- c("data","labs/student/w06a/data","../../labs/student/w06a/data")
+data_dir <- locations[file.exists(file.path(locations,"diagnostics.R"))][1]
+if(is.na(data_dir)) stop("R/QMD와 함께 data 폴더를 보관하세요.")
+source(file.path(data_dir,"diagnostics.R"))
+d <- datasets::attitude
+fit <- lm(rating~complaints+learning,data=d)
+res <- diag_residuals(fit)
+ham <- diag_hamilton(file.path(data_dir,"hamilton.csv"))
+cat(R.version.string,"\n30 departments; Hamilton: 15 constructed observations\n")
+
+# ## 1. 숫자가 같으면 같은 자료일까요?
+# 
+# Anscombe는 설명용 구성 자료입니다. 네 자료의 계수와 R²는 반올림 수준에서 비슷합니다. 그림을 보기 전에 예상하고, 같은 축에서 비교하세요.
+
+ans_summary <- do.call(rbind,lapply(1:4,function(j) {
+  f <- lm(anscombe[[j+4]]~anscombe[[j]])
+  data.frame(set=j,intercept=unname(coef(f)[1]),slope=unname(coef(f)[2]),R2=summary(f)$r.squared)
+}))
+ans_summary
+op <- par(mfrow=c(2,2),mar=c(4,4,2,1))
+for(j in 1:4) {
+  plot(anscombe[[j]],anscombe[[j+4]],xlim=c(3,20),ylim=c(2,14),pch=19,
+       col="#087f8c",xlab="X",ylab="Y",main=paste("Anscombe",j))
+  abline(lm(anscombe[[j+4]]~anscombe[[j]]),col="#d95d52",lwd=2)
+}
+par(op)
+
+# ### L1 · 예측–실행–설명
+# 
+# 네 그림 중 곡선 관계가 보이는 자료를 고르고, 요약표만으로 이를 알 수 없는 이유를 두 문장으로 쓰세요.
+
+# selected_set <- ...
+# 근거: 그림에서 관측되는 패턴과 직선의 차이를 적으세요.
+
+# ## 2. 한 부서의 잔차를 직접 만들기
+# 
+# [diag_residuals 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics.R#L16)는 lm을 받아 관측값·적합값·보통잔차·지레값·두 표준화잔차 표를 반환합니다. rating과 보통잔차 단위는 각각 %와 %p이고, 표준화잔차는 단위가 없습니다.
+
+res[1,c("row","observed","fitted","raw","h","s","internal","external")]
+i <- 1L
+e_i <- d$rating[i]-fitted(fit)[i]
+denominator <- sigma(fit)*sqrt(1-hatvalues(fit)[i])
+c(raw=e_i,denominator=denominator,internal=e_i/denominator)
+plot(res$fitted,res$observed,pch=19,col="#087f8c",xlab="Fitted rating (%)",ylab="Observed rating (%)")
+abline(0,1,lty=2)
+segments(res$fitted[i],res$fitted[i],res$fitted[i],res$observed[i],col="#d95d52",lwd=4)
+points(res$fitted[i],res$observed[i],pch=19,col="#d95d52",cex=1.5)
+
+# ### L2 · 예측–실행–설명
+# 
+# `e_i/sigma(fit)`를 교재의 내적 표준화잔차라고 적은 코드를 고치세요. 빠진 항이 무엇인지 말하세요.
+
+# corrected <- e_i / (...)
+# all.equal(unname(corrected),unname(rstandard(fit)[i]))
+
+# ## 3. 외적 표준화: 분모만 밖에서 추정하기
+# 
+# `rstudent()`는 교재의 외적 표준화잔차입니다. 관측 i를 제외해 오차 규모를 추정하되 분자는 전체 자료에서 구한 e_i입니다. 아래에서는 관측을 실제로 제외한 적합과 분산 항등식을 대조합니다.
+
+nu <- df.residual(fit)
+s_deleted_formula <- sqrt((deviance(fit)-res$raw[i]^2/(1-res$h[i]))/(nu-1))
+fit_without_i <- lm(rating~complaints+learning,data=d[-i,])
+c(formula=s_deleted_formula,refit=sigma(fit_without_i))
+c(internal=rstandard(fit)[i],external=rstudent(fit)[i])
+predictive_deleted <- d$rating[i]-predict(fit_without_i,newdata=d[i,,drop=FALSE])
+c(original_e=res$raw[i],deleted_prediction_residual=unname(predictive_deleted))
+
+# ### L3 · 예측–실행–설명
+# 
+# 외적 분자에 삭제예측잔차를 넣으면 값이 바뀝니다. 원래 e_i로 외적 표준화잔차를 완성하고 R과 확인하세요.
+
+# external_manual <- ... / (s_deleted_formula*sqrt(1-res$h[i]))
+
+# ## 4. 잔차합 0은 건강 진단 결과일까요?
+# 
+# 절편 포함 최소제곱은 잔차합을0으로 만드는 직선을 선택합니다. 아래 곡선 자료도 같은 대수적 성질을 가집니다. 모의 자료이며 실제 부서 데이터와 구별합니다.
+
+patterns <- diag_patterns()
+curve <- patterns$curve
+c(sum_residual=sum(curve$residual),sum_x_residual=sum(curve$x*curve$residual))
+plot(curve$fitted,curve$residual,pch=19,col="#087f8c",xlab="Fitted",ylab="Residual",main="Simulated curved mean, straight-line fit")
+abline(h=0,lty=2)
+
+# ### L4 · 예측–실행–설명
+# 
+# 잔차합이0인데도 곡선이 남습니다. 이것이 모순인지 설명하고, R²나 p값보다 먼저 확인할 사항을 쓰세요.
+
+# answer <- "대수적 성질과 모형 가정의 차이: ..."
+
+# ## 5. 적합 전: 쌍별 그림과 함께 보는 모형
+# 
+# [diag_hamilton 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics.R#L36)으로 읽은 Hamilton은 교재 표5.1의15개 구성 관측입니다. [diag_hamilton_fits 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics.R#L45)는 같은 Y/행의 세 모형 R²·SSE·rank를 나란히 반환합니다.
+
+ham
+pairs(ham,pch=19,col="#087f8c",main="Hamilton: inspect all pairs")
+ham_summary <- diag_hamilton_fits(ham)
+ham_summary
+cor(ham)
+coef(lm(Y~X1+X2,data=ham))
+
+# ### L5 · 예측–실행–설명
+# 
+# Y와X1의 쌍별 상관이 거의0이므로 X1을 무조건 제외해도 될까요? 한 변수/두 변수 모형 결과로 설명하세요.
+
+# c(one=ham_summary$R2[...],both=ham_summary$R2[...])
+# 비교 조건과 삭제할 수 없는 이유를 적으세요.
+
+# ## 6. 회전은 자료를 바꾸는가?
+# 
+# [diag_project 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics.R#L53)는 X1/X2/Y를 각각 표준화한 뒤 직교투영합니다. azimuth=35°, elevation=20°가 기본입니다. 반환 u/v/depth는 화면 좌표이며 원래 단위가 아닙니다. 데이터와 적합계수는 바뀌지 않습니다.
+
+projection <- diag_project(ham,azimuth=35,elevation=20)
+selected <- 4L
+plot(projection$u,projection$v,pch=19,col="#087f8c",xlab="Screen u (scaled)",ylab="Screen v (scaled)",asp=1)
+points(projection$u[selected],projection$v[selected],col="#d95d52",pch=19,cex=1.6)
+text(projection$u[selected],projection$v[selected],labels=selected,pos=3)
+ham[selected,]
+
+# ### L6 · 예측–실행–설명
+# 
+# 방위각을125°로 바꾸고4번점을 다시 찾으세요. 바뀐 값과 유지되는 값을 구별하세요.
+
+# second_view <- diag_project(ham,azimuth=...,elevation=20)
+# plot(second_view$u,second_view$v)
+
+# ## 7. 적합 후: 관찰·가능한 설명·다음 확인
+# 
+# §5.6의 세 목적을 이해하는 추가 연결 예시입니다. 정규성 검정/Cook 거리의 상세 절차는 다음 범위에 남깁니다. 모의 자료의 order는 수집 순서를 뜻하지만 attitude 행번호는 시간이 아닙니다. [diag_patterns 정의](https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics.R#L68)
+
+patterns <- diag_patterns(n=100,seed=605)
+op <- par(mfrow=c(2,2),mar=c(4,4,2,1))
+for(name in names(patterns)) {
+  a <- patterns[[name]]; xx <- if(name=="order") a$order else a$fitted
+  plot(xx,a$residual,pch=19,col="#087f8c",main=paste("Simulation:",name),
+       xlab=if(name=="order") "Collection order" else "Fitted",ylab="Residual")
+  abline(h=0,lty=2)
+}
+par(op)
+
+# ### L7 · 예측–실행–설명
+# 
+# fan 그림을 관찰한 사실, 가능한 설명, 추가 확인의 세 문장으로 쓰세요. 계수에 반드시 편향이 생겼다고 말해도 될까요?
+
+# observation <- "..."
+# possible <- "..."
+# next_check <- "..."
+
+# ## 8. 마지막: 웹 앱에서 같은 점을 연결하기
+# 
+# [누적 Shiny 편집기](https://lunalab-ai.github.io/regre/apps/w06a/edit/index.html)를 여세요. W06A 잔차에서 부서와 잔차종류를 바꾸고, W06A 회전에서 각도와 점을 바꿉니다. `W06A-L8`을 찾아 출력문을 수정→Run→Download 합니다. R Colab에서 별도 Shiny 서버를 띄울 필요는 없습니다.
+
+chosen_row <- res[1,]
+cat("앱과 같은 관측: 부서",chosen_row$row,"\n")
+# 위 편집기에서 입력→선택한 행→선택한 열→출력의 연결을 확인합니다.
+
+# ### L8 · 예측–실행–설명
+# 
+# 앱의 안내 문장을 선택된 잔차값이 소수셋째자리로 나오는 문장으로 바꾸세요. raw/internal/external 전환 시 출력값도 변해야 합니다.
+
+# 앱의 W06A-L8 renderText 안에서 고칩니다.
+# sprintf("선택 잔차: %.3f", ...)
+# 이 셀의 주석은 앱 코드로 자동 전송되지 않습니다.
+
+stopifnot(nrow(res)==30,df.residual(fit)==27,max(abs(res$internal-rstandard(fit)))<1e-10,max(abs(res$external-rstudent(fit)))<1e-10,nrow(ans_summary)==4)
+stopifnot(nrow(ham)==15,ham$X2[4]==6.64,ham_summary$rank[3]==3,abs(ham_summary$R2[3]-.999847)<1e-6,nrow(projection)==15,length(patterns)==4)

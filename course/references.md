@@ -198,3 +198,45 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/vcov.html
+
+## 회귀진단: 모형위반의 검출
+
+[강의 원문](../course/notion/w06a/w06a-assumptions.md)
+
+https://lunalab-ai.github.io/regre/w06a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/anscombe.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html
+
+[강의 원문](../course/notion/w06a/w06a-residuals.md)
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_residuals.ipynb
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics-api.md
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+[강의 원문](../course/notion/w06a/w06a-graphs.md)
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_graphs.ipynb
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w06a/src/diagnostics-api.md
+
+https://lunalab-ai.github.io/regre/apps/w06a/edit/index.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Hamilton.Data.txt
+
+[강의 원문](../course/notion/w06a/w06a-workbook.md)
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_graphs.ipynb
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06a/notebooks/student/w06a_residuals.ipynb
+
+https://lunalab-ai.github.io/regre/apps/w06a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w06a.html
+
+[강의 원문](../course/notion/w06a/w06a-math.md)
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html

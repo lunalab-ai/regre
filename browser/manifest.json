@@ -600,6 +600,106 @@
         "stopifnot(nrow(d)==30,df.residual(fit2)==27,max(abs(scaling$fitted_original_units$original-scaling$fitted_original_units$standardized))<1e-10,abs(summary(fit2)$r.squared-.7080152)<1e-6,nrow(simulation$draws)==1000)",
         "stopifnot(nrow(d)==30,partial_F$q==4,partial_F$df_full==23,abs(partial_F$F-.5287028)<1e-6,abs(equal_test$F-3.657224)<1e-5,intervals$width[2]>intervals$width[1],abs(intervals$fit[1]-64.6333333)<1e-6)"
       ]
+    },
+    {
+      "id": "w06a",
+      "title": "6주차 1차시 · 회귀진단: 무엇이 남았는가?",
+      "cells": [
+        {
+          "id": "w06a-1",
+          "code": "locations <- c(\"data\",\"labs/student/w06a/data\",\"../../labs/student/w06a/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"diagnostics.R\"))][1]\nif(is.na(data_dir)) stop(\"R/QMD와 함께 data 폴더를 보관하세요.\")\nsource(file.path(data_dir,\"diagnostics.R\"))\nd <- datasets::attitude\nfit <- lm(rating~complaints+learning,data=d)\nres <- diag_residuals(fit)\nham <- diag_hamilton(file.path(data_dir,\"hamilton.csv\"))\ncat(R.version.string,\"\\n30 departments; Hamilton: 15 constructed observations\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w06a-2",
+          "code": "ans_summary <- do.call(rbind,lapply(1:4,function(j) {\n  f <- lm(anscombe[[j+4]]~anscombe[[j]])\n  data.frame(set=j,intercept=unname(coef(f)[1]),slope=unname(coef(f)[2]),R2=summary(f)$r.squared)\n}))\nans_summary\nop <- par(mfrow=c(2,2),mar=c(4,4,2,1))\nfor(j in 1:4) {\n  plot(anscombe[[j]],anscombe[[j+4]],xlim=c(3,20),ylim=c(2,14),pch=19,\n       col=\"#087f8c\",xlab=\"X\",ylab=\"Y\",main=paste(\"Anscombe\",j))\n  abline(lm(anscombe[[j+4]]~anscombe[[j]]),col=\"#d95d52\",lwd=2)\n}\npar(op)",
+          "exercise": false
+        },
+        {
+          "id": "w06a-3",
+          "code": "# selected_set <- ...\n# 근거: 그림에서 관측되는 패턴과 직선의 차이를 적으세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06a-4",
+          "code": "res[1,c(\"row\",\"observed\",\"fitted\",\"raw\",\"h\",\"s\",\"internal\",\"external\")]\ni <- 1L\ne_i <- d$rating[i]-fitted(fit)[i]\ndenominator <- sigma(fit)*sqrt(1-hatvalues(fit)[i])\nc(raw=e_i,denominator=denominator,internal=e_i/denominator)\nplot(res$fitted,res$observed,pch=19,col=\"#087f8c\",xlab=\"Fitted rating (%)\",ylab=\"Observed rating (%)\")\nabline(0,1,lty=2)\nsegments(res$fitted[i],res$fitted[i],res$fitted[i],res$observed[i],col=\"#d95d52\",lwd=4)\npoints(res$fitted[i],res$observed[i],pch=19,col=\"#d95d52\",cex=1.5)",
+          "exercise": false
+        },
+        {
+          "id": "w06a-5",
+          "code": "# corrected <- e_i / (...)\n# all.equal(unname(corrected),unname(rstandard(fit)[i]))",
+          "exercise": false
+        },
+        {
+          "id": "w06a-6",
+          "code": "nu <- df.residual(fit)\ns_deleted_formula <- sqrt((deviance(fit)-res$raw[i]^2/(1-res$h[i]))/(nu-1))\nfit_without_i <- lm(rating~complaints+learning,data=d[-i,])\nc(formula=s_deleted_formula,refit=sigma(fit_without_i))\nc(internal=rstandard(fit)[i],external=rstudent(fit)[i])\npredictive_deleted <- d$rating[i]-predict(fit_without_i,newdata=d[i,,drop=FALSE])\nc(original_e=res$raw[i],deleted_prediction_residual=unname(predictive_deleted))",
+          "exercise": false
+        },
+        {
+          "id": "w06a-7",
+          "code": "# external_manual <- ... / (s_deleted_formula*sqrt(1-res$h[i]))",
+          "exercise": false
+        },
+        {
+          "id": "w06a-8",
+          "code": "patterns <- diag_patterns()\ncurve <- patterns$curve\nc(sum_residual=sum(curve$residual),sum_x_residual=sum(curve$x*curve$residual))\nplot(curve$fitted,curve$residual,pch=19,col=\"#087f8c\",xlab=\"Fitted\",ylab=\"Residual\",main=\"Simulated curved mean, straight-line fit\")\nabline(h=0,lty=2)",
+          "exercise": false
+        },
+        {
+          "id": "w06a-9",
+          "code": "# answer <- \"대수적 성질과 모형 가정의 차이: ...\"",
+          "exercise": false
+        },
+        {
+          "id": "w06a-10",
+          "code": "ham\npairs(ham,pch=19,col=\"#087f8c\",main=\"Hamilton: inspect all pairs\")\nham_summary <- diag_hamilton_fits(ham)\nham_summary\ncor(ham)\ncoef(lm(Y~X1+X2,data=ham))",
+          "exercise": false
+        },
+        {
+          "id": "w06a-11",
+          "code": "# c(one=ham_summary$R2[...],both=ham_summary$R2[...])\n# 비교 조건과 삭제할 수 없는 이유를 적으세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06a-12",
+          "code": "projection <- diag_project(ham,azimuth=35,elevation=20)\nselected <- 4L\nplot(projection$u,projection$v,pch=19,col=\"#087f8c\",xlab=\"Screen u (scaled)\",ylab=\"Screen v (scaled)\",asp=1)\npoints(projection$u[selected],projection$v[selected],col=\"#d95d52\",pch=19,cex=1.6)\ntext(projection$u[selected],projection$v[selected],labels=selected,pos=3)\nham[selected,]",
+          "exercise": false
+        },
+        {
+          "id": "w06a-13",
+          "code": "# second_view <- diag_project(ham,azimuth=...,elevation=20)\n# plot(second_view$u,second_view$v)",
+          "exercise": false
+        },
+        {
+          "id": "w06a-14",
+          "code": "patterns <- diag_patterns(n=100,seed=605)\nop <- par(mfrow=c(2,2),mar=c(4,4,2,1))\nfor(name in names(patterns)) {\n  a <- patterns[[name]]; xx <- if(name==\"order\") a$order else a$fitted\n  plot(xx,a$residual,pch=19,col=\"#087f8c\",main=paste(\"Simulation:\",name),\n       xlab=if(name==\"order\") \"Collection order\" else \"Fitted\",ylab=\"Residual\")\n  abline(h=0,lty=2)\n}\npar(op)",
+          "exercise": false
+        },
+        {
+          "id": "w06a-15",
+          "code": "# observation <- \"...\"\n# possible <- \"...\"\n# next_check <- \"...\"",
+          "exercise": false
+        },
+        {
+          "id": "w06a-16",
+          "code": "chosen_row <- res[1,]\ncat(\"앱과 같은 관측: 부서\",chosen_row$row,\"\\n\")\n# 위 편집기에서 입력→선택한 행→선택한 열→출력의 연결을 확인합니다.",
+          "exercise": false
+        },
+        {
+          "id": "w06a-17",
+          "code": "# 앱의 W06A-L8 renderText 안에서 고칩니다.\n# sprintf(\"선택 잔차: %.3f\", ...)\n# 이 셀의 주석은 앱 코드로 자동 전송되지 않습니다.",
+          "exercise": false
+        },
+        {
+          "id": "w06a-18",
+          "code": "stopifnot(nrow(res)==30,df.residual(fit)==27,max(abs(res$internal-rstandard(fit)))<1e-10,max(abs(res$external-rstudent(fit)))<1e-10,nrow(ans_summary)==4)\nstopifnot(nrow(ham)==15,ham$X2[4]==6.64,ham_summary$rank[3]==3,abs(ham_summary$R2[3]-.999847)<1e-6,nrow(projection)==15,length(patterns)==4)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(res)==30,df.residual(fit)==27,max(abs(res$internal-rstandard(fit)))<1e-10,max(abs(res$external-rstudent(fit)))<1e-10,nrow(ans_summary)==4)",
+        "stopifnot(nrow(ham)==15,ham$X2[4]==6.64,ham_summary$rank[3]==3,abs(ham_summary$R2[3]-.999847)<1e-6,nrow(projection)==15,length(patterns)==4)"
+      ]
     }
   ],
   "source_sha256": {
@@ -622,7 +722,10 @@
     "labs/student/w05a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
     "labs/student/w05a/w05a-multiple-regression.qmd": "7139343ef1f86ce16bc9294961f49f0ab47894b478d1cdcb6f2547a830a32a35",
     "labs/student/w05b/data/mlr-inference.R": "b4daddb8278f5c298c3f95e7c7a8ba68591c3b8e72bc5267420ae645fdce5633",
-    "labs/student/w05b/w05b-inference.qmd": "0c4650d2f23d8bae625d0f95b7ca49b74bf597adca0921796cb32043d99601b4"
+    "labs/student/w05b/w05b-inference.qmd": "0c4650d2f23d8bae625d0f95b7ca49b74bf597adca0921796cb32043d99601b4",
+    "labs/student/w06a/data/diagnostics.R": "a65806470736e48751bbb0d45ab13561df43fad2f71a2a5aedd80d6858357e11",
+    "labs/student/w06a/data/hamilton.csv": "3181aa131f41839ff6b561f24471dd694cc75f01a25946bd20fee95bcd381a74",
+    "labs/student/w06a/w06a-diagnostics.qmd": "688801727268c9c8b2ff4893553b92eca7d1f173f38298d748356a2db756fb34"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
