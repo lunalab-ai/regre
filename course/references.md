@@ -240,3 +240,23 @@ https://lunalab-ai.github.io/regre/w06a.html
 [강의 원문](../course/notion/w06a/w06a-math.md)
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+## 중간고사 대비 복습 ①: 회귀분석의 개요와 R 기초
+
+[강의 원문](../course/notion/w06b/w06b-review-workbook.md)
+
+https://cran.r-project.org/doc/manuals/r-release/R-intro.html
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w06b/src/review-foundations-api.md
+
+https://lunalab-ai.github.io/regre/apps/w06b/
+
+https://lunalab-ai.github.io/regre/w06b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html

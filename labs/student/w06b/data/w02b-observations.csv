@@ -1,0 +1,9 @@
+id,units,minutes,shift
+J01,1,18,morning
+J02,2,29,morning
+J03,3,35,morning
+J04,4,44,afternoon
+J05,5,52,afternoon
+J06,6,61,afternoon
+J07,7,,evening
+J08,8,79,evening

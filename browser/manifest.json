@@ -700,6 +700,120 @@
         "stopifnot(nrow(res)==30,df.residual(fit)==27,max(abs(res$internal-rstandard(fit)))<1e-10,max(abs(res$external-rstudent(fit)))<1e-10,nrow(ans_summary)==4)",
         "stopifnot(nrow(ham)==15,ham$X2[4]==6.64,ham_summary$rank[3]==3,abs(ham_summary$R2[3]-.999847)<1e-6,nrow(projection)==15,length(patterns)==4)"
       ]
+    },
+    {
+      "id": "w06b",
+      "title": "W06B 중간고사 복습 ① · R 기초",
+      "cells": [
+        {
+          "id": "w06b-1",
+          "code": "locations <- c(\"data\",\"labs/student/w06b/data\",\"../../labs/student/w06b/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"review-foundations.R\"))][1]\nif(is.na(data_dir)) stop(\"R/QMD와 동봉 data 폴더를 함께 보관하세요.\")\nsource(file.path(data_dir,\"review-foundations.R\"))\ndemo <- review_data()\ndemo_summary <- review_summary(demo$minutes)\nprint(demo)\nprint(demo_summary)",
+          "exercise": false
+        },
+        {
+          "id": "w06b-2",
+          "code": "# Predict first: which denominator describes observed values?\ncomparison <- rbind(review_summary(demo$minutes,\"exclude\"),\n                    review_summary(demo$minutes,\"keep\"),\n                    review_summary(demo$minutes,\"zero\"))\nprint(comparison)\nprint(review_summary(demo$minutes,scale=60))\nbarplot(demo$minutes,names.arg=demo$id,col=\"#087f8c\",\n        ylab=\"Minutes\",main=\"Synthetic work records (NA is not zero)\")",
+          "exercise": false
+        },
+        {
+          "id": "w06b-3",
+          "code": "# Q43 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-4",
+          "code": "# Q44 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-5",
+          "code": "# Q45 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-6",
+          "code": "# Q46 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-7",
+          "code": "# Q47 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-8",
+          "code": "# Q48 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-9",
+          "code": "# Q49 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-10",
+          "code": "# Q50 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-11",
+          "code": "# Q51 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-12",
+          "code": "# Q52 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-13",
+          "code": "# Q53 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-14",
+          "code": "# Q54 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-15",
+          "code": "# Q55 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-16",
+          "code": "# Q56 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-17",
+          "code": "# Q57 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-18",
+          "code": "# Q58 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-19",
+          "code": "# Q59 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-20",
+          "code": "# Q60 TODO: 위 문제의 코드를 여기에 직접 완성하세요.\n# 예상 출력 / 실제 출력 / 차이의 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w06b-21",
+          "code": "# 직접 1을 60으로 바꾸고 재실행하세요.\nmy_summary <- review_summary(demo$minutes,scale=1)\nprint(my_summary)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(demo)==8,demo_summary$n_observed==7,abs(demo_summary$mean-334/7)<1e-10,nrow(comparison)==3)"
+      ]
     }
   ],
   "source_sha256": {
@@ -725,7 +839,9 @@
     "labs/student/w05b/w05b-inference.qmd": "0c4650d2f23d8bae625d0f95b7ca49b74bf597adca0921796cb32043d99601b4",
     "labs/student/w06a/data/diagnostics.R": "a65806470736e48751bbb0d45ab13561df43fad2f71a2a5aedd80d6858357e11",
     "labs/student/w06a/data/hamilton.csv": "3181aa131f41839ff6b561f24471dd694cc75f01a25946bd20fee95bcd381a74",
-    "labs/student/w06a/w06a-diagnostics.qmd": "688801727268c9c8b2ff4893553b92eca7d1f173f38298d748356a2db756fb34"
+    "labs/student/w06a/w06a-diagnostics.qmd": "688801727268c9c8b2ff4893553b92eca7d1f173f38298d748356a2db756fb34",
+    "labs/student/w06b/data/review-foundations.R": "4c4164e6957b11c33a3e4a8f4938b6d05bb9793a890524f94f822344805566ce",
+    "labs/student/w06b/w06b-review.qmd": "04603f56149ae60525544ccf5840f38dc7a776900937abc90a70ef33e5c294b1"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
