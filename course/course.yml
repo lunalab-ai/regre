@@ -340,7 +340,7 @@ sessions:
   browser_resources:
   - labs/student/w06b/data/review-foundations.R
   browser_url: https://lunalab-ai.github.io/regre/w06b.html
-  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b/notebooks/student/w06b_foundations.ipynb
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b-r1/notebooks/student/w06b_foundations.ipynb
   browser_checks:
   - stopifnot(nrow(demo)==8,demo_summary$n_observed==7,abs(demo_summary$mean-334/7)<1e-10,nrow(comparison)==3)
   assignment:

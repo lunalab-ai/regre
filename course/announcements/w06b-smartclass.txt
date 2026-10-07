@@ -15,7 +15,7 @@
 https://fancy-ballcap-a15.notion.site/W06B-60-2026-10-08-3f27fd00109f8146b8c9f159be626e5b
 
 학생용 PDF: 핵심 요약 + 60문항, 정답 미포함
-https://github.com/lunalab-ai/regre/releases/download/2026-fall-w06b/w06b-review-workbook.pdf
+https://github.com/lunalab-ai/regre/releases/download/2026-fall-w06b-r1/w06b-review-workbook.pdf
 
 일반 문제42개(70%), R 문제18개(30%)입니다. R 문제는 빈칸 채우기8개, 오류 수정6개, 출력 예측4개입니다. 패키지나 특정 메소드 이름을 외우는 문제가 아니며, 필요한 기본 문법은 자료에 제공합니다.
 답만 쓰지 말고 ‘규칙 → 중간 계산/코드 추적 → 결과의 뜻과 단위’를 적어 주세요. 중간고사는 이 복습 자료의 문제를 일부 변형하는 방식으로 준비할 예정이므로 숫자를 외우기보다 이유를 설명하는 연습이 중요합니다. 상세 풀이의 공개 시점은 추후 안내합니다.
@@ -25,15 +25,15 @@ https://github.com/lunalab-ai/regre/releases/download/2026-fall-w06b/w06b-review
 https://lunalab-ai.github.io/regre/w06b.html
 
 Colab A — 식·단위·자료 구조, Q43~Q50
-https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b/notebooks/student/w06b_foundations.ipynb
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b-r1/notebooks/student/w06b_foundations.ipynb
 
 Colab B — 평균·조건·반복·함수, Q51~Q60
-https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b/notebooks/student/w06b_reasoning.ipynb
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w06b-r1/notebooks/student/w06b_reasoning.ipynb
 
 두 Colab 노트북은 각각 단독 실행됩니다. CPU만 사용합니다. 준비 셀부터 위에서 아래로 실행하세요. 문제의 미완성·오류 코드는 설명 부분에 있고, 연습 셀은 직접 완성하도록 주석으로 제공됩니다. ‘모두 실행’ 성공이 문제의 정답 완성을 뜻하지는 않습니다.
 
 R·QMD·데이터·노트북 묶음 다운로드
-https://github.com/lunalab-ai/regre/releases/download/2026-fall-w06b/w06b-practice.zip
+https://github.com/lunalab-ai/regre/releases/download/2026-fall-w06b-r1/w06b-practice.zip
 
 공통 함수의 입력·출력과 실제 정의 바로가기
 https://github.com/lunalab-ai/regre/blob/2026-fall-w06b/src/review-foundations-api.md
