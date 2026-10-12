@@ -260,3 +260,21 @@ https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.html
 https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html
+
+## 중간고사 대비 복습 ②: 상관과 단순선형회귀의 추정·추론
+
+[강의 원문](../course/notion/w07a/w07a-review-workbook.md)
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w07a/src/review-slr-api.md
+
+https://lunalab-ai.github.io/regre/apps/w07a/
+
+https://lunalab-ai.github.io/regre/w07a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+https://www.itl.nist.gov/div898/handbook/eda/section3/scatterp.htm

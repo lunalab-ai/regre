@@ -266,7 +266,9 @@ def check(root=ROOT, url=None):
                     if panel:
                         frame.locator('a[data-toggle="tab"][href="#' + panel + '"]').click()
                 prediction.get_by_text('112.7', exact=False).wait_for(timeout=180000)
-                frame.locator('.irs-handle').click()
+                # Cumulative apps retain hidden sliders in inactive lesson tabs.
+                # Select the one in the visible repair-prediction panel.
+                frame.locator('.irs-handle:visible').click()
                 page.keyboard.press('ArrowRight')
                 frame.locator('#prediction').get_by_text('128.2', exact=False).wait_for(timeout=30000)
                 frame.locator('#regression_plot img').wait_for(timeout=30000)

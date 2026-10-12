@@ -814,6 +814,120 @@
       "checks": [
         "stopifnot(nrow(demo)==8,demo_summary$n_observed==7,abs(demo_summary$mean-334/7)<1e-10,nrow(comparison)==3)"
       ]
+    },
+    {
+      "id": "w07a",
+      "title": "W07A 중간고사 복습 ② · 상관과 단순회귀",
+      "cells": [
+        {
+          "id": "w07a-1",
+          "code": "locations <- c(\"data\",\"labs/student/w07a/data\",\"../../labs/student/w07a/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"review-slr.R\"))][1]\nif(is.na(data_dir)) stop(\"Keep the R/QMD and its data folder together.\")\nsource(file.path(data_dir,\"review-slr.R\"))\ndemo <- review_slr_data()\ndemo_result <- review_slr(demo$x,demo$y)\nprint(demo)",
+          "exercise": false
+        },
+        {
+          "id": "w07a-2",
+          "code": "# Explanation example, independent of the exercise questions.\ncomponents <- data.frame(x=demo$x,y=demo$y,dx=demo_result$dx,\n                         dy=demo_result$dy,product=demo_result$dx*demo_result$dy)\nprint(components)\nprint(c(covariance=demo_result$covariance,r=demo_result$correlation,\n        b0=demo_result$b0,b1=demo_result$b1,SSE=demo_result$SSE,\n        s=demo_result$s,se_b1=demo_result$se_b1))\nprint(demo_result$ci)\nplot(demo$x,demo$y,pch=19,col=\"#087f8c\",xlab=\"Tasks\",ylab=\"Minutes\")\nabline(demo_result$b0,demo_result$b1,col=\"#bb4c23\",lwd=2)\nsegments(demo$x,demo$y,demo$x,demo_result$fitted,col=\"#bb4c23\")",
+          "exercise": false
+        },
+        {
+          "id": "w07a-3",
+          "code": "# Q43 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-4",
+          "code": "# Q44 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-5",
+          "code": "# Q45 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-6",
+          "code": "# Q46 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-7",
+          "code": "# Q47 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-8",
+          "code": "# Q48 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-9",
+          "code": "# Q49 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-10",
+          "code": "# Q50 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-11",
+          "code": "# Q51 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-12",
+          "code": "# Q52 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-13",
+          "code": "# Q53 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-14",
+          "code": "# Q54 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-15",
+          "code": "# Q55 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-16",
+          "code": "# Q56 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-17",
+          "code": "# Q57 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-18",
+          "code": "# Q58 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-19",
+          "code": "# Q59 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-20",
+          "code": "# Q60 TODO: 위 문제의 코드를 직접 완성하세요.\n# 실행 전 예상 / 출력 / 이론 설명을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07a-21",
+          "code": "my_result <- review_slr(demo$x,demo$y,level=.95,null=0)\nprint(c(slope=my_result$b1,t=my_result$t,p=my_result$p))",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(demo)==5,abs(demo_result$b1-1.8)<1e-12,abs(demo_result$SSE-1.6)<1e-12,nrow(components)==5)"
+      ]
     }
   ],
   "source_sha256": {
@@ -841,7 +955,9 @@
     "labs/student/w06a/data/hamilton.csv": "3181aa131f41839ff6b561f24471dd694cc75f01a25946bd20fee95bcd381a74",
     "labs/student/w06a/w06a-diagnostics.qmd": "688801727268c9c8b2ff4893553b92eca7d1f173f38298d748356a2db756fb34",
     "labs/student/w06b/data/review-foundations.R": "4c4164e6957b11c33a3e4a8f4938b6d05bb9793a890524f94f822344805566ce",
-    "labs/student/w06b/w06b-review.qmd": "04603f56149ae60525544ccf5840f38dc7a776900937abc90a70ef33e5c294b1"
+    "labs/student/w06b/w06b-review.qmd": "04603f56149ae60525544ccf5840f38dc7a776900937abc90a70ef33e5c294b1",
+    "labs/student/w07a/data/review-slr.R": "b22c8ad284d31c651c962b3a2e746bccbda1f708c88f550197cb5c7772c9dea0",
+    "labs/student/w07a/w07a-review.qmd": "ca1a941e21efbd7b9f84b8acf76b5aa09a7122389202f37eb713bfcee6ff6535"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
