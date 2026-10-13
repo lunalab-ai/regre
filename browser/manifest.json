@@ -928,6 +928,120 @@
       "checks": [
         "stopifnot(nrow(demo)==5,abs(demo_result$b1-1.8)<1e-12,abs(demo_result$SSE-1.6)<1e-12,nrow(components)==5)"
       ]
+    },
+    {
+      "id": "w07b",
+      "title": "W07B 중간고사 복습 ③ · 제곱합과 예측",
+      "cells": [
+        {
+          "id": "w07b-1",
+          "code": "locations <- c(\"data\",\"labs/student/w07b/data\",\"../../labs/student/w07b/data\")\ndata_dir <- locations[file.exists(file.path(locations,\"review-fit.R\"))][1]\nif(is.na(data_dir)) stop(\"Keep the R/QMD and its data folder together.\")\nsource(file.path(data_dir,\"review-fit.R\"))\ndemo <- review_fit_data()\ndemo_result <- review_fit_components(demo$Units,demo$Minutes)\nprint(demo)",
+          "exercise": false
+        },
+        {
+          "id": "w07b-2",
+          "code": "# Shared explanation example; exercise answers stay private.\ncomponents <- demo_result$rows\nprint(components)\nprint(c(SST=demo_result$SST,SSR=demo_result$SSR,SSE=demo_result$SSE,cross=demo_result$cross,R2=demo_result$R2))\nintervals <- review_fit_intervals(demo$Units,demo$Minutes,c(3,5,8))\nprint(intervals)\nplot(demo$Units,demo$Minutes,pch=19,col=\"#087f8c\",xlab=\"Tasks\",ylab=\"Minutes\")\nabline(demo_result$model,col=\"#087f8c\",lwd=2)\nabline(h=mean(demo$Minutes),lty=2,col=\"gray\")\nsegments(demo$Units,demo$Minutes,demo$Units,components$fitted,col=\"#bb4c23\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w07b-3",
+          "code": "# Q43 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-4",
+          "code": "# Q44 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-5",
+          "code": "# Q45 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-6",
+          "code": "# Q46 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-7",
+          "code": "# Q47 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-8",
+          "code": "# Q48 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-9",
+          "code": "# Q49 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-10",
+          "code": "# Q50 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-11",
+          "code": "# Q51 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-12",
+          "code": "# Q52 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-13",
+          "code": "# Q53 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-14",
+          "code": "# Q54 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-15",
+          "code": "# Q55 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-16",
+          "code": "# Q56 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-17",
+          "code": "# Q57 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-18",
+          "code": "# Q58 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-19",
+          "code": "# Q59 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-20",
+          "code": "# Q60 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w07b-21",
+          "code": "my_x0 <- 3\nmy_intervals <- review_fit_intervals(demo$Units,demo$Minutes,my_x0)\nprint(my_intervals)",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(demo)==5,abs(demo_result$SSE-1.6)<1e-12,abs(demo_result$SST-34)<1e-12,nrow(components)==5)"
+      ]
     }
   ],
   "source_sha256": {
@@ -957,7 +1071,9 @@
     "labs/student/w06b/data/review-foundations.R": "4c4164e6957b11c33a3e4a8f4938b6d05bb9793a890524f94f822344805566ce",
     "labs/student/w06b/w06b-review.qmd": "04603f56149ae60525544ccf5840f38dc7a776900937abc90a70ef33e5c294b1",
     "labs/student/w07a/data/review-slr.R": "b22c8ad284d31c651c962b3a2e746bccbda1f708c88f550197cb5c7772c9dea0",
-    "labs/student/w07a/w07a-review.qmd": "ca1a941e21efbd7b9f84b8acf76b5aa09a7122389202f37eb713bfcee6ff6535"
+    "labs/student/w07a/w07a-review.qmd": "ca1a941e21efbd7b9f84b8acf76b5aa09a7122389202f37eb713bfcee6ff6535",
+    "labs/student/w07b/data/review-fit.R": "a54e78166926636c3caa352f6fb78636ae22f973c4615f3010a70682cb0fd6a8",
+    "labs/student/w07b/w07b-review.qmd": "660414eec0c1062a0c822b096947edb336935b1ab9d8a46e15c6454ffc3af0fa"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

@@ -384,6 +384,36 @@ sessions:
     봅니다.
   - 상세 해설 공개 시점은 별도 안내합니다.10월14일에는 실제4주차,10월19일에는 전체 범위를 정리합니다.
   notion_url: https://fancy-ballcap-a15.notion.site/W07A-60-2026-10-12-3f77fd00109f81ccbbf9eb0c6524dd18
+- id: w07b
+  date: '2026-10-14'
+  title: '중간고사 대비 복습 ③: 제곱합·결정계수·예측과 특수 회귀모형'
+  pages:
+  - course/notion/w07b/w07b-review-workbook.md
+  labs:
+  - labs/student/w07b/w07b-review.R
+  - labs/student/w07b/w07b-review.qmd
+  - labs/student/w07b/app/app.R
+  - notebooks/student/w07b_fit.ipynb
+  - notebooks/student/w07b_prediction.ipynb
+  runtime_label: R · webR · R Colab · 누적 Shiny
+  browser_source: labs/student/w07b/w07b-review.qmd
+  browser_title: W07B 중간고사 복습 ③ · 제곱합과 예측
+  browser_resources:
+  - labs/student/w07b/data/review-fit.R
+  browser_url: https://lunalab-ai.github.io/regre/w07b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w07b/notebooks/student/w07b_fit.ipynb
+  browser_checks:
+  - stopifnot(nrow(demo)==5,abs(demo_result$SSE-1.6)<1e-12,abs(demo_result$SST-34)<1e-12,nrow(components)==5)
+  assignment:
+    requested: false
+    reason: 중간고사 대비 자율 연습; 성적 과제나 새 제출기한 요청 없음
+  announcement_guidance:
+  - 실제4주차의 제곱합·R²·F·두 예측구간·원점회귀·평균모형을 복습합니다.
+  - 일반42/R18 총60문항 중 대표 문제를 수업에서 함께 풉니다. 처음부터 모두 풀어 오실 필요는 없습니다.
+  - 실행 전 예상과 실행 후 해석을 기록하세요. R 함수의 역할은 문제에 제공합니다.
+  - 마지막에는 웹 앱 W07B 탭에서 예측 위치를 바꾸고 앱 코드 한 줄을 직접 수정합니다.
+  - 상세 해설 공개는 별도 안내하며10월19일에는 총정리합니다.
+  notion_url: https://fancy-ballcap-a15.notion.site/W07b-60-3f87fd00109f81c999cad24bea933751
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -502,6 +532,23 @@ browser:
     - labs/student/w07a/data/review-slr.R
     - labs/student/w07a/data/slr-tools.R
     - labs/student/w07a/data/w02b-observations.csv
+  - id: w07b
+    source: labs/student/w07b/app/app.R
+    data:
+    - labs/student/w07b/data/association-tools.R
+    - labs/student/w07b/data/Computer.Repair.txt
+    - labs/student/w07b/data/diagnostics.R
+    - labs/student/w07b/data/hamilton.csv
+    - labs/student/w07b/data/mlr-inference.R
+    - labs/student/w07b/data/mlr-tools.R
+    - labs/student/w07b/data/prediction-tools.R
+    - labs/student/w07b/data/r-syntax-tools.R
+    - labs/student/w07b/data/README.md
+    - labs/student/w07b/data/review-fit.R
+    - labs/student/w07b/data/review-foundations.R
+    - labs/student/w07b/data/review-slr.R
+    - labs/student/w07b/data/slr-tools.R
+    - labs/student/w07b/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
@@ -510,3 +557,4 @@ browser:
     관측값, 회귀직선과 현재 예측: Observed data, regression line and prediction
 pdf_question_pages:
 - course/notion/w07a/w07a-review-workbook.md
+- course/notion/w07b/w07b-review-workbook.md

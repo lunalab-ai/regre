@@ -1,0 +1,265 @@
+# W07B student R
+locations <- c("data","labs/student/w07b/data","../../labs/student/w07b/data")
+data_dir <- locations[file.exists(file.path(locations,"review-fit.R"))][1]
+if(is.na(data_dir)) stop("Keep the R/QMD and its data folder together.")
+source(file.path(data_dir,"review-fit.R"))
+demo <- review_fit_data()
+demo_result <- review_fit_components(demo$Units,demo$Minutes)
+print(demo)
+# Shared explanation example; exercise answers stay private.
+components <- demo_result$rows
+print(components)
+print(c(SST=demo_result$SST,SSR=demo_result$SSR,SSE=demo_result$SSE,cross=demo_result$cross,R2=demo_result$R2))
+intervals <- review_fit_intervals(demo$Units,demo$Minutes,c(3,5,8))
+print(intervals)
+plot(demo$Units,demo$Minutes,pch=19,col="#087f8c",xlab="Tasks",ylab="Minutes")
+abline(demo_result$model,col="#087f8c",lwd=2)
+abline(h=mean(demo$Minutes),lty=2,col="gray")
+segments(demo$Units,demo$Minutes,demo$Units,components$fitted,col="#bb4c23",lwd=2)
+
+# ## Q43 · 세 편차를 코드로
+# 
+# 평균5, 적합7, 관측6이다. ____를 채워 전체·설명·잔차를 계산하시오.
+# 
+# ```r
+# y <- 6; fitted_value <- 7; ybar <- 5
+# total <- y - ____
+# explained <- ____ - ybar
+# residual <- y - ____
+# print(c(total, explained, residual))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q43 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q44 · 합의 제곱 오류
+# 
+# 잔차제곱합을 구하려는 코드이다. 실행은 되지만 개념적으로 잘못된 한 줄을 고치고 원래 출력과 수정 출력을 비교하시오.
+# 
+# ```r
+# e <- c(-2,1,1)
+# SSE <- sum(e)^2
+# print(SSE)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q44 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q45 · 한 점의 부호 읽기
+# 
+# 실행하기 전에 출력 벡터의 세 수와 부호의 의미를 적으시오.
+# 
+# ```r
+# y <- 3; fitted_value <- 5; ybar <- 4
+# print(c(y-ybar,fitted_value-ybar,y-fitted_value))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q45 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q46 · 교차항 확인
+# 
+# a는 설명편차, e는 잔차이다. 점별 제곱합 분해에는 교차항이 필요하다. ____를 채워 합의 분해를 확인하시오.
+# 
+# ```r
+# a <- c(-1,0,1); e <- c(1,-2,1)
+# cross <- 2*sum(____)
+# print(c(sum((a+e)^2),sum(a^2)+sum(e^2)+cross))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q46 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q47 · 기준 대비 줄어든 오차
+# 
+# SST=80, SSE=20이다. R²를 구하는 빈칸과 해석을 쓰시오.
+# 
+# ```r
+# SST <- 80; SSE <- 20
+# R2 <- 1 - ____/____
+# print(R2)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q47 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q48 · SST는 무엇에서 빼는가
+# 
+# 평균 기준 SST를 구하려 한다. 잘못된 줄을 고치고 두 값의 차이를 설명하시오.
+# 
+# ```r
+# y <- c(4,6,8)
+# SST <- sum(y^2)
+# print(SST)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q48 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q49 · 단위 변경 출력
+# 
+# 분을 초로 바꾸면 제곱합은60²배가 된다. 아래 두 출력값을 예상하고 이유를 쓰시오.
+# 
+# ```r
+# SST <- 50; SSE <- 10
+# print(c(1-SSE/SST,1-(60^2*SSE)/(60^2*SST)))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q49 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q50 · 설명 비율을 거꾸로
+# 
+# 절편 있는 OLS에서 SST=60, SSR=45, SSE=15이다. R²를 구하려는 코드의 의미 오류를 고치시오.
+# 
+# ```r
+# SST <- 60; SSR <- 45; SSE <- 15
+# R2 <- 1-SSR/SST
+# print(R2)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q50 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q51 · F의 분모 자유도
+# 
+# 절편과 기울기를 추정하는 단순회귀이다. n=9, SSR=28, SSE=14일 때 F를 완성하시오.
+# 
+# ```r
+# n <- 9; SSR <- 28; SSE <- 14
+# df_error <- n - ____
+# F_value <- (SSR/1)/(SSE/df_error)
+# print(F_value)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q51 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q52 · t와 F의 연결 출력
+# 
+# 같은 절편 있는 단순회귀에서 기울기0을 양측 검정한다. t=-2.5, 자유도8이다. pt는 t분포 누적확률, pf는 F분포 누적확률이다. 출력과 p값의 관계를 설명하시오.
+# 
+# ```r
+# t_value <- -2.5; df <- 8
+# F_value <- t_value^2
+# p_t <- 2*pt(-abs(t_value),df)
+# p_F <- pf(F_value,1,df,lower.tail=FALSE)
+# print(round(c(F_value,p_t,p_F),4))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q52 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q53 · 평균반응의 표준오차
+# 
+# h=1/n+(x0−xbar)²/Sxx이다. 평균반응 표준오차를 완성하시오.
+# 
+# ```r
+# n <- 5; x0 <- 4; xbar <- 3; Sxx <- 10; s <- 2
+# h <- 1/n+(x0-xbar)^2/Sxx
+# SE_mean <- s*sqrt(____)
+# print(SE_mean)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q53 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q54 · 개별 예측의 빠진 1
+# 
+# 새 한 관측의 예측 표준오차를 구하려 한다. 잘못된 줄을 수정하고 빠진 변동이 무엇인지 설명하시오.
+# 
+# ```r
+# s <- 3; h <- .25
+# SE_prediction <- s*sqrt(h)
+# print(SE_prediction)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q54 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q55 · 새 자료와 예측 대상
+# 
+# 아래 lm은 직선을 적합하고 predict는 새 X의 예측을 계산한다. 새 한 건의95% 구간을 구하려면 두 빈칸을 어떻게 채우는가? 선택어: newdata, data, confidence, prediction.
+# 
+# ```r
+# d <- data.frame(x=1:5,y=c(4,5,9,10,12))
+# m <- lm(y~x,data=d)
+# new <- data.frame(x=3)
+# predict(m,____=new,interval="____",level=.95)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q55 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q56 · 실행되는 잘못된 대상
+# 
+# x=3인 집단의 평균반응에 대한95% 신뢰구간이 목적이다. 실행 가능한 코드에서 목적과 다른 한 단어를 고치시오.
+# 
+# ```r
+# d <- data.frame(x=1:5,y=c(4,5,9,10,12))
+# m <- lm(y~x,data=d)
+# ans <- predict(m,newdata=data.frame(x=3),interval="prediction",level=.95)
+# print(ans)
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q56 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q57 · 원점회귀 코드
+# 
+# 절편0을 고정한 원점회귀의 기울기와 잔차 자유도를 완성하시오.
+# 
+# ```r
+# x <- c(1,2,3); y <- c(1,3,3)
+# b <- sum(x*y)/sum(____)
+# e <- y-b*x
+# df <- length(y)-____
+# print(c(b,sum(e^2),df))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q57 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q58 · 두 기준의 출력 비교
+# 
+# SSE6, 평균 기준 SST10,0기준 총제곱합100이 주어진다. 두 출력을 예상하고 어떤 기준의 지표인지 쓰시오.
+# 
+# ```r
+# SSE <- 6; SST_mean <- 10; SST_zero <- 100
+# print(c(mean_baseline=1-SSE/SST_mean,zero_baseline=1-SSE/SST_zero))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q58 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q59 · 절편만 있는 모형의 SE
+# 
+# sd는 n−1로 나눈 표본분산의 제곱근이다. 평균의 SE를 완성하시오.
+# 
+# ```r
+# y <- c(3,5,7,9)
+# b0 <- mean(y)
+# SE_b0 <- sd(y)/sqrt(____)
+# print(c(b0,SE_b0))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q59 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+# ## Q60 · 대응 자료의 오류 수정
+# 
+# 같은 위치가 같은 사람이다. sort는 크기순 정렬이다. 대응 차이에 대한 평균과 SE를 계산할 때 잘못된 줄을 고치시오.
+# 
+# ```r
+# before <- c(6,10,8,12)
+# after <- c(5,7,7,9)
+# d <- before-sort(after)
+# print(c(mean(d),sd(d)/sqrt(length(d))))
+# ```
+# 
+# 필요한 기본 문법: c는 벡터, mean은 평균, sum은 합, ^2는 각 원소 제곱, sqrt는 제곱근, length는 원소 수입니다. 지정한 코드의 계산 이유까지 설명하세요.
+# Q60 TODO: 위 코드를 완성하고 예상·출력·이유를 기록하세요.
+
+my_x0 <- 3
+my_intervals <- review_fit_intervals(demo$Units,demo$Minutes,my_x0)
+print(my_intervals)

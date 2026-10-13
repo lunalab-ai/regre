@@ -278,3 +278,21 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
 
 https://www.itl.nist.gov/div898/handbook/eda/section3/scatterp.htm
+
+## 중간고사 대비 복습 ③: 제곱합·결정계수·예측과 특수 회귀모형
+
+[강의 원문](../course/notion/w07b/w07b-review-workbook.md)
+
+https://lunalab-ai.github.io/regre/apps/w07b/
+
+https://lunalab-ai.github.io/regre/apps/w07b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w07b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html
