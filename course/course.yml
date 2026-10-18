@@ -414,6 +414,43 @@ sessions:
   - 마지막에는 웹 앱 W07B 탭에서 예측 위치를 바꾸고 앱 코드 한 줄을 직접 수정합니다.
   - 상세 해설 공개는 별도 안내하며10월19일에는 총정리합니다.
   notion_url: https://fancy-ballcap-a15.notion.site/W07b-60-3f87fd00109f81c999cad24bea933751
+- id: w08a
+  date: '2026-10-19'
+  title: '중간고사 대비 복습 ④: 5주차 다중회귀 복습과 문제풀이'
+  labs:
+  - labs/student/w08a/w08a-review.R
+  - labs/student/w08a/w08a-review.qmd
+  - labs/student/w08a/app/app.R
+  - notebooks/student/w08a_models.ipynb
+  - notebooks/student/w08a_inference.ipynb
+  runtime_label: R · webR · R Colab · 누적 Shiny
+  browser_source: labs/student/w08a/w08a-review.qmd
+  browser_title: W08A 다중회귀 복습 · 모형과 추론
+  browser_resources:
+  - labs/student/w08a/data/mlr-inference.R
+  - labs/student/w08a/data/mlr-tools.R
+  browser_checks:
+  - stopifnot(nrow(demo_d)==30,all(complete.cases(demo_d)),df.residual(demo_fit_B)==27,df.residual(demo_fit_F)==23)
+  - stopifnot(abs(summary(demo_fit_B)$r.squared-.708015195853)<1e-10,max(abs(demo_scaling$fitted_original_units$standardized-fitted(demo_fit_B)))<1e-9)
+  - stopifnot(abs(mlr_nested_f(demo_fit_B,demo_fit_F)$F-.528702821078)<1e-10,nrow(demo_intervals)==2,demo_intervals$width[2]>demo_intervals$width[1])
+  browser_url: https://lunalab-ai.github.io/regre/w08a.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w08a/notebooks/student/w08a_models.ipynb
+  pages:
+  - course/notion/w08a/w08a-review-workbook.md
+  assignment:
+    requested: false
+    reason: 중간고사 대비 자율 연습; 성적 과제나 새 제출 기한 요청 없음
+  announcement_guidance:
+  - 10월 19일에는 실제 5주차 W05A·W05B의 다중회귀를 복습합니다.
+  - 60문항 중 대표 문항을 함께 풀며, 나머지는 자율 복습용입니다. 새로운 성적 반영 과제는 없습니다.
+  - 모형과 관측행, 자유도, 검정의 대상, 구간의 대상을 먼저 확인하세요.
+  - 설치 없는 온라인 R이나 R Colab A/B를 선택하세요. 마지막에는 누적 앱에서 구간을 바꾸고 코드 한 줄을 수정합니다.
+  - 상세 해설은 교수자 안내에 따라 추후 제공합니다. 60문항 전체를 미리 풀어 올 필요는 없습니다.
+  - 'R Colab B · 검정·예측: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w08a/notebooks/student/w08a_inference.ipynb'
+  - '누적 앱: https://lunalab-ai.github.io/regre/apps/w08a/ · 코드 편집: https://lunalab-ai.github.io/regre/apps/w08a/edit/index.html'
+  - 'PDF 바로 내려받기: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w08a/w08a-review-workbook.pdf'
+  - 'R·QMD·자료 묶음: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w08a/w08a-practice.zip'
+  notion_url: https://fancy-ballcap-a15.notion.site/W08A-60-3fd7fd00109f8135ac80cb6659dc6fc1
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -549,6 +586,23 @@ browser:
     - labs/student/w07b/data/review-slr.R
     - labs/student/w07b/data/slr-tools.R
     - labs/student/w07b/data/w02b-observations.csv
+  - id: w08a
+    source: labs/student/w08a/app/app.R
+    data:
+    - labs/student/w08a/data/association-tools.R
+    - labs/student/w08a/data/Computer.Repair.txt
+    - labs/student/w08a/data/diagnostics.R
+    - labs/student/w08a/data/hamilton.csv
+    - labs/student/w08a/data/mlr-inference.R
+    - labs/student/w08a/data/mlr-tools.R
+    - labs/student/w08a/data/prediction-tools.R
+    - labs/student/w08a/data/r-syntax-tools.R
+    - labs/student/w08a/data/README.md
+    - labs/student/w08a/data/review-fit.R
+    - labs/student/w08a/data/review-foundations.R
+    - labs/student/w08a/data/review-slr.R
+    - labs/student/w08a/data/slr-tools.R
+    - labs/student/w08a/data/w02b-observations.csv
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
@@ -558,3 +612,4 @@ browser:
 pdf_question_pages:
 - course/notion/w07a/w07a-review-workbook.md
 - course/notion/w07b/w07b-review-workbook.md
+- course/notion/w08a/w08a-review-workbook.md

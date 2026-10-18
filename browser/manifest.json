@@ -1042,6 +1042,117 @@
       "checks": [
         "stopifnot(nrow(demo)==5,abs(demo_result$SSE-1.6)<1e-12,abs(demo_result$SST-34)<1e-12,nrow(components)==5)"
       ]
+    },
+    {
+      "id": "w08a",
+      "title": "W08A 다중회귀 복습 · 모형과 추론",
+      "cells": [
+        {
+          "id": "w08a-1",
+          "code": "locations <- c(\"data\", \"labs/student/w08a/data\", \"../../labs/student/w08a/data\")\nfound <- locations[file.exists(file.path(locations,\"mlr-inference.R\"))]\nif (!length(found)) stop(\"Keep the R/QMD and the data folder together.\")\ndata_dir <- found[1]\nsource(file.path(data_dir,\"mlr-inference.R\"))\nsource(file.path(data_dir,\"mlr-tools.R\"))\ndemo_d <- datasets::attitude\ndemo_fit_A <- lm(rating ~ complaints+privileges, data=demo_d)\ndemo_fit_B <- lm(rating ~ complaints+learning, data=demo_d)\ndemo_fit_F <- lm(rating ~ ., data=demo_d)\ndemo_models <- list(A=demo_fit_A,B=demo_fit_B,F=demo_fit_F)\ndemo_scaling <- mlr_scaling(demo_d)\ndemo_new <- data.frame(complaints=mean(demo_d$complaints),learning=mean(demo_d$learning))\ndemo_intervals <- mlr_interval_comparison(demo_fit_B,demo_new)\ncat(\"Data: attitude, same 30 complete department rows; original levels in percent.\n\")\nprint(data.frame(model=names(demo_models), formula=vapply(demo_models,function(m) paste(deparse(formula(m)),collapse=\" \"),character(1)), n=30,\n                 p=vapply(demo_models,function(m) length(coef(m))-1L,integer(1)),\n                 k=vapply(demo_models,function(m) length(coef(m)),integer(1))))\ndemo_summary <- do.call(rbind,lapply(names(demo_models),function(label) {\n  m <- demo_models[[label]]\n  data.frame(model=label,SSE=deviance(m),df=df.residual(m),R2=summary(m)$r.squared,adjusted_R2=summary(m)$adj.r.squared)\n}))\nprint(demo_summary)\nprint(demo_scaling$coefficients)\nplot(fitted(demo_fit_B),demo_scaling$fitted_original_units$standardized,\n     pch=19,col=\"#087f8c\",xlab=\"Original fitted rating (%)\",ylab=\"Restored fitted rating (%)\",\n     main=\"Same 30 rows: changing coordinates preserves fitted values\")\nabline(0,1,col=\"#c35c2a\",lwd=2)\ncat(\"Partial test: B nested in F; same response and rows\n\")\nprint(mlr_nested_f(demo_fit_B,demo_fit_F))\ncat(\"Coefficient inference belongs to model B\n\")\nprint(mlr_coefficient_table(demo_fit_B))\ncat(\"Prediction model: B; new condition at training means\n\")\nprint(demo_new)\nprint(demo_intervals)\nplot(1:2,demo_intervals$fit,ylim=range(c(demo_intervals$lower,demo_intervals$upper)),\n     xaxt=\"n\",pch=19,col=\"#087f8c\",xlab=\"Prediction target\",ylab=\"Rating (%)\")\naxis(1,1:2,c(\"Mean CI\",\"New department PI\"))\nsegments(1:2,demo_intervals$lower,1:2,demo_intervals$upper,lwd=4,col=c(\"#087f8c\",\"#c35c2a\"))",
+          "exercise": false
+        },
+        {
+          "id": "w08a-2",
+          "code": "# Q43 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-3",
+          "code": "# Q44 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-4",
+          "code": "# Q45 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-5",
+          "code": "# Q46 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-6",
+          "code": "# Q47 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-7",
+          "code": "# Q48 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-8",
+          "code": "# Q49 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-9",
+          "code": "# Q50 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-10",
+          "code": "# Q51 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-11",
+          "code": "# Q52 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-12",
+          "code": "# Q53 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-13",
+          "code": "# Q54 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-14",
+          "code": "# Q55 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-15",
+          "code": "# Q56 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-16",
+          "code": "# Q57 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-17",
+          "code": "# Q58 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-18",
+          "code": "# Q59 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-19",
+          "code": "# Q60 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w08a-20",
+          "code": "selected_kind <- \"confidence\"\nactivity_rows <- mlr_interval_comparison(demo_fit_B,demo_new,level=.95)\nactivity_selected <- activity_rows[activity_rows$kind==selected_kind,,drop=FALSE]\nprint(activity_selected[c(\"kind\",\"fit\",\"lower\",\"upper\",\"width\")])",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(demo_d)==30,all(complete.cases(demo_d)),df.residual(demo_fit_B)==27,df.residual(demo_fit_F)==23)",
+        "stopifnot(abs(summary(demo_fit_B)$r.squared-.708015195853)<1e-10,max(abs(demo_scaling$fitted_original_units$standardized-fitted(demo_fit_B)))<1e-9)",
+        "stopifnot(abs(mlr_nested_f(demo_fit_B,demo_fit_F)$F-.528702821078)<1e-10,nrow(demo_intervals)==2,demo_intervals$width[2]>demo_intervals$width[1])"
+      ]
     }
   ],
   "source_sha256": {
@@ -1073,7 +1184,10 @@
     "labs/student/w07a/data/review-slr.R": "b22c8ad284d31c651c962b3a2e746bccbda1f708c88f550197cb5c7772c9dea0",
     "labs/student/w07a/w07a-review.qmd": "ca1a941e21efbd7b9f84b8acf76b5aa09a7122389202f37eb713bfcee6ff6535",
     "labs/student/w07b/data/review-fit.R": "a54e78166926636c3caa352f6fb78636ae22f973c4615f3010a70682cb0fd6a8",
-    "labs/student/w07b/w07b-review.qmd": "660414eec0c1062a0c822b096947edb336935b1ab9d8a46e15c6454ffc3af0fa"
+    "labs/student/w07b/w07b-review.qmd": "660414eec0c1062a0c822b096947edb336935b1ab9d8a46e15c6454ffc3af0fa",
+    "labs/student/w08a/data/mlr-inference.R": "b4daddb8278f5c298c3f95e7c7a8ba68591c3b8e72bc5267420ae645fdce5633",
+    "labs/student/w08a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
+    "labs/student/w08a/w08a-review.qmd": "cd70e9faab2c16c2bf27302528b29cd000dfbfc4fd2cb767dbcc5d9577156e70"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

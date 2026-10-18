@@ -16,5 +16,6 @@ title: "회귀분석 · 온라인 R 실습"
 - [W06B 중간고사 복습 ① · R 기초](w06b.qmd)
 - [W07A 중간고사 복습 ② · 상관과 단순회귀](w07a.qmd)
 - [W07B 중간고사 복습 ③ · 제곱합과 예측](w07b.qmd)
+- [W08A 다중회귀 복습 · 모형과 추론](w08a.qmd)
 
 [강의자료·PDF·다운로드](https://github.com/lunalab-ai/regre)

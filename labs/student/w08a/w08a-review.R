@@ -1,0 +1,373 @@
+# W08A student: explanation example and unanswered exercises
+# # W08A · 다중회귀 복습 R 실습
+# 
+# 2026-10-19 · 실제5주차 W05A/W05B 복습. 설명용 실제자료와 각 연습문항의 합성자료를 구별합니다.
+# 한 행은 직원 한 명이 아니라 부서 한 곳입니다. 원래 값은 긍정 응답 비율(%), 값의 변화는 %p입니다.
+# 이번 표기는 p=설명변수 수, k=p+1=절편 포함 계수 수, q=제약 수입니다.
+# 
+# A: `rating ~ complaints + privileges`; B: `rating ~ complaints + learning`; F: `rating ~ .`(나머지 여섯 변수).
+# 수업의 주 모형은 B입니다. A와 B는 서로 중첩되지 않으며, 둘 중 하나와 F의 비교는 별도로 구별합니다.
+# 
+# [함수 목적·입출력·정의 바로가기](https://github.com/lunalab-ai/regre/blob/2026-fall-w08a/src/w08a-review-api.md)
+# 
+# 먼저 코드의 결과를 예상하고 실행 후 이유를 적으세요. 연습의 빈칸·의도 오류는 문제문에 있으며 실행 셀은 TODO입니다.
+# 기본 전체 실행 성공은 문제풀이 완료를 뜻하지 않습니다. 온라인R·R Colab·로컬R 중 한 환경을 선택하면 됩니다.
+# 별도 성적 과제·제출기한은 없습니다. R/QMD를 다운로드하면 data폴더를 함께 보관하세요.
+locations <- c("data", "labs/student/w08a/data", "../../labs/student/w08a/data")
+found <- locations[file.exists(file.path(locations,"mlr-inference.R"))]
+if (!length(found)) stop("Keep the R/QMD and the data folder together.")
+data_dir <- found[1]
+source(file.path(data_dir,"mlr-inference.R"))
+source(file.path(data_dir,"mlr-tools.R"))
+demo_d <- datasets::attitude
+demo_fit_A <- lm(rating ~ complaints+privileges, data=demo_d)
+demo_fit_B <- lm(rating ~ complaints+learning, data=demo_d)
+demo_fit_F <- lm(rating ~ ., data=demo_d)
+demo_models <- list(A=demo_fit_A,B=demo_fit_B,F=demo_fit_F)
+demo_scaling <- mlr_scaling(demo_d)
+demo_new <- data.frame(complaints=mean(demo_d$complaints),learning=mean(demo_d$learning))
+demo_intervals <- mlr_interval_comparison(demo_fit_B,demo_new)
+cat("Data: attitude, same 30 complete department rows; original levels in percent.
+")
+print(data.frame(model=names(demo_models), formula=vapply(demo_models,function(m) paste(deparse(formula(m)),collapse=" "),character(1)), n=30,
+                 p=vapply(demo_models,function(m) length(coef(m))-1L,integer(1)),
+                 k=vapply(demo_models,function(m) length(coef(m)),integer(1))))
+demo_summary <- do.call(rbind,lapply(names(demo_models),function(label) {
+  m <- demo_models[[label]]
+  data.frame(model=label,SSE=deviance(m),df=df.residual(m),R2=summary(m)$r.squared,adjusted_R2=summary(m)$adj.r.squared)
+}))
+print(demo_summary)
+print(demo_scaling$coefficients)
+plot(fitted(demo_fit_B),demo_scaling$fitted_original_units$standardized,
+     pch=19,col="#087f8c",xlab="Original fitted rating (%)",ylab="Restored fitted rating (%)",
+     main="Same 30 rows: changing coordinates preserves fitted values")
+abline(0,1,col="#c35c2a",lwd=2)
+cat("Partial test: B nested in F; same response and rows
+")
+print(mlr_nested_f(demo_fit_B,demo_fit_F))
+cat("Coefficient inference belongs to model B
+")
+print(mlr_coefficient_table(demo_fit_B))
+cat("Prediction model: B; new condition at training means
+")
+print(demo_new)
+print(demo_intervals)
+plot(1:2,demo_intervals$fit,ylim=range(c(demo_intervals$lower,demo_intervals$upper)),
+     xaxt="n",pch=19,col="#087f8c",xlab="Prediction target",ylab="Rating (%)")
+axis(1,1:2,c("Mean CI","New department PI"))
+segments(1:2,demo_intervals$lower,1:2,demo_intervals$upper,lwd=4,col=c("#087f8c","#c35c2a"))
+
+# ## Q43 · 행마다 같은 계수를 적용하기
+# 
+# 합성자료 네 행에서 설명변수는 두 개이다. 절편을 포함한 주어진 식은 $\hat y=5+2x_1-x_2$이며 모든 변수는 이 문제의 점수 단위이다. `cbind`는 열을 나란히 묶고, `%*%`는 행렬 곱, `drop`은 결과의 불필요한 차원 표시를 없앤다. 함수 이름을 새로 작성할 필요는 없다.
+# 
+# 빈칸을 채우고 $X$의 크기와 출력되는 네 예측값을 쓰시오. 관측 수와 계수 수가 코드의 어느 방향에 해당하는지도 설명하시오.
+# 
+# ```r
+# x1 <- c(1, 2, 3, 4)
+# x2 <- c(1, 4, 1, 4)
+# X <- cbind(1, x1, x2)
+# b <- c(5, 2, -1)
+# prediction <- drop(X %*% ____)
+# print(prediction)
+# ```
+# 
+# Q43 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q44 · 잔차분산의 분모 고치기
+# 
+# 절편과 설명변수 두 개를 포함한 완전계수 OLS 모형에서 $n=12$, $k=3$은 **절편까지 포함한 계수 수**, $SSE=18$이다. 다음 코드는 실행되지만 단순회귀의 자유도를 잘못 사용한다. 틀린 한 줄을 고치고 잔차 자유도와 오차분산 추정값을 구하시오.
+# 
+# ```r
+# n <- 12
+# k <- 3
+# SSE <- 18
+# residual_df <- n - 2
+# s2 <- SSE / residual_df
+# print(c(df = residual_df, s2 = s2))
+# ```
+# 
+# Q44 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q45 · 정규방정식의 작은 계산
+# 
+# 절편을 포함한 합성자료의 모형행렬은 $X^\mathsf TX=\operatorname{diag}(4,4,4)$, $X^\mathsf Ty=(40,8,-4)^\mathsf T$를 만족한다. 완전계수이므로 정규방정식의 각 좌표는 $4\hat\beta_j=(X^\mathsf Ty)_j$이다. `*`는 좌표별 곱, `sum`은 합이다.
+# 
+# 빈칸을 채워 세 계수와 $x_0=(1,2,1)^\mathsf T$에서의 예측값을 구하시오. 긴 역행렬 계산은 필요하지 않다.
+# 
+# ```r
+# Xty <- c(40, 8, -4)
+# b <- Xty / ____
+# x0 <- c(1, 2, 1)
+# prediction <- sum(x0 * b)
+# print(b)
+# print(prediction)
+# ```
+# 
+# Q45 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q46 · X 중심화 뒤 절편
+# 
+# 주어진 예측식은 $\hat y=5+2x_1-x_2$이고 설명변수 평균은 $(5,2)$이다. 반응변수는 그대로 두고 $x_1^c=x_1-5$, $x_2^c=x_2-2$로 바꾼다. 아래에서 `b[-1]`은 두 기울기이며 `centers`는 원래 설명변수 평균이다.
+# 
+# 빈칸을 채우고 새 절편과 두 기울기를 쓰시오. 같은 관측의 예측값이 왜 유지되는지도 설명하시오.
+# 
+# ```r
+# b <- c(5, 2, -1)
+# centers <- c(5, 2)
+# new_intercept <- b[1] + sum(b[-1] * ____)
+# print(c(new_intercept, b[-1]))
+# ```
+# 
+# Q46 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q47 · 새 자료를 자기 평균으로 바꾼 오류
+# 
+# 학습 자료에서 $\bar x=10$, $s_x=2$, $\bar y=50$, $s_y=10$으로 표준화했고, 적합한 표준화 식은 $\hat z_y=0.6z_x$이다. 새 입력은 원단위로 $(12,14)$이다. 다음 코드는 실행되지만 새 자료의 평균·표준편차로 다른 좌표계를 만든다.
+# 
+# 틀린 줄을 학습 때의 기준으로 고치고 새 $z_x$와 원단위 예측값 두 개를 구하시오. 새 자료의 평균을 다시 계산하면 안 되는 이유를 쓰시오. `mean`과 `sd`는 입력한 벡터의 평균과 표본 표준편차를 계산한다.
+# 
+# ```r
+# new_x <- c(12, 14)
+# z_new <- (new_x - mean(new_x)) / sd(new_x)
+# predicted_z_y <- 0.6 * z_new
+# predicted_y <- 50 + 10 * predicted_z_y
+# print(z_new)
+# print(predicted_y)
+# ```
+# 
+# Q47 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q48 · 표준편차 1과 길이 1의 출력
+# 
+# 합성벡터 $x=(2,4,6)$을 사용한다. `sd`는 분모 $n-1$인 표본 표준편차, `length`는 원소 수, `sqrt`는 양의 제곱근이다. 출력되는 세 값을 순서대로 쓰고 두 변환의 차이를 설명하시오.
+# 
+# ```r
+# x <- c(2, 4, 6)
+# z <- (x-mean(x)) / sd(x)
+# u <- z / sqrt(length(x)-1)
+# print(c(sd_z = sd(z), squared_length_z = sum(z^2),
+#         squared_length_u = sum(u^2)))
+# ```
+# 
+# Q48 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q49 · 잡음의 SD가 두 배일 때
+# 
+# 같은 완전계수 설계행렬 X에서 OLS 계수의 분산은 $\sigma^2$에 비례한다. 어떤 계수의 기존 분산 추정값이0.04이고 오차의 **표준편차**를 두 배로 바꾼 상황에서, 같은 X의 분산비례식을 적용하여 새 분산 추정값을 계산한다. 출력 두 값과 그 이유를 쓰시오. 계수 추정값 자체가 반드시 두 배가 된다는 뜻인지도 설명하시오.
+# 
+# ```r
+# v_old <- 0.04
+# sigma_factor <- 2
+# v_new <- sigma_factor^2 * v_old
+# print(c(variance = v_new, SE = sqrt(v_new)))
+# ```
+# 
+# Q49 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q50 · 평균모형 대비 오차 감소
+# 
+# 절편을 포함한 동일 자료의 OLS 적합에서 $SST=80$, $SSE=20$이다. 평균만 예측하는 기준에 대한 $R^2$를 구하는 빈칸을 채우고, 결과를 정확히 한 문장으로 해석하시오. 관측을 맞힌 비율로 해석하지 않는다.
+# 
+# ```r
+# SST <- 80
+# SSE <- 20
+# R2 <- 1 - SSE / ____
+# print(R2)
+# ```
+# 
+# Q50 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q51 · 수정 R²에서 빠진 절편
+# 
+# 동일한 완전계수·절편 포함 OLS 자료에서 $n=12$, **설명변수 수** $p=2$, $SSE=18$, $SST=66$이다. 다음 수정 $R^2$ 계산은 잔차 자유도를 잘못 사용한다. 한 줄을 수정하고 올바른 값과 두 분모의 의미를 쓰시오.
+# 
+# ```r
+# n <- 12
+# p <- 2
+# SSE <- 18
+# SST <- 66
+# adjusted_R2 <- 1 - (SSE/(n-p)) / (SST/(n-1))
+# print(adjusted_R2)
+# ```
+# 
+# Q51 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q52 · 변수 추가 후 두 지표 읽기
+# 
+# 같은10개 관측과 같은 반응변수에서 절편 포함 축소모형과 중첩 완전모형을 적합했다. 축소모형의 설명변수 수는1, 완전모형은3이며 $SST=100$, SSE는 각각40과36이다. 출력되는 R²·수정 R²를 쓰고, 어느 지표가 왜 증가 또는 감소했는지 설명하시오. 이 두 수치만으로 미래 예측 우열을 확정할 수 있는지도 답하시오.
+# 
+# ```r
+# n <- 10
+# SST <- 100
+# p <- c(1, 3)
+# SSE <- c(40, 36)
+# R2 <- 1-SSE/SST
+# adj <- 1-(SSE/(n-p-1))/(SST/(n-1))
+# print(data.frame(model=c("reduced","full"), R2=R2, adjusted_R2=adj))
+# ```
+# 
+# Q52 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q53 · 귀무값과 계수 신뢰구간
+# 
+# 어떤 다중회귀 계수의 추정값은0.8, SE는0.2이다. 귀무가설은 $H_0:\beta=0.2$이며, 해당 자유도·신뢰수준의 양측 임계값은 이 문제에서2.0으로 제공한다. `c`는 두 끝점을 묶는다.
+# 
+# t 통계량의 빈칸을 채우고 t와 계수 신뢰구간을 구하시오. 주어진 양측 기준에서 귀무값0.2가 구간 안에 있는지도 설명하시오.
+# 
+# ```r
+# estimate <- 0.8
+# null <- 0.2
+# SE <- 0.2
+# critical <- 2.0
+# t_value <- (estimate - ____) / SE
+# CI <- estimate + c(-1, 1)*critical*SE
+# print(t_value)
+# print(CI)
+# ```
+# 
+# Q53 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q54 · 전체 F의 분자 자유도
+# 
+# 같은24개 관측에 절편과 설명변수 세 개를 넣은 완전계수 OLS 모형이다. $SST=500$, $SSE=200$이며 전체 귀무가설은 세 기울기가 모두0이다. 다음 코드는 분자의 자유도 나눗셈이 빠졌다. F 계산 한 줄을 고치고 분자·분모 자유도 및 F를 쓰시오.
+# 
+# ```r
+# n <- 24
+# p <- 3
+# SST <- 500
+# SSE <- 200
+# SSR <- SST-SSE
+# F_value <- SSR / (SSE/(n-p-1))
+# print(F_value)
+# ```
+# 
+# Q54 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q55 · 부분 F의 두 모형을 연결하기
+# 
+# 같은20개 완전 관측과 같은 반응변수에 중첩 OLS 모형을 적합했다. 축소모형은 절편+설명변수1개, 완전모형은 절편+설명변수3개이다. 따라서 절편 포함 계수 수는 $k_R=2$, $k_F=4$이며 $SSE_R=180$, $SSE_F=120$이다. 추가된 두 기울기가 모두0인지 검정한다.
+# 
+# 빈칸 두 개를 채우고 $q$, 완전모형 잔차 자유도, F를 계산하시오. 실제 수업의 A=`rating ~ complaints + privileges`, B=`rating ~ complaints + learning`처럼 설명변수만 서로 다른 두 모형을 같은 식으로 비교해도 되는지도 답하시오.
+# 
+# ```r
+# n <- 20
+# k_reduced <- 2
+# k_full <- 4
+# SSE_reduced <- 180
+# SSE_full <- 120
+# q <- k_full-k_reduced
+# df_full <- n-k_full
+# F_value <- ((SSE_reduced-SSE_full)/____) / (SSE_full/____)
+# print(c(q=q, df_full=df_full, F=F_value))
+# ```
+# 
+# Q55 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q56 · 계수 차이에서 공분산을 빠뜨리면
+# 
+# 같은 다중회귀 모형의 두 기울기 추정값이0.8과0.3이고, 추정된 분산·공분산은 $v_1=0.04$, $v_2=0.09$, $c_{12}=0.01$이다. 같은 단위의 두 설명변수 계수가 같은지 검정한다. 차이의 분산은 $v_1+v_2-2c_{12}$이고 한 제약에서는 $F=t^2$이다.
+# 
+# 오류 줄을 수정하고 차이·차이의 분산·SE·F를 구하시오. 표준오차끼리 단순히 빼면 안 되는 이유를 쓰시오. 필요한 분산 공식은 위에 제공하였다.
+# 
+# ```r
+# b <- c(0.8, 0.3)
+# v1 <- 0.04
+# v2 <- 0.09
+# cov12 <- 0.01
+# difference <- b[1]-b[2]
+# v_difference <- v1+v2
+# SE_difference <- sqrt(v_difference)
+# F_value <- difference^2/v_difference
+# print(c(difference=difference, variance=v_difference,
+#         SE=SE_difference, F=F_value))
+# ```
+# 
+# Q56 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q57 · 계수 합 제약의 원단위 SSE
+# 
+# 합성자료에서 완전모형은 $y=\beta_0+\beta_1x_1+\beta_2x_2+\varepsilon$이다. $H_0:\beta_1+\beta_2=1$을 대입하면 $y-x_2=\beta_0+\beta_1(x_1-x_2)+\varepsilon$이다. 아래 `lm`의 호출틀은 제공되어 있다. `fitted`는 적합값, `sum(...^2)`는 제곱합이다.
+# 
+# 빈칸 두 개를 채우고 축소모형의 적합값에 $x_2$를 다시 더하는 이유를 설명하시오. 제공 코드로 $SSE_F$, $SSE_R$, F를 구하시오. 반응변수가 다른 두 `lm` 객체를 그대로 `anova`에 넣어 비교하지 않는다.
+# 
+# ```r
+# d <- data.frame(x1=c(-1,-1,0,0,1,1), x2=c(-1,1,-1,1,-1,1))
+# d$y <- c(10.1,8.7,7.7,12.3,11.3,9.9)
+# full <- lm(y ~ x1+x2, data=d)
+# yr <- d$y - ____
+# xr <- d$x1 - ____
+# restricted <- lm(yr ~ xr)
+# fitted_original_y <- fitted(restricted)+d$x2
+# SSE_full <- sum((d$y-fitted(full))^2)
+# SSE_restricted <- sum((d$y-fitted_original_y)^2)
+# F_value <- ((SSE_restricted-SSE_full)/1)/(SSE_full/(6-3))
+# print(c(SSE_full=SSE_full, SSE_restricted=SSE_restricted, F=F_value))
+# ```
+# 
+# Q57 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q58 · 새 조건의 예측 중심
+# 
+# 주어진 절편 포함 적합식은 $\hat y=5+2x_1-x_2$이다. 새 조건은 $x_1=3,x_2=4$이며 `x0`는 절편 열을 포함한다. 빈칸을 채우고 점예측을 구하시오. 같은 조건에서 평균반응 신뢰구간과 개별값 예측구간의 중심이 같은지, 폭도 같은지를 설명하시오.
+# 
+# ```r
+# b <- c(5,2,-1)
+# x0 <- c(1,3,4)
+# prediction <- sum(b * ____)
+# print(prediction)
+# ```
+# 
+# Q58 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q59 · 평균과 다음 한 건의 구간 출력
+# 
+# 같은 다중회귀 모형과 같은 새 조건에서 점예측은50, 잔차 표준편차 추정값은 $s=6$, $h_0=0.25$이다. 해당 신뢰수준·잔차 자유도의 양측 임계값은2.0으로 제공한다. 표준 회귀모형의 가정이 성립한다고 가정한다.
+# 
+# 출력되는 두 구간을 계산하고, 같은 조건의 평균을 묻는 경우와 다음 관측 한 건을 묻는 경우에 각각 어느 행을 사용해야 하는지 설명하시오. 제곱근을 포함한 정확한 식도 허용한다.
+# 
+# ```r
+# fit <- 50
+# s <- 6
+# h0 <- 0.25
+# critical <- 2
+# mean_half <- critical*s*sqrt(h0)
+# prediction_half <- critical*s*sqrt(1+h0)
+# print(c(mean_lower=fit-mean_half, mean_upper=fit+mean_half))
+# print(c(pred_lower=fit-prediction_half, pred_upper=fit+prediction_half))
+# ```
+# 
+# Q59 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# ## Q60 · 열 순서가 바뀐 새 입력
+# 
+# 주어진 식은 $\hat y=3+1.5x_1-0.5x_2$이고 계수 벡터 순서는 절편,x1,x2이다. 새로운 조건은 $x_1=8,x_2=2$이다. 아래 코드는 실행되지만 두 설명변수의 위치가 바뀌었다.
+# 
+# 잘못된 줄을 수정하고 올바른 예측값을 구하시오. 잘못된 코드의 예측값도 계산하여, 벡터 길이가 맞는 것만으로 올바른 예측을 보장하지 못하는 이유를 설명하시오.
+# 
+# ```r
+# b <- c(3, 1.5, -0.5)
+# new <- data.frame(x1=8, x2=2)
+# x0 <- c(1, new$x2, new$x1)
+# prediction <- sum(x0*b)
+# print(prediction)
+# ```
+# 
+# Q60 TODO: 직접 완성하고 예상, 출력, 이유를 기록하세요.
+
+# APP01
+# ## APP01 · 같은 모형에서 입력과 출력 연결
+# 
+# 이 활동은 Q55·Q59의 실제자료 적용이며 60문항에 추가되는 독립 문항이 아닙니다.
+# [누적 앱 W08A](https://lunalab-ai.github.io/regre/apps/w08a/)의 **W08A 다중회귀 복습** 탭을 여세요.
+# 1. 실제30부서의 A/B/F 식과 p·k·잔차자유도를 확인하고 B→F의 비교가 중첩인지 설명합니다. A/B와 구별합니다.
+# 2. B의 평균 조건에서 confidence와 prediction을 바꾸기 **전** 중심과 폭의 변화를 예상하고 실행 뒤 관찰값·이유를 기록합니다.
+# 3. 신뢰수준 또는 complaints 중 하나만 바꾸고, 나머지를 고정한 비교를 기록합니다. 각 변수의 범위 안이라는 사실만으로 공동 관측 범위의 지지를 보장하지 않음을 설명합니다.
+# 4. [앱 편집기](https://lunalab-ai.github.io/regre/apps/w08a/edit/index.html)에서 `W08A_APP01` 표식이 있는 `selectInput("w8_kind",...)` 줄의 `selected="confidence"`를 `selected="prediction"`으로 바꾸고 Run합니다. 기본 선택과 폭 표시가 연결되는지 확인합니다. 다른 줄은 바꾸지 않습니다.
+# 5. 입력 `w8_kind` → 두 구간 표에서 행 선택 → 폭 표시의 연결을 말로 설명합니다. 아래 `selected_kind` 한 줄을 바꾸어 같은 계산을 R에서도 확인할 수 있습니다.
+# 
+# 학습 기록: 예상 / 바꾼 조건 하나 / 유지한 조건 / 실제 관찰 / 수식에서 바뀐 항 / 해석의 한계.
+selected_kind <- "confidence"
+activity_rows <- mlr_interval_comparison(demo_fit_B,demo_new,level=.95)
+activity_selected <- activity_rows[activity_rows$kind==selected_kind,,drop=FALSE]
+print(activity_selected[c("kind","fit","lower","upper","width")])

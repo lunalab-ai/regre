@@ -296,3 +296,33 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html
+
+## 중간고사 대비 복습 ④: 5주차 다중회귀 복습과 문제풀이
+
+[강의 원문](../course/notion/w08a/w08a-review-workbook.md)
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05a/w05a-multiple-regression.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05b/w05b-inference.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05b/w05b-interpretation.md
+
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w05b/w05b-math.md
+
+https://lunalab-ai.github.io/regre/apps/w08a/
+
+https://lunalab-ai.github.io/regre/apps/w08a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w08a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/base/html/scale.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/attitude.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html

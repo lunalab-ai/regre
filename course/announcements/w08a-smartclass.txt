@@ -1,0 +1,49 @@
+[회귀분석의 이해] 2026-10-19 · w08a 중간고사 대비 복습 ④: 5주차 다중회귀 복습과 문제풀이 자료 안내
+
+SmartClass 강의자료 메뉴에 등록할 학생용 안내입니다. 아래 링크를 이용해 주세요.
+
+Notion 강의노트
+https://fancy-ballcap-a15.notion.site/W08A-60-3fd7fd00109f8135ac80cb6659dc6fc1
+
+Markdown 강의노트
+https://github.com/lunalab-ai/regre/blob/main/course/notion/w08a/w08a-review-workbook.md
+
+PDF 강의노트
+https://github.com/lunalab-ai/regre/blob/main/course/handouts/w08a-review-workbook.pdf
+
+실습 파일 (R)
+https://github.com/lunalab-ai/regre/blob/main/labs/student/w08a/w08a-review.R
+
+실습 파일 (qmd)
+https://github.com/lunalab-ai/regre/blob/main/labs/student/w08a/w08a-review.qmd
+
+실습 파일 (R)
+https://github.com/lunalab-ai/regre/blob/main/labs/student/w08a/app/app.R
+
+실습 파일 (ipynb)
+https://github.com/lunalab-ai/regre/blob/main/notebooks/student/w08a_models.ipynb
+
+실습 파일 (ipynb)
+https://github.com/lunalab-ai/regre/blob/main/notebooks/student/w08a_inference.ipynb
+
+Colab 실습
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w08a/notebooks/student/w08a_models.ipynb
+
+설치 없는 온라인 R 실습
+https://lunalab-ai.github.io/regre/w08a.html
+
+위에 연결된 자료를 이용해 학습하고, 퀴즈 해설이 제공되면 먼저 풀어 본 뒤 확인해 주세요.
+
+- Colab에서 Drive에 사본을 저장한 뒤 설명을 읽고 한 셀씩 실행하세요.
+- 10월 19일에는 실제 5주차 W05A·W05B의 다중회귀를 복습합니다.
+- 60문항 중 대표 문항을 함께 풀며, 나머지는 자율 복습용입니다. 새로운 성적 반영 과제는 없습니다.
+- 모형과 관측행, 자유도, 검정의 대상, 구간의 대상을 먼저 확인하세요.
+- 설치 없는 온라인 R이나 R Colab A/B를 선택하세요. 마지막에는 누적 앱에서 구간을 바꾸고 코드 한 줄을 수정합니다.
+- 상세 해설은 교수자 안내에 따라 추후 제공합니다. 60문항 전체를 미리 풀어 올 필요는 없습니다.
+- R Colab B · 검정·예측: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w08a/notebooks/student/w08a_inference.ipynb
+- 누적 앱: https://lunalab-ai.github.io/regre/apps/w08a/ · 코드 편집: https://lunalab-ai.github.io/regre/apps/w08a/edit/index.html
+- PDF 바로 내려받기: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w08a/w08a-review-workbook.pdf
+- R·QMD·자료 묶음: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w08a/w08a-practice.zip
+
+전체 강의자료
+https://github.com/lunalab-ai/regre
