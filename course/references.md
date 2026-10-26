@@ -326,3 +326,7 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/confint.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/predict.lm.html
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
+
+## 중간고사 답안 리뷰와 판서 필기
+
+[강의 원문](../course/notion/w09a/w09a-midterm-review-notes.md)
