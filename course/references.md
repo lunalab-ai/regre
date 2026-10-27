@@ -330,3 +330,51 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/summary.lm.html
 ## 중간고사 답안 리뷰와 판서 필기
 
 [강의 원문](../course/notion/w09a/w09a-midterm-review-notes.md)
+
+## 회귀진단의 완성: 잔차·영향력·변수 효과를 직접 계산하기
+
+[강의 원문](../course/notion/w09b/w09b-review.md)
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w09b/src/diagnostics-influence-api.md
+
+https://lunalab-ai.github.io/regre/w09b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/
+
+[강의 원문](../course/notion/w09b/w09b-influence.md)
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w09b/src/diagnostics-influence-api.md
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+[강의 원문](../course/notion/w09b/w09b-effects.md)
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w09b/src/diagnostics-influence-api.md
+
+https://search.r-project.org/CRAN/refmans/car/html/avPlots.html
+
+https://search.r-project.org/CRAN/refmans/car/html/crPlots.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Scottish.Hills.txt
+
+[강의 원문](../course/notion/w09b/w09b-handling.md)
+
+https://lunalab-ai.github.io/regre/apps/w09b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w09b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/hills.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/rlm.html
+
+[강의 원문](../course/notion/w09b/w09b-workbook.md)
+
+https://lunalab-ai.github.io/regre/apps/w09b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w09b.html
+
+[강의 원문](../course/notion/w09b/w09b-math.md)
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html

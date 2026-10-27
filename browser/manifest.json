@@ -1153,6 +1153,111 @@
         "stopifnot(abs(summary(demo_fit_B)$r.squared-.708015195853)<1e-10,max(abs(demo_scaling$fitted_original_units$standardized-fitted(demo_fit_B)))<1e-9)",
         "stopifnot(abs(mlr_nested_f(demo_fit_B,demo_fit_F)$F-.528702821078)<1e-10,nrow(demo_intervals)==2,demo_intervals$width[2]>demo_intervals$width[1])"
       ]
+    },
+    {
+      "id": "w09b",
+      "title": "W09B · 회귀진단의 완성",
+      "cells": [
+        {
+          "id": "w09b-1",
+          "code": "tag <- \"2026-fall-w09b\"\nlocal_dirs <- c(\"data\",\"labs/student/w09b/data\",\"../../labs/student/w09b/data\",\"../../../labs/student/w09b/data\")\nfound <- local_dirs[file.exists(file.path(local_dirs,\"diagnostics-influence.R\"))]\ndata_dir <- if(length(found)) found[1] else file.path(path.expand(\"~\"),\".cache\",\"regre\",tag)\ndir.create(data_dir,recursive=TRUE,showWarnings=FALSE)\nexpected <- c(\"diagnostics-base-w09b.R\"=\"1d6d198179eb52922e0b7da3a3836838\",\"diagnostics-influence.R\"=\"106f87499e0a0565f4c19d75b7e26c9a\",\"diagnostics-effects.R\"=\"df333742f83c7f635427673c62acf214\",\"hand-six-w09b.csv\"=\"313e3e377db6f34c55963371366bcfe1\",\"nyrivers-w09b.csv\"=\"6f67635643fbb5aac0b37b7a8fed0d26\",\"scottish-hills-w09b.csv\"=\"ea6e5b9206884d205cfa393d89e0f84a\")\npaths <- c(\"diagnostics-base-w09b.R\"=\"src/diagnostics.R\",\"diagnostics-influence.R\"=\"src/diagnostics-influence.R\",\"diagnostics-effects.R\"=\"src/diagnostics-effects.R\",\"hand-six-w09b.csv\"=\"data/sample/w09b/hand-six-w09b.csv\",\"nyrivers-w09b.csv\"=\"data/sample/w09b/nyrivers-w09b.csv\",\"scottish-hills-w09b.csv\"=\"data/sample/w09b/scottish-hills-w09b.csv\")\noptions(timeout=120)\nfor(name in names(paths)) {\n  target <- file.path(data_dir,name)\n  if(!file.exists(target)) {\n    address <- paste0(\"https://raw.githubusercontent.com/lunalab-ai/regre/\",tag,\"/\",paths[[name]])\n    status <- download.file(address,target,mode=\"wb\")\n    if(status!=0) stop(\"다운로드 실패: 인터넷 연결을 확인하고 준비 셀을 다시 실행하세요.\")\n    cat(name,\": fixed-tag first download\\n\")\n  } else cat(name,\": bundled file or cache verified\\n\")\n  if(unname(tools::md5sum(target))!=expected[[name]]) stop(\"파일 동일성 불일치: 수정 파일을 보존하고 별도 폴더에서 고정 버전을 다시 준비하세요.\")\n}\nsource(file.path(data_dir,\"diagnostics-base-w09b.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"diagnostics-influence.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"diagnostics-effects.R\"),encoding=\"UTF-8\")\ntoy <- read.csv(file.path(data_dir,\"hand-six-w09b.csv\"))\nny <- read.csv(file.path(data_dir,\"nyrivers-w09b.csv\"))\nhills <- read.csv(file.path(data_dir,\"scottish-hills-w09b.csv\"))\nfit_review <- lm(rating~complaints+learning,data=datasets::attitude)\nfit_toy <- lm(y~x,data=toy)\nfit_ny_simple <- lm(Nitrogen~ComIndl,data=ny)\nfit_ny_full <- lm(Nitrogen~Agr+Forest+Rsdntial+ComIndl,data=ny)\nfit_hills <- lm(Time~Distance+Climb,data=hills)\ntoy_influence <- diag_influence(fit_toy)\nny_influence <- diag_influence(fit_ny_simple)\nav_distance <- diag_added_variable(fit_hills,\"Distance\")\ncpr_distance <- diag_component_residual(fit_hills,\"Distance\")\ncat(R.version.string,\"\\nRows: six=\",nrow(toy),\" NY=\",nrow(ny),\" Hills=\",nrow(hills),\"\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w09b-2",
+          "code": "toy\nc(coefficients=coef(fit_toy),SSE=deviance(fit_toy),s=sigma(fit_toy))\ntoy_influence[4,c(\"raw\",\"h\",\"internal\",\"external\",\"Cook\",\"DFFITS\",\"potential\",\"residual_component\",\"Hadi\")]\ni <- 4L\ndeleted4 <- diag_deleted_fit(fit_toy,i)\nc(Cook_formula=toy_influence$Cook[i],Cook_refit=deleted4$Cook)\nplot(toy$x,toy$y,pch=19,col=\"#2166AC\",xlab=\"x (teaching units)\",ylab=\"y (teaching units)\")\nabline(fit_toy,col=\"#D6604D\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w09b-3",
+          "code": "# L01: 식의 각 항과 단위를 먼저 적고 아래 주석을 완성하세요.\n# your_calculation <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-4",
+          "code": "# L02: 식의 각 항과 단위를 먼저 적고 아래 주석을 완성하세요.\n# your_calculation <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-5",
+          "code": "ny_influence[4:5,c(\"row\",\"internal\",\"external\",\"h\",\"Cook\",\"DFFITS\",\"potential\",\"residual_component\",\"Hadi\")]\nplot(ny_influence$residual_component,ny_influence$potential,pch=19,\n xlab=\"Residual component R\",ylab=\"Potential P\",col=\"#2166AC\")\ntext(ny_influence$residual_component[4:5],ny_influence$potential[4:5],labels=4:5,pos=4)\nny_influence[7,c(\"raw\",\"h\")]\nc(SSE=deviance(fit_ny_simple),k=fit_ny_simple$rank,df=df.residual(fit_ny_simple))",
+          "exercise": false
+        },
+        {
+          "id": "w09b-6",
+          "code": "# L03: d_squared <- ...\n# P <- ...; R <- ...; H <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-7",
+          "code": "coef(fit_hills)\nrx <- residuals(lm(Distance~Climb,data=hills))\nry <- residuals(lm(Time~Climb,data=hills))\nc(AV_slope=sum(rx*ry)/sum(rx^2),full_coefficient=coef(fit_hills)[\"Distance\"])\nhead(av_distance$data)\ncpr_distance[1,]\nplot(av_distance$data$x_residual,av_distance$data$y_residual,pch=19,\n xlab=\"Distance residual (miles)\",ylab=\"Time residual (seconds)\",col=\"#2166AC\")\nabline(a=0,b=av_distance$slope,col=\"#D6604D\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w09b-8",
+          "code": "# L04: 같은 관측과 단위를 확인한 뒤 계산하세요.\n# your_calculation <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-9",
+          "code": "# L05: 같은 관측과 단위를 확인한 뒤 계산하세요.\n# your_calculation <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-10",
+          "code": "if(!requireNamespace(\"MASS\",quietly=TRUE)) stop(\"MASS 패키지가 필요합니다. 브라우저는 로딩 완료를 기다리고, 데스크톱은 준비 안내를 확인하세요.\")\nfit_hills_robust <- MASS::rlm(Time~Distance+Climb,data=hills)\ncbind(OLS=coef(fit_hills),Huber_M=coef(fit_hills_robust))\ndata.frame(row=c(7,11,18),h=hatvalues(fit_hills)[c(7,11,18)],weight=fit_hills_robust$w[c(7,11,18)])\nlist(converged=fit_hills_robust$converged,residual_df=fit_hills_robust$df.residual)\nc(Distance_only=coef(lm(Time~Distance,data=hills))[\"Distance\"],Distance_adjusted=coef(fit_hills)[\"Distance\"])",
+          "exercise": false
+        },
+        {
+          "id": "w09b-11",
+          "code": "# L06: 편집기에서 W09B_L06 표식을 찾아 출력 연결 한 곳을 수정합니다.\n# 수정 전 예상, 수정한 필드와 라벨, 두 관측의 실제 출력을 기록하세요.",
+          "exercise": false
+        },
+        {
+          "id": "w09b-12",
+          "code": "# L07: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-13",
+          "code": "# L08: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-14",
+          "code": "# L09: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-15",
+          "code": "# L10: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-16",
+          "code": "# L11: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-17",
+          "code": "# L12: 식/코드와 해석을 직접 작성하세요.\n# your_check <- ...",
+          "exercise": false
+        },
+        {
+          "id": "w09b-18",
+          "code": "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w09b-19",
+          "code": "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
+        "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+      ]
     }
   ],
   "source_sha256": {
@@ -1187,7 +1292,14 @@
     "labs/student/w07b/w07b-review.qmd": "660414eec0c1062a0c822b096947edb336935b1ab9d8a46e15c6454ffc3af0fa",
     "labs/student/w08a/data/mlr-inference.R": "b4daddb8278f5c298c3f95e7c7a8ba68591c3b8e72bc5267420ae645fdce5633",
     "labs/student/w08a/data/mlr-tools.R": "39a018b91947a4ff86d18d538f826bfd8a8b8c1f3966954a3491b84e69018cb5",
-    "labs/student/w08a/w08a-review.qmd": "cd70e9faab2c16c2bf27302528b29cd000dfbfc4fd2cb767dbcc5d9577156e70"
+    "labs/student/w08a/w08a-review.qmd": "cd70e9faab2c16c2bf27302528b29cd000dfbfc4fd2cb767dbcc5d9577156e70",
+    "labs/student/w09b/data/diagnostics-base-w09b.R": "a65806470736e48751bbb0d45ab13561df43fad2f71a2a5aedd80d6858357e11",
+    "labs/student/w09b/data/diagnostics-influence.R": "2ecf758972fece6c5b5a0558718cdc1e7be4f0e9e80ed5638bd34a190f5f24e6",
+    "labs/student/w09b/data/diagnostics-effects.R": "533972f34f9a45830cb5fa478188c3955b8f376b04783eecc4c45fb21ab2543b",
+    "labs/student/w09b/data/hand-six-w09b.csv": "beb816d63f6ce8ce6b05e9e11d0a68357db686dc31ad5c2d6b673db4e17b5bac",
+    "labs/student/w09b/data/nyrivers-w09b.csv": "706e47d1d929ec4364ec0c0f6dac7ac479920d085737260f19b0cc6c724acdc0",
+    "labs/student/w09b/data/scottish-hills-w09b.csv": "423f12c27f3e173e3b73ae5bf2d4dabe890c5812e261ca7e7812305c14ff1f7f",
+    "labs/student/w09b/w09b-diagnostics.qmd": "bf361d80df8fa288f377b7706992ee32eed0883048f1f311413cc419a1f90cbd"
   },
   "quarto_live_tag": "v0.2.0",
   "webr": "https://webr.r-wasm.org/v0.6.0/"

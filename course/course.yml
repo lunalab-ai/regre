@@ -468,6 +468,52 @@ sessions:
   - 중간고사 채점은 이번 주 중 마무리할 예정입니다. 채점이 완료된 후 결과를 공지하겠습니다.
   browser_no_practice: 승인된 W09A는 중간고사 판서 답안 리뷰 전용 수업이며 신규 R 실습을 생성하지 않는다. 기존 실습·공개
     링크는 보존한다.
+- id: w09b
+  date: '2026-10-28'
+  title: '회귀진단의 완성: 잔차·영향력·변수 효과를 직접 계산하기'
+  pages:
+  - course/notion/w09b/w09b-review.md
+  - course/notion/w09b/w09b-influence.md
+  - course/notion/w09b/w09b-effects.md
+  - course/notion/w09b/w09b-handling.md
+  - course/notion/w09b/w09b-workbook.md
+  - course/notion/w09b/w09b-math.md
+  labs:
+  - labs/student/w09b/w09b-diagnostics.R
+  - labs/student/w09b/w09b-diagnostics.qmd
+  - labs/student/w09b/app/app.R
+  - notebooks/student/w09b_influence.ipynb
+  - notebooks/student/w09b_effects.ipynb
+  quiz: course/quiz/w09b.yml
+  runtime_label: R · webR · 독립 R Colab A/B · 누적 Shiny
+  browser_source: labs/student/w09b/w09b-diagnostics.qmd
+  browser_title: W09B · 회귀진단의 완성
+  browser_resources:
+  - labs/student/w09b/data/diagnostics-base-w09b.R
+  - labs/student/w09b/data/diagnostics-influence.R
+  - labs/student/w09b/data/diagnostics-effects.R
+  - labs/student/w09b/data/hand-six-w09b.csv
+  - labs/student/w09b/data/nyrivers-w09b.csv
+  - labs/student/w09b/data/scottish-hills-w09b.csv
+  browser_packages:
+  - MASS
+  browser_url: https://lunalab-ai.github.io/regre/w09b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b/notebooks/student/w09b_influence.ipynb
+  announcement_guidance:
+  - 주교재5.1–5.6을 빠르게 복습하고5.7–5.15를 마무리합니다. 설명 예제10개와 직접 계산12문제 중 필수L01–L06을 우선하세요.
+  - 온라인R·데스크톱R/QMD·독립 R Colab A/B 중 한 환경을 선택합니다. 데이터와 고정 버전 공통 함수는 자동 준비합니다.
+  - 'R Colab B · 변수 효과/로버스트: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b/notebooks/student/w09b_effects.ipynb'
+  - 마지막은 누적 앱에서 W09B_L06 출력 연결 한 곳을 수정하고 입력 변경,CSV/R다운로드,원상복구를 확인합니다.
+  - 원자료를 보존하고 모형·단위·축을 확인합니다. 새 성적 반영 과제나 제출 기한은 없습니다.
+  browser_checks:
+  - "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n\
+    \ max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\n\
+    cat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")"
+  - "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n\
+    \ abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"\
+    Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\n\
+    cat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+  notion_url: https://fancy-ballcap-a15.notion.site/W09B-2026-10-28-4067fd00109f81c6b1c3eedfeba4ee03
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -620,6 +666,30 @@ browser:
     - labs/student/w08a/data/review-slr.R
     - labs/student/w08a/data/slr-tools.R
     - labs/student/w08a/data/w02b-observations.csv
+  - id: w09b
+    source: labs/student/w09b/app/app.R
+    data:
+    - labs/student/w09b/data/association-tools.R
+    - labs/student/w09b/data/Computer.Repair.txt
+    - labs/student/w09b/data/diagnostics-base-w09b.R
+    - labs/student/w09b/data/diagnostics-effects.R
+    - labs/student/w09b/data/diagnostics-influence.R
+    - labs/student/w09b/data/diagnostics.R
+    - labs/student/w09b/data/hamilton.csv
+    - labs/student/w09b/data/hand-six-w09b.csv
+    - labs/student/w09b/data/mlr-inference.R
+    - labs/student/w09b/data/mlr-tools.R
+    - labs/student/w09b/data/nyrivers-w09b.csv
+    - labs/student/w09b/data/prediction-tools.R
+    - labs/student/w09b/data/r-syntax-tools.R
+    - labs/student/w09b/data/README.md
+    - labs/student/w09b/data/review-fit.R
+    - labs/student/w09b/data/review-foundations.R
+    - labs/student/w09b/data/review-slr.R
+    - labs/student/w09b/data/scottish-hills-w09b.csv
+    - labs/student/w09b/data/slr-tools.R
+    - labs/student/w09b/data/w02b-observations.csv
+    - labs/student/w09b/data/W09B-SOURCES.md
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
