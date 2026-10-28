@@ -405,11 +405,13 @@ NY 네 변수 모형을 전체 자료와 5번 제외 자료에 각각 적합해 
 #| label: cell-w09b-18
 #| autorun: false
 #| persist: true
+local({
 stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,
  max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,
  max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,
  abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)
 cat("W09B_INFLUENCE_RUNTIME_CHECK_PASSED\n")
+})
 ```
 
 :::
@@ -422,11 +424,13 @@ cat("W09B_INFLUENCE_RUNTIME_CHECK_PASSED\n")
 #| label: cell-w09b-19
 #| autorun: false
 #| persist: true
+local({
 stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,
  abs(av_distance$slope-coef(fit_hills)["Distance"])<1e-8,
  max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)["Distance"]*hills$Distance))<1e-8,
  fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))
 cat("W09B_EFFECTS_RUNTIME_CHECK_PASSED\n")
+})
 ```
 
 :::

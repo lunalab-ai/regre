@@ -84,8 +84,10 @@ def generate(root=ROOT):
     browser = root / 'browser'
     if not (browser / '_extensions/r-wasm/live/_extension.yml').exists():
         raise ValueError('Install the pinned Quarto Live extension in browser/')
+    patch_quarto_live_reset_persistence(browser)
     entries = lessons(root, config)
-    manifest = {'pages': [], 'source_sha256': {}, 'quarto_live_tag': settings['quarto_live_tag'], 'webr': settings['webr_url']}
+    manifest = {'pages': [], 'source_sha256': {}, 'quarto_live_tag': settings['quarto_live_tag'],
+                'quarto_live_reset_patch': 'remove-null-on-reset-v1', 'webr': settings['webr_url']}
     navbar = [{'text': '실습 홈', 'href': 'index.qmd'}]
     for s, rel in entries:
         s['browser_url'] = settings['url'].rstrip('/') + '/' + s['id'] + '.html'
@@ -158,6 +160,27 @@ def binary(name):
             found = next(iter(sorted(Path('C:/Program Files/R').glob('R-*/bin/Rscript.exe'), reverse=True)), None)
     if not found or not Path(found).exists(): raise ValueError('Missing tool: ' + name)
     return str(found)
+
+
+def patch_quarto_live_reset_persistence(target):
+    """Do not persist the non-running reset sentinel as editable R source.
+
+    Quarto Live v0.2.0 resets the document, then emits code=null to clear its
+    execution result without autorunning. Its persistence handler otherwise
+    stores the literal string 'null', replacing the source on the next load.
+    Remove only this editor's key for that explicit reset; preserve real edits.
+    """
+    path = target / '_extensions/r-wasm/live/resources/live-runtime.js'
+    text = path.read_text(encoding='utf-8')
+    old = 'this.options.persist&&window.localStorage.setItem(this.storageKey,this.container.value.code)'
+    new = ('this.options.persist&&(this.container.value.code===null?'
+           'window.localStorage.removeItem(this.storageKey):'
+           'window.localStorage.setItem(this.storageKey,this.container.value.code))')
+    if text.count(new) == 1 and old not in text:
+        return
+    if text.count(old) != 1 or new in text:
+        raise ValueError('Review changed Quarto Live reset persistence: ' + str(path))
+    path.write_text(text.replace(old, new), encoding='utf-8')
 
 
 def patch_shinylive_utf8_export(target):

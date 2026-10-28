@@ -141,16 +141,20 @@ c(Distance_only=coef(lm(Time~Distance,data=hills))["Distance"],Distance_adjusted
 
 # 기본 실행 자가 검사
 
+local({
 stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,
  max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,
  max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,
  abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)
 cat("W09B_INFLUENCE_RUNTIME_CHECK_PASSED\n")
+})
 
 # 변수 효과 실행 자가 검사
 
+local({
 stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,
  abs(av_distance$slope-coef(fit_hills)["Distance"])<1e-8,
  max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)["Distance"]*hills$Distance))<1e-8,
  fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))
 cat("W09B_EFFECTS_RUNTIME_CHECK_PASSED\n")
+})

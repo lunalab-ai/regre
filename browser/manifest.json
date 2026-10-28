@@ -1245,18 +1245,18 @@
         },
         {
           "id": "w09b-18",
-          "code": "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
+          "code": "local({\nstopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")\n})",
           "exercise": false
         },
         {
           "id": "w09b-19",
-          "code": "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")",
+          "code": "local({\nstopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")\n})",
           "exercise": false
         }
       ],
       "checks": [
-        "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
-        "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+        "local({\nstopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\ncat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")\n})",
+        "local({\nstopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\ncat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")\n})"
       ]
     }
   ],
@@ -1299,8 +1299,9 @@
     "labs/student/w09b/data/hand-six-w09b.csv": "beb816d63f6ce8ce6b05e9e11d0a68357db686dc31ad5c2d6b673db4e17b5bac",
     "labs/student/w09b/data/nyrivers-w09b.csv": "706e47d1d929ec4364ec0c0f6dac7ac479920d085737260f19b0cc6c724acdc0",
     "labs/student/w09b/data/scottish-hills-w09b.csv": "423f12c27f3e173e3b73ae5bf2d4dabe890c5812e261ca7e7812305c14ff1f7f",
-    "labs/student/w09b/w09b-diagnostics.qmd": "bf361d80df8fa288f377b7706992ee32eed0883048f1f311413cc419a1f90cbd"
+    "labs/student/w09b/w09b-diagnostics.qmd": "aef24ff3e55f38bdf5e0655f22ab6371b47e625436cdd6922e27245f3e4b072b"
   },
   "quarto_live_tag": "v0.2.0",
+  "quarto_live_reset_patch": "remove-null-on-reset-v1",
   "webr": "https://webr.r-wasm.org/v0.6.0/"
 }

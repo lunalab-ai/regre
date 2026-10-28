@@ -498,21 +498,21 @@ sessions:
   browser_packages:
   - MASS
   browser_url: https://lunalab-ai.github.io/regre/w09b.html
-  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b/notebooks/student/w09b_influence.ipynb
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b-r1/notebooks/student/w09b_influence.ipynb
   announcement_guidance:
   - 주교재5.1–5.6을 빠르게 복습하고5.7–5.15를 마무리합니다. 설명 예제10개와 직접 계산12문제 중 필수L01–L06을 우선하세요.
   - 온라인R·데스크톱R/QMD·독립 R Colab A/B 중 한 환경을 선택합니다. 데이터와 고정 버전 공통 함수는 자동 준비합니다.
-  - 'R Colab B · 변수 효과/로버스트: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b/notebooks/student/w09b_effects.ipynb'
+  - 'R Colab B · 변수 효과/로버스트: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w09b-r1/notebooks/student/w09b_effects.ipynb'
   - 마지막은 누적 앱에서 W09B_L06 출력 연결 한 곳을 수정하고 입력 변경,CSV/R다운로드,원상복구를 확인합니다.
   - 원자료를 보존하고 모형·단위·축을 확인합니다. 새 성적 반영 과제나 제출 기한은 없습니다.
   browser_checks:
-  - "stopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n\
+  - "local({\nstopifnot(nrow(toy)==6,nrow(ny)==20,df.residual(fit_toy)==4,\n max(abs(toy_influence$Cook-cooks.distance(fit_toy)))<1e-9,\n\
     \ max(abs(ny_influence$DFFITS-dffits(fit_ny_simple)))<1e-9,\n abs(diag_deleted_fit(fit_ny_simple,4)$Cook-ny_influence$Cook[4])<1e-9)\n\
-    cat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")"
-  - "stopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n\
+    cat(\"W09B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")\n})"
+  - "local({\nstopifnot(nrow(hills)==35,df.residual(fit_hills)==32,hills$Time[23]==2859,\n\
     \ abs(av_distance$slope-coef(fit_hills)[\"Distance\"])<1e-8,\n max(abs(cpr_distance$component_residual-residuals(fit_hills)-coef(fit_hills)[\"\
     Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\n\
-    cat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+    cat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")\n})"
   notion_url: https://fancy-ballcap-a15.notion.site/W09B-2026-10-28-4067fd00109f81c6b1c3eedfeba4ee03
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
