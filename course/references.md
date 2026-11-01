@@ -378,3 +378,63 @@ https://lunalab-ai.github.io/regre/w09b.html
 [강의 원문](../course/notion/w09b/w09b-math.md)
 
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+## 회귀진단을 처음부터 다시 이해하고 범주형 예측변수로 확장하기
+
+[강의 원문](../course/notion/w10a/w10a-foundations.md)
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/ppoints.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/qqnorm.html
+
+https://www.itl.nist.gov/div898/handbook/eda/section3/runseqpl.htm
+
+[강의 원문](../course/notion/w10a/w10a-influence.md)
+
+https://github.com/lunalab-ai/regre/blob/2026-fall-w10a/src/diagnostics-learning-api.md
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/
+
+[강의 원문](../course/notion/w10a/w10a-effects.md)
+
+https://search.r-project.org/CRAN/refmans/car/html/avPlots.html
+
+https://search.r-project.org/CRAN/refmans/car/html/crPlots.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/rlm.html
+
+[강의 원문](../course/notion/w10a/w10a-categorical.md)
+
+https://lunalab-ai.github.io/regre/apps/w10a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w10a.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/model.matrix.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/relevel.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/
+
+[강의 원문](../course/notion/w10a/w10a-workbook.md)
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w10a/labs/student/w10a
+
+https://lunalab-ai.github.io/regre/apps/w10a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w10a.html
+
+[강의 원문](../course/notion/w10a/w10a-concept-cards.md)
+
+https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/rlm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/ppoints.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/qqnorm.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/

@@ -514,6 +514,57 @@ sessions:
     Distance\"]*hills$Distance))<1e-8,\n fit_hills_robust$converged,length(fit_hills_robust$w)==35,is.na(fit_hills_robust$df.residual))\n\
     cat(\"W09B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")\n})"
   notion_url: https://fancy-ballcap-a15.notion.site/W09B-2026-10-28-4067fd00109f81c6b1c3eedfeba4ee03
+- id: w10a
+  date: '2026-11-02'
+  title: 회귀진단을 처음부터 다시 이해하고 범주형 예측변수로 확장하기
+  pages:
+  - course/notion/w10a/w10a-foundations.md
+  - course/notion/w10a/w10a-influence.md
+  - course/notion/w10a/w10a-effects.md
+  - course/notion/w10a/w10a-categorical.md
+  - course/notion/w10a/w10a-workbook.md
+  - course/notion/w10a/w10a-concept-cards.md
+  labs:
+  - labs/student/w10a/w10a-diagnostics.R
+  - labs/student/w10a/w10a-diagnostics.qmd
+  - labs/student/w10a/app/app.R
+  - notebooks/student/w10a_foundations.ipynb
+  - notebooks/student/w10a_categorical.ipynb
+  quiz: course/quiz/w10a.yml
+  runtime_label: R · webR · 독립 R Colab A/B · 누적 Shiny
+  browser_source: labs/student/w10a/w10a-diagnostics.qmd
+  browser_title: W10A · 회귀진단 재학습과 범주형 예측변수
+  browser_resources:
+  - labs/student/w10a/data/diagnostics-base-w09b.R
+  - labs/student/w10a/data/diagnostics-influence.R
+  - labs/student/w10a/data/diagnostics-effects.R
+  - labs/student/w10a/data/diagnostics-learning.R
+  - labs/student/w10a/data/hand-five-w10a.csv
+  - labs/student/w10a/data/nyrivers-w10a.csv
+  - labs/student/w10a/data/scottish-hills-w10a.csv
+  - labs/student/w10a/data/salary-survey-w10a.csv
+  browser_packages:
+  - MASS
+  browser_url: https://lunalab-ai.github.io/regre/w10a.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w10a/notebooks/student/w10a_foundations.ipynb
+  browser_checks:
+  - "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,hills$Time[23]==2859,\n abs(shift$trace$delta_fitted-2)<1e-8,abs(shift$trace$delta_residual-8)<1e-8,\n\
+    \ abs(sum(hatvalues(ft))-2)<1e-10,max(abs(ni$Cook-cooks.distance(fn)))<1e-8,\n\
+    \ abs(av$slope-coef(fh)[\"Distance\"])<1e-8,rob$converged,is.na(rob$df.residual))\n\
+    cat(\"W10A_FOUNDATIONS_RUNTIME_CHECK_PASSED\\n\")"
+  - "stopifnot(nrow(salary)==46,sa$rank==5,si$rank==7,df.residual(si)==39,\n abs(sigma(sa)-1027.4372509814)<1e-6,abs(sigma(si)-173.8086086257)<1e-6,\n\
+    \ max(abs(fitted(si)-fitted(si_ref)))<1e-8,nobs(sd)==45,df.residual(sd)==38,\n\
+    \ abs(sigma(sd)-67.1189282144)<1e-6,\n max(abs(salary_group_predictions(si,6)$S_hat-pr$S_hat-coef(si)[\"\
+    X\"]))<1e-8)\ncat(\"W10A_CATEGORICAL_RUNTIME_CHECK_PASSED\\n\")"
+  announcement_guidance:
+  - 지난5장 내용을 처음부터 다시 배우고 주교재6.1–6.3까지 연결합니다. 설명 예제E01–E12,필수L01–L06과반복L07–L12를구별합니다.
+  - 온라인R·RStudio/R-QMD·독립R Colab A/B 중 한 경로를선택하고 예상→손계산→실행→한문장해석을남기세요.
+  - 'R Colab B: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w10a/notebooks/student/w10a_categorical.ipynb'
+  - 마지막누적앱W10A_L06에서출력필드와제목을수정하고입력반응·CSV/R다운로드·재시작을확인합니다. 새성적반영과제나제출기한은없습니다.
+  - '학생 통합 교재 PDF: https://github.com/lunalab-ai/regre/raw/2026-fall-w10a/course/handouts/w10a-student-book.pdf'
+  - '직접 계산 인쇄용 워크북 PDF: https://github.com/lunalab-ai/regre/raw/2026-fall-w10a/course/handouts/w10a-workbook-print.pdf'
+  - '학생 실습·PDF 전체 ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10a/w10a-student-materials.zip'
+  - '누적 앱 편집기: https://lunalab-ai.github.io/regre/apps/w10a/edit/index.html'
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -690,6 +741,40 @@ browser:
     - labs/student/w09b/data/slr-tools.R
     - labs/student/w09b/data/w02b-observations.csv
     - labs/student/w09b/data/W09B-SOURCES.md
+  - id: w10a
+    source: labs/student/w10a/app/app.R
+    data:
+    - labs/student/w10a/data/association-tools.R
+    - labs/student/w10a/data/Computer.Repair.txt
+    - labs/student/w10a/data/diagnostics-base-w09b.R
+    - labs/student/w10a/data/diagnostics-effects.R
+    - labs/student/w10a/data/diagnostics-influence.R
+    - labs/student/w10a/data/diagnostics-learning.R
+    - labs/student/w10a/data/diagnostics.R
+    - labs/student/w10a/data/hamilton.csv
+    - labs/student/w10a/data/hand-five-w10a.csv
+    - labs/student/w10a/data/hand-six-w09b.csv
+    - labs/student/w10a/data/mlr-inference.R
+    - labs/student/w10a/data/mlr-tools.R
+    - labs/student/w10a/data/nyrivers-w09b.csv
+    - labs/student/w10a/data/nyrivers-w10a.csv
+    - labs/student/w10a/data/prediction-tools.R
+    - labs/student/w10a/data/r-syntax-tools.R
+    - labs/student/w10a/data/README.md
+    - labs/student/w10a/data/review-fit.R
+    - labs/student/w10a/data/review-foundations.R
+    - labs/student/w10a/data/review-slr.R
+    - labs/student/w10a/data/salary-survey-w10a.csv
+    - labs/student/w10a/data/scottish-hills-w09b.csv
+    - labs/student/w10a/data/scottish-hills-w10a.csv
+    - labs/student/w10a/data/slr-tools.R
+    - labs/student/w10a/data/w02b-observations.csv
+    - labs/student/w10a/data/w09b-distance-effects.png
+    - labs/student/w10a/data/w09b-ny-pr.png
+    - labs/student/w10a/data/w09b-robust.png
+    - labs/student/w10a/data/w09b-six.png
+    - labs/student/w10a/data/W09B-SOURCES.md
+    - labs/student/w10a/data/W10A-SOURCES.md
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
