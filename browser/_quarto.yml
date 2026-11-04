@@ -18,6 +18,7 @@ project:
   - w08a.qmd
   - w09b.qmd
   - w10a.qmd
+  - w10b.qmd
 website:
   title: 회귀분석의 이해 · 온라인 실습
   site-url: https://lunalab-ai.github.io/regre/
@@ -55,6 +56,8 @@ website:
       href: w09b.qmd
     - text: w10a · W10A · 회귀진단 재학습과 범주형 예측변수
       href: w10a.qmd
+    - text: w10b · W10B · 한 점씩 이해하는 영향력과 변수 효과
+      href: w10b.qmd
 lang: ko
 engine: knitr
 format:

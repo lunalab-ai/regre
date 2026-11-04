@@ -1288,6 +1288,126 @@
         "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,hills$Time[23]==2859,\n abs(shift$trace$delta_fitted-2)<1e-8,abs(shift$trace$delta_residual-8)<1e-8,\n abs(sum(hatvalues(ft))-2)<1e-10,max(abs(ni$Cook-cooks.distance(fn)))<1e-8,\n abs(av$slope-coef(fh)[\"Distance\"])<1e-8,rob$converged,is.na(rob$df.residual))\ncat(\"W10A_FOUNDATIONS_RUNTIME_CHECK_PASSED\\n\")",
         "stopifnot(nrow(salary)==46,sa$rank==5,si$rank==7,df.residual(si)==39,\n abs(sigma(sa)-1027.4372509814)<1e-6,abs(sigma(si)-173.8086086257)<1e-6,\n max(abs(fitted(si)-fitted(si_ref)))<1e-8,nobs(sd)==45,df.residual(sd)==38,\n abs(sigma(sd)-67.1189282144)<1e-6,\n max(abs(salary_group_predictions(si,6)$S_hat-pr$S_hat-coef(si)[\"X\"]))<1e-8)\ncat(\"W10A_CATEGORICAL_RUNTIME_CHECK_PASSED\\n\")"
       ]
+    },
+    {
+      "id": "w10b",
+      "title": "W10B · 한 점씩 이해하는 영향력과 변수 효과",
+      "cells": [
+        {
+          "id": "w10b-1",
+          "code": "# Prefer bundled files; otherwise download from one fixed public tag.\ntag <- \"2026-fall-w10b\"\nlocal_dirs <- c(\"data\",\"labs/student/w10b/data\",\"../../labs/student/w10b/data\",\n                \"../../../labs/student/w10b/data\",\"../data\")\nfound <- local_dirs[file.exists(file.path(local_dirs,\"diagnostics-w10b.R\"))]\ncache_root <- Sys.getenv(\"REGRE_CACHE_DIR\",unset=file.path(path.expand(\"~\"),\".cache\",\"regre\"))\ndata_dir <- if(length(found)) found[1] else file.path(cache_root,tag)\ndir.create(data_dir,recursive=TRUE,showWarnings=FALSE)\nexpected <- c(\"diagnostics-base-w10b.R\"=\"1d6d198179eb52922e0b7da3a3836838\",\"diagnostics-influence-w10b.R\"=\"106f87499e0a0565f4c19d75b7e26c9a\",\"diagnostics-effects-w10b.R\"=\"df333742f83c7f635427673c62acf214\",\"diagnostics-w10b.R\"=\"bf0d09021d75d1e04dbbbfc64fd23403\",\"hand-five-w10b.csv\"=\"d5911a65bf38d08ef947d43cb7ebf0e9\",\"nyrivers-w10b.csv\"=\"6f67635643fbb5aac0b37b7a8fed0d26\",\"scottish-hills-w10b.csv\"=\"ea6e5b9206884d205cfa393d89e0f84a\")\noptions(timeout=120)\nfor(name in names(expected)) {\n target <- file.path(data_dir,name)\n if(!file.exists(target)) {\n  url <- paste0(\"https://raw.githubusercontent.com/lunalab-ai/regre/\",tag,\"/labs/student/w10b/data/\",name)\n  status <- download.file(url,target,mode=\"wb\")\n  if(status!=0) stop(\"Download failed. Check the connection and rerun preparation.\")\n  cat(name,\": fixed-tag download\\n\")\n } else cat(name,\": bundled/cache file\\n\")\n if(unname(tools::md5sum(target))!=expected[[name]])\n  stop(\"Unexpected file bytes. Preserve edited files; use a fresh folder or cache.\")\n}\nsource(file.path(data_dir,\"diagnostics-base-w10b.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"diagnostics-influence-w10b.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"diagnostics-effects-w10b.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"diagnostics-w10b.R\"),encoding=\"UTF-8\")\ntoy <- read.csv(file.path(data_dir,\"hand-five-w10b.csv\"))\nny <- read.csv(file.path(data_dir,\"nyrivers-w10b.csv\"))\nhills <- read.csv(file.path(data_dir,\"scottish-hills-w10b.csv\"))\nft <- lm(y~x,toy); fn <- lm(Nitrogen~ComIndl,ny)\nfh <- lm(Time~Distance+Climb,hills)\nstopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,hills$Time[23]==2859)\ncat(\"W10B_DATA_READY: toy5 / NY20 / Hills35; units unchanged\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w10b-2",
+          "code": "print(c(observed=toy$y[3],fitted=fitted(ft)[3],residual=residuals(ft)[3],h=hatvalues(ft)[3]))\nplot(toy$x,toy$y,pch=19,xlab=\"x (teaching units)\",ylab=\"y (teaching units)\");abline(ft,col=\"steelblue\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w10b-3",
+          "code": "my_L01_prediction <- NA_real_\nmy_L01_residual <- NA_real_\nmy_L01_h <- NA_real_",
+          "exercise": true
+        },
+        {
+          "id": "w10b-4",
+          "code": "d4 <- w10b_deletion_trace(ft,4)\nprint(d4$predictions,digits=6)\nprint(c(numerator=d4$numerator,denominator=d4$denominator,Cook=d4$Cook_from_predictions))",
+          "exercise": false
+        },
+        {
+          "id": "w10b-5",
+          "code": "print(d4$score[,c(\"row\",\"h\",\"raw\",\"Cook\",\"DFFITS\")],digits=6)\nprint(c(full_s=d4$s,deleted_s=d4$s_deleted))",
+          "exercise": false
+        },
+        {
+          "id": "w10b-6",
+          "code": "my_L02_Cook <- NA_real_\nmy_L02_DFFITS <- NA_real_\nmy_L02_reason <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-7",
+          "code": "ni <- diag_influence(fn)\nprint(ni[c(4,5),c(\"row\",\"h\",\"Cook\",\"DFFITS\",\"potential\",\"residual_component\",\"Hadi\")],digits=6)\nplot(ni$residual_component,ni$potential,pch=19,xlab=\"Hadi residual component R\",ylab=\"Potential P\");text(ni$residual_component,ni$potential,labels=ni$row,pos=3,cex=.7)",
+          "exercise": false
+        },
+        {
+          "id": "w10b-8",
+          "code": "my_L03_P <- NA_real_\nmy_L03_R <- NA_real_\nmy_L03_H <- NA_real_",
+          "exercise": true
+        },
+        {
+          "id": "w10b-9",
+          "code": "aux_time <- lm(Time~Climb,hills)\nprint(c(observed=hills$Time[1],auxiliary=fitted(aux_time)[1],difference=residuals(aux_time)[1]))",
+          "exercise": false
+        },
+        {
+          "id": "w10b-10",
+          "code": "aux_distance <- lm(Distance~Climb,hills)\nprint(c(observed=hills$Distance[1],auxiliary=fitted(aux_distance)[1],difference=residuals(aux_distance)[1]))",
+          "exercise": false
+        },
+        {
+          "id": "w10b-11",
+          "code": "ef <- w10b_effect_trace(fh,\"Distance\")\nprint(ef$data[1,c(\"row\",\"x\",\"observed\",\"auxiliary_x\",\"auxiliary_y\",\"av_x\",\"av_y\")],digits=6)\nprint(c(AV_slope=ef$av_slope,full_model_coefficient=coef(fh)[\"Distance\"]))\nplot(ef$data$av_x,ef$data$av_y,pch=19,xlab=\"Distance residual (miles)\",ylab=\"Time residual (seconds)\");abline(0,ef$av_slope,col=\"steelblue\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w10b-12",
+          "code": "my_L04_x <- NA_real_\nmy_L04_y <- NA_real_\nmy_L04_interpretation <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-13",
+          "code": "cp <- diag_component_residual(fh,\"Distance\")\nprint(ef$data[1,c(\"row\",\"fitted\",\"residual\",\"component\",\"cpr_x\",\"cpr_y\")],digits=6)\nplot(cp$x,cp$component_residual,pch=19,xlab=\"Original Distance (miles)\",ylab=\"Component + residual (seconds)\");abline(0,coef(fh)[\"Distance\"],col=\"steelblue\",lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w10b-14",
+          "code": "distance_only <- lm(Time~Distance,hills)\nprint(c(distance_only=coef(distance_only)[\"Distance\"],with_Climb=coef(fh)[\"Distance\"]))\nprint(summary(fh)$coefficients[\"Climb\",])",
+          "exercise": false
+        },
+        {
+          "id": "w10b-15",
+          "code": "print(w10b_huber_trace(c(.5,2,4)))\nif(!requireNamespace(\"MASS\",quietly=TRUE)) stop(\"Use R with recommended MASS or the installation-free online R route.\")\nrob <- MASS::rlm(Time~Distance+Climb,hills,maxit=100)\nprint(list(converged=rob$converged,df_residual=rob$df.residual))\nprint(data.frame(row=c(7,11,18),h=hatvalues(fh)[c(7,11,18)],weight=rob$w[c(7,11,18)]))",
+          "exercise": false
+        },
+        {
+          "id": "w10b-16",
+          "code": "my_L05_CPR_x <- NA_real_\nmy_L05_CPR_y <- NA_real_\nmy_L05_weights <- rep(NA_real_,3)",
+          "exercise": true
+        },
+        {
+          "id": "w10b-17",
+          "code": "my_L06_prediction <- \"\"\nmy_L06_saved_files <- \"\"\nmy_L06_restart_observation <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-18",
+          "code": "my_L07_prediction <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-19",
+          "code": "my_L08_coordinate <- c(NA_real_,NA_real_)",
+          "exercise": true
+        },
+        {
+          "id": "w10b-20",
+          "code": "my_L09_ratio <- NA_real_\nmy_L09_explanation <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-21",
+          "code": "my_L10_weight <- NA_real_\nmy_L10_convergence_check <- \"\"",
+          "exercise": true
+        },
+        {
+          "id": "w10b-22",
+          "code": "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,\n abs(d4$Cook_from_predictions-cooks.distance(ft)[4])<1e-10,\n max(abs(ni$Cook-cooks.distance(fn)))<1e-9,\n abs(sum(hatvalues(ft))-2)<1e-10)\ncat(\"W10B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")\nstopifnot(nrow(hills)==35,hills$Time[23]==2859,\n abs(ef$av_slope-coef(fh)[\"Distance\"])<1e-8,\n max(abs(cp$component_residual-(residuals(fh)+coef(fh)[\"Distance\"]*hills$Distance)))<1e-8,\n rob$converged,is.na(rob$df.residual),abs(rob$w[11]-1)<1e-8)\ncat(\"W10B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,\n abs(d4$Cook_from_predictions-cooks.distance(ft)[4])<1e-10,\n max(abs(ni$Cook-cooks.distance(fn)))<1e-9,\n abs(sum(hatvalues(ft))-2)<1e-10)\ncat(\"W10B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
+        "stopifnot(nrow(hills)==35,hills$Time[23]==2859,\n abs(ef$av_slope-coef(fh)[\"Distance\"])<1e-8,\n max(abs(cp$component_residual-(residuals(fh)+coef(fh)[\"Distance\"]*hills$Distance)))<1e-8,\n rob$converged,is.na(rob$df.residual),abs(rob$w[11]-1)<1e-8)\ncat(\"W10B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+      ]
     }
   ],
   "source_sha256": {
@@ -1338,7 +1458,15 @@
     "labs/student/w10a/data/nyrivers-w10a.csv": "706e47d1d929ec4364ec0c0f6dac7ac479920d085737260f19b0cc6c724acdc0",
     "labs/student/w10a/data/scottish-hills-w10a.csv": "423f12c27f3e173e3b73ae5bf2d4dabe890c5812e261ca7e7812305c14ff1f7f",
     "labs/student/w10a/data/salary-survey-w10a.csv": "bd29b858815b362268d72fa5638bc71ea84edc9e976429646e8bdabdf28a093e",
-    "labs/student/w10a/w10a-diagnostics.qmd": "d8cd34f53746997a4ccbeaa21e6491ff8f03520a3b20094bf3fa496c70b8497d"
+    "labs/student/w10a/w10a-diagnostics.qmd": "d8cd34f53746997a4ccbeaa21e6491ff8f03520a3b20094bf3fa496c70b8497d",
+    "labs/student/w10b/data/diagnostics-base-w10b.R": "a65806470736e48751bbb0d45ab13561df43fad2f71a2a5aedd80d6858357e11",
+    "labs/student/w10b/data/diagnostics-influence-w10b.R": "2ecf758972fece6c5b5a0558718cdc1e7be4f0e9e80ed5638bd34a190f5f24e6",
+    "labs/student/w10b/data/diagnostics-effects-w10b.R": "533972f34f9a45830cb5fa478188c3955b8f376b04783eecc4c45fb21ab2543b",
+    "labs/student/w10b/data/diagnostics-w10b.R": "52bf6d1ee73230e9cf2e32c2a9d8c00cfce6dd2df83d60fc211ee6b85f259669",
+    "labs/student/w10b/data/hand-five-w10b.csv": "b4d6142aeddcd3ada7609c929e2dd27413b57f35cae1c5696ee9d13e5139811c",
+    "labs/student/w10b/data/nyrivers-w10b.csv": "706e47d1d929ec4364ec0c0f6dac7ac479920d085737260f19b0cc6c724acdc0",
+    "labs/student/w10b/data/scottish-hills-w10b.csv": "423f12c27f3e173e3b73ae5bf2d4dabe890c5812e261ca7e7812305c14ff1f7f",
+    "labs/student/w10b/w10b-diagnostics.qmd": "302de2dc229202126ec8b63916192b62a3532cd4fbf1f0651d37c8044419ae3d"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

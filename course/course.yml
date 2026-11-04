@@ -565,6 +565,56 @@ sessions:
   - '직접 계산 인쇄용 워크북 PDF: https://github.com/lunalab-ai/regre/raw/2026-fall-w10a/course/handouts/w10a-workbook-print.pdf'
   - '학생 실습·PDF 전체 ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10a/w10a-student-materials.zip'
   - '누적 앱 편집기: https://lunalab-ai.github.io/regre/apps/w10a/edit/index.html'
+- id: w10b
+  date: '2026-11-04'
+  title: 영향력과 변수 효과를 그림·손계산·R로 차근차근 이해하기
+  pages:
+  - course/notion/w10b/w10b-bridge.md
+  - course/notion/w10b/w10b-influence.md
+  - course/notion/w10b/w10b-effects.md
+  - course/notion/w10b/w10b-workbook.md
+  - course/notion/w10b/w10b-concept-cards.md
+  labs:
+  - labs/student/w10b/w10b-diagnostics.R
+  - labs/student/w10b/w10b-diagnostics.qmd
+  - labs/student/w10b/app/app.R
+  - notebooks/student/w10b_influence.ipynb
+  - notebooks/student/w10b_effects.ipynb
+  runtime_label: R · webR · 독립 R Colab A(영향력)/B(변수 효과)
+  browser_source: labs/student/w10b/w10b-diagnostics.qmd
+  browser_title: W10B · 한 점씩 이해하는 영향력과 변수 효과
+  browser_resources:
+  - labs/student/w10b/data/diagnostics-base-w10b.R
+  - labs/student/w10b/data/diagnostics-influence-w10b.R
+  - labs/student/w10b/data/diagnostics-effects-w10b.R
+  - labs/student/w10b/data/diagnostics-w10b.R
+  - labs/student/w10b/data/hand-five-w10b.csv
+  - labs/student/w10b/data/nyrivers-w10b.csv
+  - labs/student/w10b/data/scottish-hills-w10b.csv
+  browser_packages:
+  - MASS
+  browser_checks:
+  - "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,\n abs(d4$Cook_from_predictions-cooks.distance(ft)[4])<1e-10,\n\
+    \ max(abs(ni$Cook-cooks.distance(fn)))<1e-9,\n abs(sum(hatvalues(ft))-2)<1e-10)\n\
+    cat(\"W10B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")"
+  - "stopifnot(nrow(hills)==35,hills$Time[23]==2859,\n abs(ef$av_slope-coef(fh)[\"\
+    Distance\"])<1e-8,\n max(abs(cp$component_residual-(residuals(fh)+coef(fh)[\"\
+    Distance\"]*hills$Distance)))<1e-8,\n rob$converged,is.na(rob$df.residual),abs(rob$w[11]-1)<1e-8)\n\
+    cat(\"W10B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
+  browser_url: https://lunalab-ai.github.io/regre/w10b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w10b/notebooks/student/w10b_influence.ipynb
+  announcement_guidance:
+  - 지난B·C를 보강하며 주교재6.1–6.3은 이번에 진행하지 않습니다.
+  - 설명 예제E01–E08과 필수L01–L06,반복L07–L10을 구별하고 예상→손계산→실행→해석을 남기세요.
+  - '독립 R Colab B(변수 효과): https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w10b/notebooks/student/w10b_effects.ipynb'
+  - 마지막L06에서는 앱의 지표 필드와 제목을 바꾸고 입력 반응·CSV/수정 코드 저장·재시작을 확인합니다. 새 성적 반영 과제나 제출 기한은
+    없습니다.
+  - '학생 통합PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-student-book.pdf'
+  - '빈칸 워크북PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-workbook-print.pdf'
+  - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-student-materials.zip'
+  - '점검 문제PDF(질문만): https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-check-questions.pdf'
+  - '축·기호 카드PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-concept-cards.pdf'
+  notion_url: https://fancy-ballcap-a15.notion.site/W10B-11-4-40d7fd00109f81d29239eae58550e005
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -775,6 +825,18 @@ browser:
     - labs/student/w10a/data/w09b-six.png
     - labs/student/w10a/data/W09B-SOURCES.md
     - labs/student/w10a/data/W10A-SOURCES.md
+  - id: w10b
+    source: labs/student/w10b/app/app.R
+    data:
+    - labs/student/w10b/data/diagnostics-base-w10b.R
+    - labs/student/w10b/data/diagnostics-influence-w10b.R
+    - labs/student/w10b/data/diagnostics-effects-w10b.R
+    - labs/student/w10b/data/diagnostics-w10b.R
+    - labs/student/w10b/data/hand-five-w10b.csv
+    - labs/student/w10b/data/nyrivers-w10b.csv
+    - labs/student/w10b/data/scottish-hills-w10b.csv
+    - labs/student/w10b/data/slr-tools-w10b.R
+    - labs/student/w10b/data/computer-repair-w10b.txt
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

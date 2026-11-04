@@ -438,3 +438,43 @@ https://stat.ethz.ch/R-manual/R-devel/library/stats/html/ppoints.html
 https://stat.ethz.ch/R-manual/R-devel/library/stats/html/qqnorm.html
 
 https://www1.aucegypt.edu/faculty/hadi/RABE6/
+
+## 영향력과 변수 효과를 그림·손계산·R로 차근차근 이해하기
+
+[강의 원문](../course/notion/w10b/w10b-bridge.md)
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w10b/labs/student/w10b
+
+https://lunalab-ai.github.io/regre/apps/w10b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w10b.html
+
+[강의 원문](../course/notion/w10b/w10b-influence.md)
+
+[강의 원문](../course/notion/w10b/w10b-effects.md)
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w10b/labs/student/w10b
+
+https://lunalab-ai.github.io/regre/apps/w10b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w10b.html
+
+https://search.r-project.org/CRAN/refmans/car/html/avPlots.html
+
+https://search.r-project.org/CRAN/refmans/car/html/crPlots.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/rlm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/influence.measures.html
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/
+
+[강의 원문](../course/notion/w10b/w10b-workbook.md)
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w10b/labs/student/w10b
+
+https://lunalab-ai.github.io/regre/apps/w10b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w10b.html
+
+[강의 원문](../course/notion/w10b/w10b-concept-cards.md)
