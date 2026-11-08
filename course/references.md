@@ -478,3 +478,25 @@ https://lunalab-ai.github.io/regre/apps/w10b/edit/index.html
 https://lunalab-ai.github.io/regre/w10b.html
 
 [강의 원문](../course/notion/w10b/w10b-concept-cards.md)
+
+## 범주형 예측변수와 상호작용을 그림·손계산·R로 이해하기
+
+[강의 원문](../course/notion/w11a/w11a-dummy.md)
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_categorical.ipynb
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_groups.ipynb
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w11a/labs/student/w11a
+
+https://lunalab-ai.github.io/regre/apps/w11a/edit/index.html
+
+https://lunalab-ai.github.io/regre/w11a.html
+
+[강의 원문](../course/notion/w11a/w11a-salary.md)
+
+[강의 원문](../course/notion/w11a/w11a-groups.md)
+
+[강의 원문](../course/notion/w11a/w11a-workbook.md)
+
+[강의 원문](../course/notion/w11a/w11a-concept-cards.md)

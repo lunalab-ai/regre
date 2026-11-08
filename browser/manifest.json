@@ -1408,6 +1408,146 @@
         "stopifnot(nrow(toy)==5,nrow(ny)==20,nrow(hills)==35,\n abs(d4$Cook_from_predictions-cooks.distance(ft)[4])<1e-10,\n max(abs(ni$Cook-cooks.distance(fn)))<1e-9,\n abs(sum(hatvalues(ft))-2)<1e-10)\ncat(\"W10B_INFLUENCE_RUNTIME_CHECK_PASSED\\n\")",
         "stopifnot(nrow(hills)==35,hills$Time[23]==2859,\n abs(ef$av_slope-coef(fh)[\"Distance\"])<1e-8,\n max(abs(cp$component_residual-(residuals(fh)+coef(fh)[\"Distance\"]*hills$Distance)))<1e-8,\n rob$converged,is.na(rob$df.residual),abs(rob$w[11]-1)<1e-8)\ncat(\"W10B_EFFECTS_RUNTIME_CHECK_PASSED\\n\")"
       ]
+    },
+    {
+      "id": "w11a",
+      "title": "W11A · 식을 읽고 계산을 바꾸는 범주형 회귀",
+      "cells": [
+        {
+          "id": "w11a-1",
+          "code": "# Prefer bundled files; otherwise download the reviewed, fixed release once.\ntag <- \"2026-fall-w11a\"\nlocal_dirs <- c(\"data\",\"labs/student/w11a/data\",\"../../labs/student/w11a/data\",\"../../../labs/student/w11a/data\")\nfound <- local_dirs[file.exists(file.path(local_dirs,\"categorical-trace-w11a.R\"))]\ncache_root <- Sys.getenv(\"REGRE_CACHE_DIR\",unset=file.path(path.expand(\"~\"),\".cache\",\"regre\"))\ndata_dir <- if(length(found)) found[1] else file.path(cache_root,tag)\ndir.create(data_dir,recursive=TRUE,showWarnings=FALSE)\nexpected <- c(\"diagnostics-learning-w11a.R\"=\"7ba534cc7178c9c6bbfde87f650926ca\",\"categorical-trace-w11a.R\"=\"cd201e03f0de484b2ee9bb71b7d56e24\",\"salary-survey-w11a.csv\"=\"fe3d38b8ec469415e5854b93c08d1185\",\"preemployment-w11a.csv\"=\"b07cddce30abfd0c25e84d9640733b53\")\noptions(timeout=120)\nfor(name in names(expected)) {\n target <- file.path(data_dir,name)\n if(!file.exists(target)) {\n  status <- download.file(paste0(\"https://raw.githubusercontent.com/lunalab-ai/regre/\",tag,\"/labs/student/w11a/data/\",name),target,mode=\"wb\")\n  if(status!=0) stop(\"Download failed. Check your connection and rerun preparation.\")\n  cat(name,\": fixed-tag download\\n\")\n } else cat(name,\": bundled/cache file\\n\")\n if(unname(tools::md5sum(target))!=expected[[name]])\n  stop(\"File bytes differ. Preserve your edited file; use a fresh folder or cache.\")\n}\nsource(file.path(data_dir,\"diagnostics-learning-w11a.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"categorical-trace-w11a.R\"),encoding=\"UTF-8\")\nsalary <- read.csv(file.path(data_dir,\"salary-survey-w11a.csv\"))\npre <- read.csv(file.path(data_dir,\"preemployment-w11a.csv\"))\nstopifnot(nrow(salary)==46,nrow(pre)==20,salary$S[1]==13876,pre$TEST[1]==.28)\nsa <- salary_fit(salary,FALSE); si <- salary_fit(salary,TRUE)\nmods <- cat_two_group_models(pre)\ncat(\"W11A_DATA_READY: Salary46 / Preemployment20; original source rows retained\\n\")",
+          "exercise": false
+        },
+        {
+          "id": "w11a-2",
+          "code": "salary_prepare <- function(data, reference=3L) {\n  columns <- c(\"S\",\"X\",\"E\",\"M\")\n  if (!is.data.frame(data) || !all(columns %in% names(data)) || nrow(data)<8L ||\n      !all(vapply(data[columns],is.numeric,logical(1))) ||\n      any(!is.finite(as.matrix(data[columns]))) ||\n      any(!data$E %in% 1:3) || any(!data$M %in% 0:1))\n    stop(\"Use complete finite S/X/E/M data; E=1,2,3 and M=0,1.\")\n  if (length(reference)!=1L || !is.numeric(reference) || !is.finite(reference) ||\n      !reference %in% 1:3) stop(\"reference must be education code 1, 2 or 3.\")\n  labels <- c(\"HighSchool\",\"Bachelor\",\"Graduate\")\n  d <- data[columns]\n  d$row_id <- seq_len(nrow(d))\n  d$Education <- factor(labels[d$E],levels=c(labels[reference],labels[-reference]))\n  contrasts(d$Education) <- contr.treatment(levels(d$Education),base=1)\n  d\n}\nd <- salary_prepare(salary)\nprint(d[1:6,c(\"row_id\",\"E\",\"M\",\"Education\")])\nprint(model.matrix(sa)[1:6,])",
+          "exercise": false
+        },
+        {
+          "id": "w11a-3",
+          "code": "cat_row_trace <- function(fit, newdata) {\n  cat_check_fit(fit)\n  if (!is.data.frame(newdata) || nrow(newdata)<1L)\n    stop(\"newdata must contain at least one complete observation.\")\n  term <- delete.response(terms(fit))\n  frame <- model.frame(term,newdata,na.action=na.fail,xlev=fit$xlevels)\n  design <- model.matrix(term,frame,contrasts.arg=fit$contrasts)\n  beta <- coef(fit)\n  if (!identical(colnames(design),names(beta)) || any(!is.finite(design)))\n    stop(\"New rows must use the fitted columns, factor levels and finite values.\")\n  contribution <- sweep(design,2,beta,\"*\")\n  data.frame(row=rep(seq_len(nrow(design)),each=ncol(design)),\n    term=rep(colnames(design),times=nrow(design)),\n    value=as.vector(t(design)),coefficient=rep(unname(beta),times=nrow(design)),\n    contribution=as.vector(t(contribution)),row.names=NULL)\n}\none <- data.frame(X=5,Education=factor(\"Bachelor\",levels=sa$xlevels$Education),M=1)\nadditive_row <- cat_row_trace(sa,one)\nprint(additive_row,digits=6)\nprint(c(sum_of_terms=sum(additive_row$contribution),predict=unname(predict(sa,one))))\nbarplot(additive_row$contribution,names.arg=additive_row$term,las=2,cex.names=.6,ylab=\"Contribution (USD/year)\")",
+          "exercise": false
+        },
+        {
+          "id": "w11a-4",
+          "code": "salary_fit <- function(data, interaction=FALSE, omit_row=integer(), reference=3L) {\n  if (length(interaction)!=1L || !is.logical(interaction) || is.na(interaction))\n    stop(\"interaction must be TRUE or FALSE.\")\n  d <- salary_prepare(data,reference)\n  if (!is.numeric(omit_row) || any(!is.finite(omit_row)) ||\n      any(omit_row!=as.integer(omit_row)) || any(!omit_row %in% d$row_id))\n    stop(\"omit_row must contain valid original row IDs, or integer().\")\n  selected <- d[!d$row_id %in% omit_row,,drop=FALSE]\n  groups <- table(selected$Education,factor(selected$M,levels=0:1))\n  if (any(groups==0L))\n    stop(\"Keep observations in all six education/management groups for this teaching comparison.\")\n  formula <- if (interaction) S~X+Education*M else S~X+Education+M\n  fit <- lm(formula,data=selected)\n  if (fit$rank!=ncol(model.matrix(fit)) || df.residual(fit)<1L)\n    stop(\"Selected rows do not support a full-rank model with residual degrees of freedom.\")\n  attr(fit,\"salary_rows\") <- selected$row_id\n  attr(fit,\"salary_interaction\") <- interaction\n  fit\n}\nfull_row <- cat_row_trace(si,one)\nprint(full_row,digits=6)\nprint(salary_group_gaps(si,5),digits=6)\nprint(c(additive=sigma(sa),interaction=sigma(si)))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-5",
+          "code": "cat_fit_trace <- function(fit) {\n  frame <- cat_check_fit(fit)\n  design <- model.matrix(fit)\n  observed <- model.response(frame)\n  beta <- qr.coef(qr(design),observed)\n  fitted <- drop(design %*% beta)\n  residual <- observed-fitted\n  squared <- residual^2\n  rows <- data.frame(source_row=rownames(design),observed=unname(observed),\n    fitted=unname(fitted),residual=unname(residual),squared=unname(squared),\n    cumulative=cumsum(unname(squared)),row.names=NULL)\n  list(design=design,coefficients=beta,rows=rows,\n    SSE=sum(squared),n=nrow(design),k=ncol(design),df=df.residual(fit))\n}\nsalary_trace <- cat_fit_trace(si)\nprint(salary_trace$design[1:6,])\nprint(salary_trace$coefficients)\nprint(salary_trace$rows[1:6,],digits=6)\nprint(c(SSE=salary_trace$SSE,df=salary_trace$df,sigma=sqrt(salary_trace$SSE/salary_trace$df)))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-6",
+          "code": "reference1 <- salary_fit(salary,TRUE,reference=1)\nprint(coef(si));print(coef(reference1))\nprint(max(abs(fitted(si)-fitted(reference1))))\nsensitivity <- salary_fit(salary,TRUE,omit_row=33)\nprint(data.frame(model=c(\"all46\",\"separate45\"),n=c(nobs(si),nobs(sensitivity)),sigma=c(sigma(si),sigma(sensitivity))))\nprint(aggregate(X~E+M,salary,range))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-7",
+          "code": "cat_two_group_models <- function(data) {\n  columns <- c(\"TEST\",\"RACE\",\"JPERF\")\n  if (!is.data.frame(data) || !all(columns %in% names(data)) || nrow(data)<6L ||\n      !all(vapply(data[columns],is.numeric,logical(1))) ||\n      any(!is.finite(as.matrix(data[columns]))) ||\n      any(!data$RACE %in% 0:1) || length(unique(data$RACE))!=2L)\n    stop(\"Use complete finite TEST/RACE/JPERF rows with both original 0/1 groups.\")\n  models <- list(M0=lm(JPERF~TEST,data,na.action=na.fail),\n    MI=lm(JPERF~TEST+RACE,data,na.action=na.fail),\n    MS=lm(JPERF~TEST+TEST:RACE,data,na.action=na.fail),\n    MF=lm(JPERF~TEST*RACE,data,na.action=na.fail))\n  invisible(lapply(models,cat_check_fit))\n  models\n}\nmods <- cat_two_group_models(pre)\nprint(model.matrix(mods$MF)[1:6,])\nprint(coef(mods$MF))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-8",
+          "code": "cat_group_lines <- function(fit) {\n  cat_check_fit(fit)\n  beta <- c(\"(Intercept)\"=0,\"TEST\"=0,\"RACE\"=0,\"TEST:RACE\"=0)\n  if (!all(names(coef(fit)) %in% names(beta)))\n    stop(\"Use a TEST/RACE model from this two-group comparison.\")\n  beta[names(coef(fit))] <- coef(fit)\n  Z <- 0:1\n  data.frame(Z=Z,intercept=unname(beta[\"(Intercept)\"]+beta[\"RACE\"]*Z),\n    slope=unname(beta[\"TEST\"]+beta[\"TEST:RACE\"]*Z))\n}\ncat_gap <- function(gamma, delta, x) {\n  if (length(gamma)!=1L || length(delta)!=1L || !is.numeric(gamma) ||\n      !is.numeric(delta) || !is.numeric(x) || !length(x) ||\n      any(!is.finite(c(gamma,delta,x)))) stop(\"Use finite scalar gaps and finite x.\")\n  gamma+delta*x\n}\nlines_full <- cat_group_lines(mods$MF)\nprint(lines_full,digits=6)\nnew_two <- data.frame(TEST=1.5,RACE=0:1)\nprint(cbind(new_two,prediction=predict(mods$MF,new_two)))\nprint(cat_gap(diff(lines_full$intercept),diff(lines_full$slope),c(.5,1.5,2.3)))\nplot(pre$TEST,pre$JPERF,col=ifelse(pre$RACE==0,\"steelblue\",\"darkorange\"),pch=19,xlab=\"TEST\",ylab=\"JPERF\")\nfor(i in 1:2) abline(lines_full$intercept[i],lines_full$slope[i],col=c(\"steelblue\",\"darkorange\")[i],lwd=2)",
+          "exercise": false
+        },
+        {
+          "id": "w11a-9",
+          "code": "cat_fit_trace <- function(fit) {\n  frame <- cat_check_fit(fit)\n  design <- model.matrix(fit)\n  observed <- model.response(frame)\n  beta <- qr.coef(qr(design),observed)\n  fitted <- drop(design %*% beta)\n  residual <- observed-fitted\n  squared <- residual^2\n  rows <- data.frame(source_row=rownames(design),observed=unname(observed),\n    fitted=unname(fitted),residual=unname(residual),squared=unname(squared),\n    cumulative=cumsum(unname(squared)),row.names=NULL)\n  list(design=design,coefficients=beta,rows=rows,\n    SSE=sum(squared),n=nrow(design),k=ncol(design),df=df.residual(fit))\n}\ntrace0 <- cat_fit_trace(mods$M0);traceF <- cat_fit_trace(mods$MF)\nprint(trace0$rows[1:4,],digits=6);print(traceF$rows[1:4,],digits=6)\nprint(c(SSE0=trace0$SSE,SSEF=traceF$SSE,dfF=traceF$df))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-10",
+          "code": "cat_nested_trace <- function(reduced, full, tolerance=1e-9) {\n  checked <- cat_check_pair(reduced,full,tolerance)\n  SSE_reduced <- sum(residuals(reduced)^2)\n  SSE_full <- sum(residuals(full)^2)\n  if (SSE_full<=0 ||\n      SSE_reduced<SSE_full-tolerance*max(1,SSE_reduced))\n    stop(\"F needs positive full-model residual variance and a valid nested SSE.\")\n  q <- checked$q\n  df_full <- checked$df_full\n  # A tiny negative difference can only be numerical roundoff for nested OLS.\n  increase <- max(0,SSE_reduced-SSE_full)\n  F <- (increase/q)/(SSE_full/df_full)\n  data.frame(n=checked$n,k_reduced=reduced$rank,k_full=full$rank,q=q,\n    df_full=df_full,SSE_reduced=SSE_reduced,SSE_full=SSE_full,\n    F=F,p=pf(F,q,df_full,lower.tail=FALSE))\n}\ncomparison <- cat_nested_trace(mods$M0,mods$MF)\nprint(comparison,digits=9)\nprint(anova(mods$M0,mods$MF))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-11",
+          "code": "comparison_pairs <- list(c(\"M0\",\"MF\"),c(\"M0\",\"MI\"),c(\"M0\",\"MS\"),c(\"MI\",\"MF\"),c(\"MS\",\"MF\"))\ncomparison_table <- do.call(rbind,lapply(comparison_pairs,function(pair) cbind(reduced=pair[1],full=pair[2],cat_nested_trace(mods[[pair[1]]],mods[[pair[2]]]))))\nprint(comparison_table,digits=7)",
+          "exercise": false
+        },
+        {
+          "id": "w11a-12",
+          "code": "group1 <- lm(JPERF~TEST,pre[pre$RACE==1,])\nbeta1 <- coef(group1)\nx_at_mean4 <- unname((4-beta1[1])/beta1[2])\nprint(c(TEST_point_estimate=x_at_mean4,n=nobs(group1),df=df.residual(group1)))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-13",
+          "code": "student_formula <- function() JPERF ~ TEST * RACE\nedited_model <- lm(student_formula(),pre)\nprint(model.matrix(edited_model)[1:4,])\nprint(cat_group_lines(edited_model))\nprint(cat_nested_trace(mods$M0,edited_model))",
+          "exercise": false
+        },
+        {
+          "id": "w11a-14",
+          "code": "my_L01_prediction <- NA_real_\nmy_L01_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-15",
+          "code": "my_L02_prediction <- NA_real_\nmy_L02_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-16",
+          "code": "my_L03_prediction <- NA_real_\nmy_L03_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-17",
+          "code": "my_L04_prediction <- NA_real_\nmy_L04_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-18",
+          "code": "my_L05_prediction <- NA_real_\nmy_L05_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-19",
+          "code": "my_L06_prediction <- NA_real_\nmy_L06_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-20",
+          "code": "my_L07_prediction <- NA_real_\nmy_L07_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-21",
+          "code": "my_L08_prediction <- NA_real_\nmy_L08_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-22",
+          "code": "my_L09_prediction <- NA_real_\nmy_L09_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-23",
+          "code": "my_L10_prediction <- NA_real_\nmy_L10_reason <- \"\"\n# Record a prediction first; an unfinished answer does not block the examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11a-24",
+          "code": "cat_check_fit <- function(fit) {\n  if (!inherits(fit,\"lm\") || !is.data.frame(fit$model))\n    stop(\"Use a standard lm with its complete model frame retained.\")\n  frame <- fit$model\n  design <- model.matrix(fit)\n  y <- model.response(frame)\n  if (!is.numeric(y) || is.matrix(y) || any(!is.finite(y)) ||\n      any(!is.finite(design)) || !is.null(model.weights(frame)) ||\n      !is.null(model.offset(frame)) || fit$rank!=ncol(design) ||\n      df.residual(fit)<1L || any(!is.finite(coef(fit))))\n    stop(\"Require finite, unweighted, no-offset, full-rank univariate OLS with residual df.\")\n  frame\n}",
+          "exercise": false
+        },
+        {
+          "id": "w11a-25",
+          "code": "cat_check_pair <- function(reduced, full, tolerance=1e-9) {\n  r <- cat_check_fit(reduced)\n  f <- cat_check_fit(full)\n  if (!identical(rownames(r),rownames(f)) ||\n      !isTRUE(all.equal(model.response(r),model.response(f),tolerance=0)))\n    stop(\"Compare the same response and identical observations in identical order.\")\n  xr <- model.matrix(reduced)\n  xf <- model.matrix(full)\n  if (length(tolerance)!=1L || !is.numeric(tolerance) ||\n      !is.finite(tolerance) || tolerance<=0) stop(\"Use positive finite tolerance.\")\n  q <- full$rank-reduced$rank\n  if (q<=0 || max(abs(qr.resid(qr(xf),xr)))>tolerance*max(1,abs(xr)))\n    stop(\"Reduced design must be nested in full design with fewer parameters.\")\n  list(n=nrow(f),q=q,df_full=df.residual(full))\n}",
+          "exercise": false
+        },
+        {
+          "id": "w11a-26",
+          "code": "stopifnot(nrow(salary)==46,nrow(pre)==20,si$rank==7,df.residual(si)==39,\n max(abs(salary_trace$rows$fitted-fitted(si)))<1e-7,\n abs(sum(additive_row$contribution)-predict(sa,one))<1e-7,\n max(abs(fitted(si)-fitted(reference1)))<1e-7)\ncat(\"W11A_CATEGORICAL_RUNTIME_PASS: source calculations, not exercise completion\\n\")\nstopifnot(nrow(pre)==20,mods$MF$rank==4,comparison$q==2,comparison$df_full==16,\n abs(comparison$F-anova(mods$M0,mods$MF)$F[2])<1e-9,\n abs(comparison$p-.054236056264714)<1e-10,\n cat_nested_trace(mods$M0,mods$MI)$df_full==17,\n cat_nested_trace(mods$M0,mods$MS)$df_full==17)\ncat(\"W11A_GROUPS_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(nrow(salary)==46,nrow(pre)==20,si$rank==7,df.residual(si)==39,\n max(abs(salary_trace$rows$fitted-fitted(si)))<1e-7,\n abs(sum(additive_row$contribution)-predict(sa,one))<1e-7,\n max(abs(fitted(si)-fitted(reference1)))<1e-7)\ncat(\"W11A_CATEGORICAL_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
+        "stopifnot(nrow(pre)==20,mods$MF$rank==4,comparison$q==2,comparison$df_full==16,\n abs(comparison$F-anova(mods$M0,mods$MF)$F[2])<1e-9,\n abs(comparison$p-.054236056264714)<1e-10,\n cat_nested_trace(mods$M0,mods$MI)$df_full==17,\n cat_nested_trace(mods$M0,mods$MS)$df_full==17)\ncat(\"W11A_GROUPS_RUNTIME_PASS: source calculations, not exercise completion\\n\")"
+      ]
     }
   ],
   "source_sha256": {
@@ -1466,7 +1606,12 @@
     "labs/student/w10b/data/hand-five-w10b.csv": "b4d6142aeddcd3ada7609c929e2dd27413b57f35cae1c5696ee9d13e5139811c",
     "labs/student/w10b/data/nyrivers-w10b.csv": "706e47d1d929ec4364ec0c0f6dac7ac479920d085737260f19b0cc6c724acdc0",
     "labs/student/w10b/data/scottish-hills-w10b.csv": "423f12c27f3e173e3b73ae5bf2d4dabe890c5812e261ca7e7812305c14ff1f7f",
-    "labs/student/w10b/w10b-diagnostics.qmd": "302de2dc229202126ec8b63916192b62a3532cd4fbf1f0651d37c8044419ae3d"
+    "labs/student/w10b/w10b-diagnostics.qmd": "302de2dc229202126ec8b63916192b62a3532cd4fbf1f0651d37c8044419ae3d",
+    "labs/student/w11a/data/diagnostics-learning-w11a.R": "cb65f7b5b83f55568da8c31ad9f38007381b6ff06215ce39717d8ed9671ebea5",
+    "labs/student/w11a/data/categorical-trace-w11a.R": "52be5b97431257da15466bef389d7a0d09d3f9672d1ce4f04ded198696fb021e",
+    "labs/student/w11a/data/salary-survey-w11a.csv": "bd29b858815b362268d72fa5638bc71ea84edc9e976429646e8bdabdf28a093e",
+    "labs/student/w11a/data/preemployment-w11a.csv": "b44606e049abaeeea67c63f4a7dea81a60794927e03c534373a13428b85a3f39",
+    "labs/student/w11a/w11a-categorical.qmd": "77d40c789981b99b35bc3fe6c5c75ce47ed84ed132a4cf0ee9aa3ddc356066dd"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

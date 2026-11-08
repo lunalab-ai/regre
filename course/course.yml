@@ -615,6 +615,53 @@ sessions:
   - '점검 문제PDF(질문만): https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-check-questions.pdf'
   - '축·기호 카드PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w10b/w10b-concept-cards.pdf'
   notion_url: https://fancy-ballcap-a15.notion.site/W10B-11-4-40d7fd00109f81d29239eae58550e005
+- id: w11a
+  date: '2026-11-09'
+  title: 범주형 예측변수와 상호작용을 그림·손계산·R로 이해하기
+  pages:
+  - course/notion/w11a/w11a-dummy.md
+  - course/notion/w11a/w11a-salary.md
+  - course/notion/w11a/w11a-groups.md
+  - course/notion/w11a/w11a-workbook.md
+  - course/notion/w11a/w11a-concept-cards.md
+  labs:
+  - labs/student/w11a/w11a-categorical.R
+  - labs/student/w11a/w11a-categorical.qmd
+  - labs/student/w11a/app/app.R
+  - notebooks/student/w11a_categorical.ipynb
+  - notebooks/student/w11a_groups.ipynb
+  runtime_label: R · webR · 독립 R Colab A/B
+  browser_source: labs/student/w11a/w11a-categorical.qmd
+  browser_title: W11A · 식을 읽고 계산을 바꾸는 범주형 회귀
+  browser_resources:
+  - labs/student/w11a/data/diagnostics-learning-w11a.R
+  - labs/student/w11a/data/categorical-trace-w11a.R
+  - labs/student/w11a/data/salary-survey-w11a.csv
+  - labs/student/w11a/data/preemployment-w11a.csv
+  browser_checks:
+  - "stopifnot(nrow(salary)==46,nrow(pre)==20,si$rank==7,df.residual(si)==39,\n max(abs(salary_trace$rows$fitted-fitted(si)))<1e-7,\n\
+    \ abs(sum(additive_row$contribution)-predict(sa,one))<1e-7,\n max(abs(fitted(si)-fitted(reference1)))<1e-7)\n\
+    cat(\"W11A_CATEGORICAL_RUNTIME_PASS: source calculations, not exercise completion\\\
+    n\")"
+  - "stopifnot(nrow(pre)==20,mods$MF$rank==4,comparison$q==2,comparison$df_full==16,\n\
+    \ abs(comparison$F-anova(mods$M0,mods$MF)$F[2])<1e-9,\n abs(comparison$p-.054236056264714)<1e-10,\n\
+    \ cat_nested_trace(mods$M0,mods$MI)$df_full==17,\n cat_nested_trace(mods$M0,mods$MS)$df_full==17)\n\
+    cat(\"W11A_GROUPS_RUNTIME_PASS: source calculations, not exercise completion\\\
+    n\")"
+  browser_url: https://lunalab-ai.github.io/regre/w11a.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_categorical.ipynb
+  announcement_guidance:
+  - '주교재6.1–6.4 전체: 지시변수·급료조사·상호작용·두 집단 회귀 비교를 처음부터 연결합니다.'
+  - 설명 예제E01–E08, 필수L01–L06, 반복L07–L10을 구별하고 예상→계산→실행→해석을 남기세요.
+  - '독립 R Colab B(두 집단·부분F): https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_groups.ipynb'
+  - 실제 함수 정의가 본문에 펼쳐져 있습니다. 마지막에는 모형 함수를 바꾸어 앱 계산·그림·CSV와 연결합니다. 새 성적 반영 과제나 제출 기한은
+    없습니다.
+  - '학생 통합PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-student-book.pdf'
+  - '빈칸 워크북PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-workbook-print.pdf'
+  - '개념 카드PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-concept-cards.pdf'
+  - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-check-questions.pdf'
+  - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-student-materials.zip'
+  notion_url: https://fancy-ballcap-a15.notion.site/W11A-2026-11-09-4127fd00109f81679a11c7dbddd2b04f
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -837,6 +884,27 @@ browser:
     - labs/student/w10b/data/scottish-hills-w10b.csv
     - labs/student/w10b/data/slr-tools-w10b.R
     - labs/student/w10b/data/computer-repair-w10b.txt
+  - id: w11a
+    source: labs/student/w11a/app/app.R
+    data:
+    - labs/student/w11a/data/diagnostics-learning-w11a.R
+    - labs/student/w11a/data/categorical-trace-w11a.R
+    - labs/student/w11a/data/salary-survey-w11a.csv
+    - labs/student/w11a/data/preemployment-w11a.csv
+    browser_checks:
+    - selector: '#salary_summary'
+      text: '22223.191'
+    - selector: '#salary_plot img'
+    - selector: .irs-handle:visible
+      click: true
+      press: ArrowRight
+    - selector: '#salary_summary'
+      text: '22720.178'
+    - selector: a[data-value="2. 두 집단의 식과 검정"]
+      click: true
+    - selector: '#group_comparison'
+      text: '0.0542361'
+    - selector: '#group_plot img'
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes

@@ -282,25 +282,37 @@ def check(root=ROOT, url=None):
                 page = browser.new_page()
                 page.goto(url.rstrip('/') + '/apps/' + app['id'] + '/edit/index.html', wait_until='domcontentloaded')
                 frame = page.frame_locator('iframe').first
-                prediction = frame.locator('#prediction')
-                prediction.wait_for(state='attached', timeout=180000)
-                if not prediction.is_visible():
-                    panel = prediction.evaluate("el => el.closest('.tab-pane')?.id")
-                    if panel:
-                        frame.locator('a[data-toggle="tab"][href="#' + panel + '"]').click()
-                prediction.get_by_text('112.7', exact=False).wait_for(timeout=180000)
-                # Cumulative apps retain hidden sliders in inactive lesson tabs.
-                # Select the one in the visible repair-prediction panel.
-                frame.locator('.irs-handle:visible').click()
-                page.keyboard.press('ArrowRight')
-                frame.locator('#prediction').get_by_text('128.2', exact=False).wait_for(timeout=30000)
-                frame.locator('#regression_plot img').wait_for(timeout=30000)
+                custom = app.get('browser_checks')
+                if custom is not None:
+                    if not custom or not any('text' in step for step in custom):
+                        raise ValueError('Shiny browser_checks require an output text assertion')
+                    for step in custom:
+                        target = frame.locator(step['selector'])
+                        target.wait_for(state='visible', timeout=180000)
+                        if step.get('click'): target.click()
+                        if step.get('press'): target.press(step['press'])
+                        if 'text' in step:
+                            expect(target).to_contain_text(str(step['text']), timeout=90000)
+                else:
+                    prediction = frame.locator('#prediction')
+                    prediction.wait_for(state='attached', timeout=180000)
+                    if not prediction.is_visible():
+                        panel = prediction.evaluate("el => el.closest('.tab-pane')?.id")
+                        if panel:
+                            frame.locator('a[data-toggle="tab"][href="#' + panel + '"]').click()
+                    prediction.get_by_text('112.7', exact=False).wait_for(timeout=180000)
+                    # Cumulative apps retain hidden sliders in inactive lesson tabs.
+                    # Select the one in the visible repair-prediction panel.
+                    frame.locator('.irs-handle:visible').click()
+                    page.keyboard.press('ArrowRight')
+                    frame.locator('#prediction').get_by_text('128.2', exact=False).wait_for(timeout=30000)
+                    frame.locator('#regression_plot img').wait_for(timeout=30000)
                 if page.locator('.cm-content').count() == 0: raise ValueError('Shiny editor missing')
                 page.screenshot(path=str(root / '.build/shiny-verified.png'), full_page=True)
                 page.locator('.cm-content').first.fill('library(shiny)\nshinyApp(fluidPage(h2("Browser edit verified")), function(input, output, session) {})')
                 page.get_by_role('button', name=re.compile('Re-run app')).click()
                 frame.get_by_role('heading', name='Browser edit verified').wait_for(timeout=90000)
-                results.append({'app': app['id'], 'slider_prediction': 'passed', 'plot': 'passed', 'editor_rerun': 'passed'})
+                results.append({'app': app['id'], 'output_checks': len(custom) if custom is not None else 'legacy slider and plot', 'editor_rerun': 'passed'})
                 page.close()
             browser.close()
         report = {'url': url, 'source_sha256': manifest['source_sha256'], 'results': results}
