@@ -2,9 +2,9 @@
 
 회귀분석의 이해 · W11A · 2026-11-09 · 주교재 §6.1–6.2
 
-[설치 없는 온라인 R](https://lunalab-ai.github.io/regre/w11a.html) · [수정하는 회귀 앱](https://lunalab-ai.github.io/regre/apps/w11a/edit/index.html) · [R/QMD 다운로드](https://github.com/lunalab-ai/regre/tree/2026-fall-w11a/labs/student/w11a)
+[설치 없는 온라인 R](https://lunalab-ai.github.io/regre/w11a.html) · [수정하는 회귀 앱](https://lunalab-ai.github.io/regre/apps/w11a/edit/index.html) · [R/QMD 다운로드](https://github.com/lunalab-ai/regre/tree/2026-fall-w11a-v2/labs/student/w11a)
 
-[R Colab A · 지시변수와 급료조사](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_categorical.ipynb) · [R Colab B · 두 집단과 부분 F](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_groups.ipynb)
+[R Colab A · 지시변수와 급료조사](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_categorical.ipynb) · [R Colab B · 두 집단과 부분 F](https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_groups.ipynb)
 
 예상과 이유 → 작은 손계산 → R 실행 → 그림 비교 → 한 문장 설명 순서로 사용합니다. A/B는 각각 준비부터 독립 실행합니다. 새 성적 반영 과제나 제출 기한은 없습니다.
 

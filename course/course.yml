@@ -649,18 +649,18 @@ sessions:
     cat(\"W11A_GROUPS_RUNTIME_PASS: source calculations, not exercise completion\\\
     n\")"
   browser_url: https://lunalab-ai.github.io/regre/w11a.html
-  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_categorical.ipynb
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_categorical.ipynb
   announcement_guidance:
   - '주교재6.1–6.4 전체: 지시변수·급료조사·상호작용·두 집단 회귀 비교를 처음부터 연결합니다.'
   - 설명 예제E01–E08, 필수L01–L06, 반복L07–L10을 구별하고 예상→계산→실행→해석을 남기세요.
-  - '독립 R Colab B(두 집단·부분F): https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_groups.ipynb'
+  - '독립 R Colab B(두 집단·부분F): https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_groups.ipynb'
   - 실제 함수 정의가 본문에 펼쳐져 있습니다. 마지막에는 모형 함수를 바꾸어 앱 계산·그림·CSV와 연결합니다. 새 성적 반영 과제나 제출 기한은
     없습니다.
-  - '학생 통합PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-student-book.pdf'
-  - '빈칸 워크북PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-workbook-print.pdf'
-  - '개념 카드PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-concept-cards.pdf'
-  - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-check-questions.pdf'
-  - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a/w11a-student-materials.zip'
+  - '학생 통합PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-student-book.pdf'
+  - '빈칸 워크북PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-workbook-print.pdf'
+  - '개념 카드PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-concept-cards.pdf'
+  - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-check-questions.pdf'
+  - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-student-materials.zip'
   notion_url: https://fancy-ballcap-a15.notion.site/W11A-2026-11-09-4127fd00109f81679a11c7dbddd2b04f
 hero: course/notion/week01/assets/hero_regression.png
 supplements:

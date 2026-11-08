@@ -483,11 +483,11 @@ https://lunalab-ai.github.io/regre/w10b.html
 
 [강의 원문](../course/notion/w11a/w11a-dummy.md)
 
-https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_categorical.ipynb
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_categorical.ipynb
 
-https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a/notebooks/student/w11a_groups.ipynb
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11a-v2/notebooks/student/w11a_groups.ipynb
 
-https://github.com/lunalab-ai/regre/tree/2026-fall-w11a/labs/student/w11a
+https://github.com/lunalab-ai/regre/tree/2026-fall-w11a-v2/labs/student/w11a
 
 https://lunalab-ai.github.io/regre/apps/w11a/edit/index.html
 

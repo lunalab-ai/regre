@@ -1,6 +1,6 @@
 # W11A · Inspectable student examples
 # Prefer bundled files; otherwise download the reviewed, fixed release once.
-tag <- "2026-fall-w11a"
+tag <- "2026-fall-w11a-v2"
 local_dirs <- c("data","labs/student/w11a/data","../../labs/student/w11a/data","../../../labs/student/w11a/data")
 found <- local_dirs[file.exists(file.path(local_dirs,"categorical-trace-w11a.R"))]
 cache_root <- Sys.getenv("REGRE_CACHE_DIR",unset=file.path(path.expand("~"),".cache","regre"))
