@@ -1752,7 +1752,7 @@
     "labs/student/w11b/data/ski-sales-w11b.csv": "c33f0bfefc007fec6a093f478a6e0c561f0a4a1082c27a8b45ae198739fba69a",
     "labs/student/w11b/data/education-w11b.csv": "fed3287c2a2aaa4dae4233b4a068b4dadb62512f6a9279a09d8a6a09a4032fd8",
     "labs/student/w11b/data/fertilizer-w11b.csv": "7c84f0cde0c8eb7cb78baeba6c8e22ff920f5e2c969cd02a1f81b4cfc7ee1329",
-    "labs/student/w11b/w11b-applications.qmd": "7a05cd042253af95c3855ddbd73eae898554a3fd9a61c21632bc82bd9921ae76"
+    "labs/student/w11b/w11b-applications.qmd": "130a07e44ec64287e1508cf7618ac5491c7293bbeeff9f993823d4afe0967cfe"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

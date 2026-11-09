@@ -64,7 +64,7 @@
 
 ## L04 · 숫자 분기 코딩 디버깅
 
-Sales~PDI+QuarterNumber와 Sales~PDI+Quarter의 설계열·계수 수를 비교하세요. 전자의 숨은 제약을 말하고 의도한 분기 모형으로 고치세요.
+`Sales ~ PDI + QuarterNumber`와 `Sales ~ PDI + Quarter`의 설계열·계수 수를 비교하세요. 전자의 숨은 제약을 말하고 의도한 분기 모형으로 고치세요.
 
 힌트: 번호의 간격과 범주의 이름은 다릅니다.
 

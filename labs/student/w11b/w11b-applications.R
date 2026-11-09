@@ -247,7 +247,7 @@ my_L03_prediction <- NA_real_
 my_L03_reason <- ""
 # Your answer is separate: unfinished exercises do not block later examples.
 
-# L04 Sales~PDI+QuarterNumber와 Sales~PDI+Quarter의 설계열·계수 수를 비교하세요. 전자의 숨은 제약을 말하고 의도한 분기 모형으로 고치세요.
+# L04 `Sales ~ PDI + QuarterNumber`와 `Sales ~ PDI + Quarter`의 설계열·계수 수를 비교하세요. 전자의 숨은 제약을 말하고 의도한 분기 모형으로 고치세요.
 my_L04_prediction <- NA_real_
 my_L04_reason <- ""
 # Your answer is separate: unfinished exercises do not block later examples.
