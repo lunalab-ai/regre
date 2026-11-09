@@ -20,6 +20,7 @@ project:
   - w10a.qmd
   - w10b.qmd
   - w11a.qmd
+  - w11b.qmd
 website:
   title: 회귀분석의 이해 · 온라인 실습
   site-url: https://lunalab-ai.github.io/regre/
@@ -61,6 +62,8 @@ website:
       href: w10b.qmd
     - text: w11a · W11A · 식을 읽고 계산을 바꾸는 범주형 회귀
       href: w11a.qmd
+    - text: w11b · W11B · 평균·계절·시간 안정성의 실제 계산
+      href: w11b.qmd
 lang: ko
 engine: knitr
 format:

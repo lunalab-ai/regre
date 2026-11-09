@@ -500,3 +500,41 @@ https://lunalab-ai.github.io/regre/w11a.html
 [강의 원문](../course/notion/w11a/w11a-workbook.md)
 
 [강의 원문](../course/notion/w11a/w11a-concept-cards.md)
+
+## 지시변수의 응용 — 평균 비교·계절성·회귀모수의 시간적 안정성
+
+[강의 원문](../course/notion/w11b/w11b-means.md)
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11b/notebooks/student/w11b_mean_season.ipynb
+
+https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11b/notebooks/student/w11b_stability.ipynb
+
+https://github.com/lunalab-ai/regre/tree/2026-fall-w11b/labs/student/w11b
+
+https://lunalab-ai.github.io/regre/apps/w11b/edit/index.html
+
+https://lunalab-ai.github.io/regre/w11b.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/anova.lm.html
+
+https://stat.ethz.ch/R-manual/R-devel/library/stats/html/model.matrix.html
+
+[강의 원문](../course/notion/w11b/w11b-seasons.md)
+
+https://otexts.com/fpp3/regression.html#seasonal-dummy-variables
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Ski.Sales.txt
+
+[강의 원문](../course/notion/w11b/w11b-stability.md)
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Edu.Expend.txt
+
+[강의 원문](../course/notion/w11b/w11b-workbook.md)
+
+[강의 원문](../course/notion/w11b/w11b-concept-map.md)
+
+[강의 원문](../course/notion/w11b/w11b-sas-r.md)
+
+[강의 원문](../course/notion/w11b/w11b-checkpoints.md)
+
+https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-quiz.pdf

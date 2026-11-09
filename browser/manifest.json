@@ -1548,6 +1548,141 @@
         "stopifnot(nrow(salary)==46,nrow(pre)==20,si$rank==7,df.residual(si)==39,\n max(abs(salary_trace$rows$fitted-fitted(si)))<1e-7,\n abs(sum(additive_row$contribution)-predict(sa,one))<1e-7,\n max(abs(fitted(si)-fitted(reference1)))<1e-7)\ncat(\"W11A_CATEGORICAL_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
         "stopifnot(nrow(pre)==20,mods$MF$rank==4,comparison$q==2,comparison$df_full==16,\n abs(comparison$F-anova(mods$M0,mods$MF)$F[2])<1e-9,\n abs(comparison$p-.054236056264714)<1e-10,\n cat_nested_trace(mods$M0,mods$MI)$df_full==17,\n cat_nested_trace(mods$M0,mods$MS)$df_full==17)\ncat(\"W11A_GROUPS_RUNTIME_PASS: source calculations, not exercise completion\\n\")"
       ]
+    },
+    {
+      "id": "w11b",
+      "title": "W11B · 평균·계절·시간 안정성의 실제 계산",
+      "cells": [
+        {
+          "id": "w11b-1",
+          "code": "# Bundled inputs first. A fixed-tag download is used only when no local copy exists.\ntag <- \"2026-fall-w11b\"\nlocal_dirs <- c(\"data\",\"labs/student/w11b/data\",\"../../labs/student/w11b/data\",\"../../../labs/student/w11b/data\")\nfound <- local_dirs[file.exists(file.path(local_dirs,\"indicator-applications-w11b.R\"))]\ncache_root <- Sys.getenv(\"REGRE_CACHE_DIR\",unset=file.path(path.expand(\"~\"),\".cache\",\"regre\"))\ndata_dir <- if(length(found)) found[1] else file.path(cache_root,tag)\ndir.create(data_dir,recursive=TRUE,showWarnings=FALSE)\nexpected <- c(\"categorical-trace-w11b.R\"=\"cd201e03f0de484b2ee9bb71b7d56e24\",\"indicator-applications-w11b.R\"=\"dcbf19df1dfa8c0618b4577fe649aec5\",\"ski-sales-w11b.csv\"=\"0ccf5e3ffa6992bdb40ba2977addd87c\",\"education-w11b.csv\"=\"8ed5c621f5a02c46ca4654c81d3644d0\",\"fertilizer-w11b.csv\"=\"d9adb09eac8823b7a3d21b0a84b757df\")\noptions(timeout=120)\nfor(name in names(expected)) {\n target <- file.path(data_dir,name)\n if(!file.exists(target)) {\n  status <- download.file(paste0(\"https://raw.githubusercontent.com/lunalab-ai/regre/\",tag,\"/labs/student/w11b/data/\",name),target,mode=\"wb\")\n  if(status!=0) stop(\"Download failed: check the connection and rerun this preparation cell.\")\n  cat(name,\": fixed-tag download\\n\")\n } else cat(name,\": bundled/cache file\\n\")\n if(unname(tools::md5sum(target))!=expected[[name]])\n  stop(\"Input bytes differ. Preserve your edited copy and use a fresh data folder/cache.\")\n}\nsource(file.path(data_dir,\"categorical-trace-w11b.R\"),encoding=\"UTF-8\")\nsource(file.path(data_dir,\"indicator-applications-w11b.R\"),encoding=\"UTF-8\")\nski_raw <- read.csv(file.path(data_dir,\"ski-sales-w11b.csv\"))\nedu_raw <- read.csv(file.path(data_dir,\"education-w11b.csv\"))\ncorn <- read.csv(file.path(data_dir,\"fertilizer-w11b.csv\"))\ntoy <- data.frame(source_row=1:9,y=c(4,5,6,6,7,8,8,9,10),Group=factor(rep(c(\"A\",\"B\",\"C\"),each=3),levels=c(\"C\",\"A\",\"B\")))\ncontrasts(toy$Group) <- contr.treatment(levels(toy$Group),base=1)\nski <- ia_quarter_prepare(ski_raw)\nedu <- ia_year_prepare(edu_raw)\nstopifnot(nrow(ski)==40,nrow(edu)==150,nrow(corn)==40,all(table(ski$Quarter)==10),all(table(edu$YearGroup)==50))\ncat(\"W11B_DATA_READY: own9 / Ski40 / Education150 / Corn40.\\n\")\nprint(R.version.string)",
+          "exercise": false
+        },
+        {
+          "id": "w11b-2",
+          "code": "m0 <- lm(y~1,toy)\nm1 <- lm(y~Group,toy)\nprint(toy);print(model.matrix(m1));print(coef(m1))\nprint(aggregate(y~Group,toy,mean))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-3",
+          "code": "ia_mean_parts <- function(y, group) {\n  if (!is.numeric(y) || any(!is.finite(y)) || length(y)!=length(group) ||\n      anyNA(group) || any(!nzchar(as.character(group)))) stop(\"Use complete numeric y and group labels.\")\n  g <- droplevels(factor(group)); n <- length(y); k <- nlevels(g)\n  if (k<2L || n<=k) stop(\"Need at least two groups and positive within-group degrees of freedom.\")\n  grand <- mean(y)\n  fitted <- ave(y,g,FUN=mean)\n  residual <- y-fitted\n  SSE <- sum(residual^2)\n  SSB <- sum((fitted-grand)^2)\n  SST <- sum((y-grand)^2)\n  if (SSE<=0) stop(\"The classical F ratio needs positive within-group variation.\")\n  F <- (SSB/(k-1L))/(SSE/(n-k))\n  list(rows=data.frame(observed=y,group=g,group_mean=fitted,residual=residual,squared=residual^2),\n    summary=data.frame(n=n,k=k,grand=grand,SST=SST,SSB=SSB,SSE=SSE,\n      q=k-1L,df=n-k,F=F,p=pf(F,k-1L,n-k,lower.tail=FALSE)))\n}\nparts <- ia_mean_parts(toy$y,toy$Group)\nprint(parts$rows);print(parts$summary)\nstopifnot(abs(parts$summary$SST-parts$summary$SSB-parts$summary$SSE)<1e-10)\nplot(as.numeric(toy$Group),toy$y,pch=19,xaxt=\"n\",xlab=\"Group (C baseline)\",ylab=\"y (own example)\")\naxis(1,at=1:3,labels=levels(toy$Group))\npoints(1:3,tapply(toy$y,toy$Group,mean),pch=18,col=\"blue\",cex=2)",
+          "exercise": false
+        },
+        {
+          "id": "w11b-4",
+          "code": "cat_fit_trace <- function(fit) {\n  frame <- cat_check_fit(fit)\n  design <- model.matrix(fit)\n  observed <- model.response(frame)\n  beta <- qr.coef(qr(design),observed)\n  fitted <- drop(design %*% beta)\n  residual <- observed-fitted\n  squared <- residual^2\n  rows <- data.frame(source_row=rownames(design),observed=unname(observed),\n    fitted=unname(fitted),residual=unname(residual),squared=unname(squared),\n    cumulative=cumsum(unname(squared)),row.names=NULL)\n  list(design=design,coefficients=beta,rows=rows,\n    SSE=sum(squared),n=nrow(design),k=ncol(design),df=df.residual(fit))\n}\ntoy_trace <- cat_fit_trace(m1)\nprint(toy_trace$rows);print(toy_trace$coefficients)",
+          "exercise": false
+        },
+        {
+          "id": "w11b-5",
+          "code": "cat_nested_trace <- function(reduced, full, tolerance=1e-9) {\n  checked <- cat_check_pair(reduced,full,tolerance)\n  SSE_reduced <- sum(residuals(reduced)^2)\n  SSE_full <- sum(residuals(full)^2)\n  if (SSE_full<=0 ||\n      SSE_reduced<SSE_full-tolerance*max(1,SSE_reduced))\n    stop(\"F needs positive full-model residual variance and a valid nested SSE.\")\n  q <- checked$q\n  df_full <- checked$df_full\n  # A tiny negative difference can only be numerical roundoff for nested OLS.\n  increase <- max(0,SSE_reduced-SSE_full)\n  F <- (increase/q)/(SSE_full/df_full)\n  data.frame(n=checked$n,k_reduced=reduced$rank,k_full=full$rank,q=q,\n    df_full=df_full,SSE_reduced=SSE_reduced,SSE_full=SSE_full,\n    F=F,p=pf(F,q,df_full,lower.tail=FALSE))\n}\ntoy_test <- cat_nested_trace(m0,m1)\nprint(toy_test);print(anova(m0,m1))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-6",
+          "code": "ia_rows <- function(data, columns) {\n  if (!is.data.frame(data) || nrow(data)<2L || !all(columns %in% names(data)))\n    stop(\"Supply a data.frame containing all required columns.\")\n  if (anyNA(data[columns])) stop(\"Resolve missing source values explicitly before fitting.\")\n  d <- data\n  if (!\"source_row\" %in% names(d)) d$source_row <- seq_len(nrow(d))\n  if (anyNA(d$source_row) || anyDuplicated(d$source_row)) stop(\"source_row must be complete and unique.\")\n  rownames(d) <- as.character(d$source_row)\n  d\n}\nia_quarter_prepare <- function(data, reference=4L) {\n  d <- ia_rows(data,c(\"Date\",\"Sales\",\"PDI\"))\n  d$Date <- trimws(as.character(d$Date))\n  if (any(!grepl(\"^Q[1-4]/[0-9]{2}$\",d$Date)) || anyDuplicated(d$Date) ||\n      !is.numeric(d$Sales) || !is.numeric(d$PDI) || any(!is.finite(c(d$Sales,d$PDI))))\n    stop(\"Use unique Q1/64-style dates and finite numeric Sales/PDI.\")\n  if (length(reference)!=1L || !reference %in% 1:4) stop(\"Choose one reference quarter from 1:4.\")\n  d$QuarterNumber <- as.integer(substr(d$Date,2,2))\n  d$Year <- 1900L+as.integer(substr(d$Date,4,5))\n  if (!setequal(unique(d$QuarterNumber),1:4)) stop(\"This four-quarter comparison needs all quarters.\")\n  d$Quarter <- factor(d$QuarterNumber,levels=c(reference,setdiff(1:4,reference)))\n  contrasts(d$Quarter) <- contr.treatment(levels(d$Quarter),base=1)\n  d\n}\nski <- ia_quarter_prepare(ski_raw,reference=4)\nseason0 <- lm(Sales~PDI,ski)\nseason <- lm(Sales~PDI+Quarter,ski)\nprint(ski[1:8,c(\"source_row\",\"Date\",\"PDI\",\"QuarterNumber\",\"Quarter\")])\nprint(model.matrix(season)[1:8,]);print(coef(season))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-7",
+          "code": "season_test <- cat_nested_trace(season0,season)\nprint(season_test);print(anova(season0,season))\nplot(ski$source_row,resid(season0),type=\"b\",col=\"gray50\",xlab=\"Original quarter order\",ylab=\"Sales residual (original scale)\")\nlines(ski$source_row,resid(season),col=\"blue\",type=\"b\");abline(h=0,lty=2)\nacf(resid(season),main=\"Residual ACF after seasonal mean terms\")\nski_ref1 <- ia_quarter_prepare(ski_raw,1)\nseason_ref1 <- lm(Sales~PDI+Quarter,ski_ref1)\nprint(max(abs(fitted(season)-fitted(season_ref1))))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-8",
+          "code": "ia_year_prepare <- function(data, reference=1975L) {\n  d <- ia_rows(data,c(\"STATE\",\"Y\",\"X1\",\"X2\",\"X3\",\"Year\"))\n  nums <- c(\"Y\",\"X1\",\"X2\",\"X3\",\"Year\")\n  if (!all(vapply(d[nums],is.numeric,logical(1))) || any(!is.finite(as.matrix(d[nums]))))\n    stop(\"Use complete finite numeric Y/X1/X2/X3/Year.\")\n  d$STATE <- trimws(as.character(d$STATE))\n  years <- c(1960L,1970L,1975L)\n  if (any(!nzchar(d$STATE)) || anyDuplicated(paste(d$STATE,d$Year)) ||\n      !setequal(unique(d$Year),years)) stop(\"Need unique STATE-Year keys for 1960/1970/1975.\")\n  if (length(reference)!=1L || !reference %in% years) stop(\"Choose a source year as reference.\")\n  d$YearGroup <- factor(d$Year,levels=c(reference,setdiff(years,reference)))\n  contrasts(d$YearGroup) <- contr.treatment(levels(d$YearGroup),base=1)\n  d\n}\nedu <- ia_year_prepare(edu_raw,1975)\nprint(edu[1:4,c(\"source_row\",\"STATE\",\"Year\",\"Y\",\"X1\",\"X2\",\"X3\",\"YearGroup\")])",
+          "exercise": false
+        },
+        {
+          "id": "w11b-9",
+          "code": "ia_full_formula <- function() {\n  Y ~ (X1 + X2 + X3) * YearGroup\n}\nia_year_models <- function(data, formula_fn=ia_full_formula) {\n  if (!is.function(formula_fn)) stop(\"formula_fn must be the actual function you edited.\")\n  d <- ia_rows(data,c(\"Y\",\"X1\",\"X2\",\"X3\",\"YearGroup\"))\n  if (!is.factor(d$YearGroup)) stop(\"Use prepared categorical YearGroup.\")\n  models <- list(common=lm(Y~X1+X2+X3,d,na.action=na.fail),\n    intercept=lm(Y~X1+X2+X3+YearGroup,d,na.action=na.fail),\n    full=lm(formula_fn(),d,na.action=na.fail))\n  invisible(lapply(models,cat_check_fit))\n  cat_check_pair(models$common,models$full)\n  models\n}\nyear_models <- ia_year_models(edu,ia_full_formula)\nprint(vapply(year_models,function(f) f$rank,integer(1)))\nprint(model.matrix(year_models$full)[1:4,]);print(coef(year_models$full))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-10",
+          "code": "cat_fit_trace <- function(fit) {\n  frame <- cat_check_fit(fit)\n  design <- model.matrix(fit)\n  observed <- model.response(frame)\n  beta <- qr.coef(qr(design),observed)\n  fitted <- drop(design %*% beta)\n  residual <- observed-fitted\n  squared <- residual^2\n  rows <- data.frame(source_row=rownames(design),observed=unname(observed),\n    fitted=unname(fitted),residual=unname(residual),squared=unname(squared),\n    cumulative=cumsum(unname(squared)),row.names=NULL)\n  list(design=design,coefficients=beta,rows=rows,\n    SSE=sum(squared),n=nrow(design),k=ncol(design),df=df.residual(fit))\n}\ncat_nested_trace <- function(reduced, full, tolerance=1e-9) {\n  checked <- cat_check_pair(reduced,full,tolerance)\n  SSE_reduced <- sum(residuals(reduced)^2)\n  SSE_full <- sum(residuals(full)^2)\n  if (SSE_full<=0 ||\n      SSE_reduced<SSE_full-tolerance*max(1,SSE_reduced))\n    stop(\"F needs positive full-model residual variance and a valid nested SSE.\")\n  q <- checked$q\n  df_full <- checked$df_full\n  # A tiny negative difference can only be numerical roundoff for nested OLS.\n  increase <- max(0,SSE_reduced-SSE_full)\n  F <- (increase/q)/(SSE_full/df_full)\n  data.frame(n=checked$n,k_reduced=reduced$rank,k_full=full$rank,q=q,\n    df_full=df_full,SSE_reduced=SSE_reduced,SSE_full=SSE_full,\n    F=F,p=pf(F,q,df_full,lower.tail=FALSE))\n}\nyear_trace <- cat_fit_trace(year_models$full)\nyear_test <- cat_nested_trace(year_models$common,year_models$full)\nprint(year_trace$rows[1:6,]);print(year_test)\nprint(anova(year_models$common,year_models$full))\none_state <- edu[1,,drop=FALSE]\none_state$YearGroup <- factor(as.character(one_state$YearGroup),levels=levels(edu$YearGroup))\nprint(cat_row_trace(year_models$full,one_state))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-11",
+          "code": "edu_ref1960 <- ia_year_prepare(edu_raw,1960)\nother_reference <- ia_year_models(edu_ref1960,ia_full_formula)\nprint(max(abs(fitted(year_models$full)-fitted(other_reference$full))))\nprint(aggregate(X1~YearGroup,edu,range))\nplot(fitted(year_models$full),edu$Y,col=as.integer(edu$YearGroup),pch=19,xlab=\"Fitted Y (original scale)\",ylab=\"Observed Y (original scale)\")\nabline(0,1,lty=2)",
+          "exercise": false
+        },
+        {
+          "id": "w11b-12",
+          "code": "student_formula <- function() {\n Y ~ (X1 + X2 + X3) * YearGroup\n}\nmy_models <- ia_year_models(edu,student_formula)\nprint(cat_nested_trace(my_models$common,my_models$full))",
+          "exercise": false
+        },
+        {
+          "id": "w11b-13",
+          "code": "my_L01_prediction <- NA_real_\nmy_L01_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-14",
+          "code": "my_L02_prediction <- NA_real_\nmy_L02_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-15",
+          "code": "my_L03_prediction <- NA_real_\nmy_L03_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-16",
+          "code": "my_L04_prediction <- NA_real_\nmy_L04_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-17",
+          "code": "my_L05_prediction <- NA_real_\nmy_L05_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-18",
+          "code": "my_L06_prediction <- NA_real_\nmy_L06_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-19",
+          "code": "my_L07_prediction <- NA_real_\nmy_L07_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-20",
+          "code": "my_L08_prediction <- NA_real_\nmy_L08_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-21",
+          "code": "my_L09_prediction <- NA_real_\nmy_L09_reason <- \"\"\n# Your answer is separate: unfinished exercises do not block later examples.",
+          "exercise": false
+        },
+        {
+          "id": "w11b-22",
+          "code": "cat_check_fit <- function(fit) {\n  if (!inherits(fit,\"lm\") || !is.data.frame(fit$model))\n    stop(\"Use a standard lm with its complete model frame retained.\")\n  frame <- fit$model\n  design <- model.matrix(fit)\n  y <- model.response(frame)\n  if (!is.numeric(y) || is.matrix(y) || any(!is.finite(y)) ||\n      any(!is.finite(design)) || !is.null(model.weights(frame)) ||\n      !is.null(model.offset(frame)) || fit$rank!=ncol(design) ||\n      df.residual(fit)<1L || any(!is.finite(coef(fit))))\n    stop(\"Require finite, unweighted, no-offset, full-rank univariate OLS with residual df.\")\n  frame\n}",
+          "exercise": false
+        },
+        {
+          "id": "w11b-23",
+          "code": "cat_check_pair <- function(reduced, full, tolerance=1e-9) {\n  r <- cat_check_fit(reduced)\n  f <- cat_check_fit(full)\n  if (!identical(rownames(r),rownames(f)) ||\n      !isTRUE(all.equal(model.response(r),model.response(f),tolerance=0)))\n    stop(\"Compare the same response and identical observations in identical order.\")\n  xr <- model.matrix(reduced)\n  xf <- model.matrix(full)\n  if (length(tolerance)!=1L || !is.numeric(tolerance) ||\n      !is.finite(tolerance) || tolerance<=0) stop(\"Use positive finite tolerance.\")\n  q <- full$rank-reduced$rank\n  if (q<=0 || max(abs(qr.resid(qr(xf),xr)))>tolerance*max(1,abs(xr)))\n    stop(\"Reduced design must be nested in full design with fewer parameters.\")\n  list(n=nrow(f),q=q,df_full=df.residual(full))\n}",
+          "exercise": false
+        },
+        {
+          "id": "w11b-24",
+          "code": "cat_row_trace <- function(fit, newdata) {\n  cat_check_fit(fit)\n  if (!is.data.frame(newdata) || nrow(newdata)<1L)\n    stop(\"newdata must contain at least one complete observation.\")\n  term <- delete.response(terms(fit))\n  frame <- model.frame(term,newdata,na.action=na.fail,xlev=fit$xlevels)\n  design <- model.matrix(term,frame,contrasts.arg=fit$contrasts)\n  beta <- coef(fit)\n  if (!identical(colnames(design),names(beta)) || any(!is.finite(design)))\n    stop(\"New rows must use the fitted columns, factor levels and finite values.\")\n  contribution <- sweep(design,2,beta,\"*\")\n  data.frame(row=rep(seq_len(nrow(design)),each=ncol(design)),\n    term=rep(colnames(design),times=nrow(design)),\n    value=as.vector(t(design)),coefficient=rep(unname(beta),times=nrow(design)),\n    contribution=as.vector(t(contribution)),row.names=NULL)\n}",
+          "exercise": false
+        },
+        {
+          "id": "w11b-25",
+          "code": "stopifnot(abs(parts$summary$SSE-6)<1e-10,abs(toy_test$F-12)<1e-9,toy_test$q==2,toy_test$df_full==6,\n nrow(ski)==40,season$rank==5,season_test$q==3,season_test$df_full==35,\n abs(season_test$F-anova(season0,season)$F[2])<1e-8,\n max(abs(fitted(season)-fitted(season_ref1)))<1e-9)\ncat(\"W11B_MEAN_SEASON_RUNTIME_PASS: source calculations, not exercise completion\\n\")\nstopifnot(nrow(edu)==150,year_models$common$rank==4,year_models$intercept$rank==6,year_models$full$rank==12,\n year_test$q==8,year_test$df_full==138,abs(year_test$F-anova(year_models$common,year_models$full)$F[2])<1e-8,\n max(abs(year_trace$rows$fitted-fitted(year_models$full)))<1e-7,\n max(abs(fitted(year_models$full)-fitted(other_reference$full)))<1e-7)\ncat(\"W11B_STABILITY_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(abs(parts$summary$SSE-6)<1e-10,abs(toy_test$F-12)<1e-9,toy_test$q==2,toy_test$df_full==6,\n nrow(ski)==40,season$rank==5,season_test$q==3,season_test$df_full==35,\n abs(season_test$F-anova(season0,season)$F[2])<1e-8,\n max(abs(fitted(season)-fitted(season_ref1)))<1e-9)\ncat(\"W11B_MEAN_SEASON_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
+        "stopifnot(nrow(edu)==150,year_models$common$rank==4,year_models$intercept$rank==6,year_models$full$rank==12,\n year_test$q==8,year_test$df_full==138,abs(year_test$F-anova(year_models$common,year_models$full)$F[2])<1e-8,\n max(abs(year_trace$rows$fitted-fitted(year_models$full)))<1e-7,\n max(abs(fitted(year_models$full)-fitted(other_reference$full)))<1e-7)\ncat(\"W11B_STABILITY_RUNTIME_PASS: source calculations, not exercise completion\\n\")"
+      ]
     }
   ],
   "source_sha256": {
@@ -1611,7 +1746,13 @@
     "labs/student/w11a/data/categorical-trace-w11a.R": "52be5b97431257da15466bef389d7a0d09d3f9672d1ce4f04ded198696fb021e",
     "labs/student/w11a/data/salary-survey-w11a.csv": "bd29b858815b362268d72fa5638bc71ea84edc9e976429646e8bdabdf28a093e",
     "labs/student/w11a/data/preemployment-w11a.csv": "b44606e049abaeeea67c63f4a7dea81a60794927e03c534373a13428b85a3f39",
-    "labs/student/w11a/w11a-categorical.qmd": "c51a7a4b3583594d91f2a04249540b2ee3006653aaa54c419ac017d2dfc16275"
+    "labs/student/w11a/w11a-categorical.qmd": "c51a7a4b3583594d91f2a04249540b2ee3006653aaa54c419ac017d2dfc16275",
+    "labs/student/w11b/data/categorical-trace-w11b.R": "52be5b97431257da15466bef389d7a0d09d3f9672d1ce4f04ded198696fb021e",
+    "labs/student/w11b/data/indicator-applications-w11b.R": "eba36d3a1119708434fc2f2693d296424a9f8f43d1ce4bdd4539d01b62afaf35",
+    "labs/student/w11b/data/ski-sales-w11b.csv": "c33f0bfefc007fec6a093f478a6e0c561f0a4a1082c27a8b45ae198739fba69a",
+    "labs/student/w11b/data/education-w11b.csv": "fed3287c2a2aaa4dae4233b4a068b4dadb62512f6a9279a09d8a6a09a4032fd8",
+    "labs/student/w11b/data/fertilizer-w11b.csv": "7c84f0cde0c8eb7cb78baeba6c8e22ff920f5e2c969cd02a1f81b4cfc7ee1329",
+    "labs/student/w11b/w11b-applications.qmd": "7a05cd042253af95c3855ddbd73eae898554a3fd9a61c21632bc82bd9921ae76"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

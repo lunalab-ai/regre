@@ -662,6 +662,57 @@ sessions:
   - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-check-questions.pdf'
   - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11a-v2/w11a-student-materials.zip'
   notion_url: https://fancy-ballcap-a15.notion.site/W11A-2026-11-09-4127fd00109f81679a11c7dbddd2b04f
+- id: w11b
+  date: '2026-11-10'
+  title: 지시변수의 응용 — 평균 비교·계절성·회귀모수의 시간적 안정성
+  pages:
+  - course/notion/w11b/w11b-means.md
+  - course/notion/w11b/w11b-seasons.md
+  - course/notion/w11b/w11b-stability.md
+  - course/notion/w11b/w11b-workbook.md
+  - course/notion/w11b/w11b-concept-map.md
+  - course/notion/w11b/w11b-sas-r.md
+  - course/notion/w11b/w11b-checkpoints.md
+  labs:
+  - labs/student/w11b/w11b-applications.R
+  - labs/student/w11b/w11b-applications.qmd
+  - labs/student/w11b/app/app.R
+  - notebooks/student/w11b_mean_season.ipynb
+  - notebooks/student/w11b_stability.ipynb
+  quiz: course/quiz/w11b.yml
+  runtime_label: R · editable WebR · independent R Colab A/B
+  browser_source: labs/student/w11b/w11b-applications.qmd
+  browser_title: W11B · 평균·계절·시간 안정성의 실제 계산
+  browser_resources:
+  - labs/student/w11b/data/categorical-trace-w11b.R
+  - labs/student/w11b/data/indicator-applications-w11b.R
+  - labs/student/w11b/data/ski-sales-w11b.csv
+  - labs/student/w11b/data/education-w11b.csv
+  - labs/student/w11b/data/fertilizer-w11b.csv
+  browser_checks:
+  - "stopifnot(abs(parts$summary$SSE-6)<1e-10,abs(toy_test$F-12)<1e-9,toy_test$q==2,toy_test$df_full==6,\n\
+    \ nrow(ski)==40,season$rank==5,season_test$q==3,season_test$df_full==35,\n abs(season_test$F-anova(season0,season)$F[2])<1e-8,\n\
+    \ max(abs(fitted(season)-fitted(season_ref1)))<1e-9)\ncat(\"W11B_MEAN_SEASON_RUNTIME_PASS:\
+    \ source calculations, not exercise completion\\n\")"
+  - "stopifnot(nrow(edu)==150,year_models$common$rank==4,year_models$intercept$rank==6,year_models$full$rank==12,\n\
+    \ year_test$q==8,year_test$df_full==138,abs(year_test$F-anova(year_models$common,year_models$full)$F[2])<1e-8,\n\
+    \ max(abs(year_trace$rows$fitted-fitted(year_models$full)))<1e-7,\n max(abs(fitted(year_models$full)-fitted(other_reference$full)))<1e-7)\n\
+    cat(\"W11B_STABILITY_RUNTIME_PASS: source calculations, not exercise completion\\\
+    n\")"
+  browser_url: https://lunalab-ai.github.io/regre/w11b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11b/notebooks/student/w11b_mean_season.ipynb
+  announcement_guidance:
+  - 주교재6.5–6.7, 장말 연결과 SAS/R 대응. 11월10일 수업입니다.
+  - 예상→손계산→실제 함수 수정→R 실행→한 문장 해석. 필수L01–L06, 선택L07–L09입니다.
+  - '독립 R Colab B: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w11b/notebooks/student/w11b_stability.ipynb'
+  - 본문의 실제 함수 정의를 읽고 수정합니다. 앱은 별도 실행환경이므로 수정 함수를 편집기에도 반영하고 Run하세요. CSV와 독립 실행 R을
+    저장합니다. 새 성적 반영 과제나 제출 기한은 없습니다.
+  - '학생 통합PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-student-book.pdf'
+  - '계산 기록지PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-workbook-print.pdf'
+  - '개념 지도PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-concept-map.pdf'
+  - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-check-questions.pdf'
+  - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-student-materials.zip'
+  notion_url: https://fancy-ballcap-a15.notion.site/W11B-2026-11-10-4137fd00109f81dea6b6dba6399f68a0
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -905,6 +956,23 @@ browser:
     - selector: '#group_comparison'
       text: '0.0542361'
     - selector: '#group_plot img'
+  - id: w11b
+    source: labs/student/w11b/app/app.R
+    data:
+    - labs/student/w11b/data/categorical-trace-w11b.R
+    - labs/student/w11b/data/indicator-applications-w11b.R
+    - labs/student/w11b/data/ski-sales-w11b.csv
+    - labs/student/w11b/data/education-w11b.csv
+    - labs/student/w11b/data/fertilizer-w11b.csv
+    browser_checks:
+    - selector: '#mean_test'
+      text: '12'
+    - selector: '#mean_plot img'
+    - selector: a[data-value="year"]
+      click: true
+    - selector: '#year_test'
+      text: '9.422465'
+    - selector: '#year_plot img'
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
