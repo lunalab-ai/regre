@@ -749,14 +749,14 @@ sessions:
     \   all(sign(raw_check$rows$std_residual_fit_scale) ==\n              c(1, rep(-1,\
     \ 10), rep(1, 4))))\ncat(\"W12A_B_OK\\n\")"
   browser_url: https://lunalab-ai.github.io/regre/w12a.html
-  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a/notebooks/student/w12a_axes.ipynb
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a-v2/notebooks/student/w12a_axes.ipynb
   announcement_guidance:
   - 11월 16일 수업은 주교재 7.1–7.3을 다룹니다.
-  - 독립 R Colab B https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a/notebooks/student/w12a_decay.ipynb
+  - 독립 R Colab B https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a-v2/notebooks/student/w12a_decay.ipynb
   - 편집형 실습 앱 https://lunalab-ai.github.io/regre/apps/w12a/edit/index.html
-  - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-student-book.pdf
-  - 학생 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-workbook-print.pdf
-  - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-student-materials.zip
+  - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-student-book.pdf
+  - 학생 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-workbook-print.pdf
+  - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-student-materials.zip
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab

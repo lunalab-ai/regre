@@ -538,3 +538,25 @@ https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Edu.Expend.txt
 [강의 원문](../course/notion/w11b/w11b-checkpoints.md)
 
 https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-quiz.pdf
+
+## 변수변환으로 곡선을 직선화하고 잔차로 판단하기
+
+[강의 원문](../course/notion/w12a/w12a-core.md)
+
+https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-workbook-print.pdf
+
+https://lunalab-ai.github.io/regre/w12a.html
+
+[강의 원문](../course/notion/w12a/w12a-transformations.md)
+
+[강의 원문](../course/notion/w12a/w12a-bacteria.md)
+
+https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Bacteria.txt
+
+[강의 원문](../course/notion/w12a/w12a-workbook.md)
+
+https://lunalab-ai.github.io/regre/w12a.html
+
+[강의 원문](../course/notion/w12a/w12a-checkpoints.md)
+
+https://lunalab-ai.github.io/regre/w12a.html
