@@ -1683,6 +1683,46 @@
         "stopifnot(abs(parts$summary$SSE-6)<1e-10,abs(toy_test$F-12)<1e-9,toy_test$q==2,toy_test$df_full==6,\n nrow(ski)==40,season$rank==5,season_test$q==3,season_test$df_full==35,\n abs(season_test$F-anova(season0,season)$F[2])<1e-8,\n max(abs(fitted(season)-fitted(season_ref1)))<1e-9)\ncat(\"W11B_MEAN_SEASON_RUNTIME_PASS: source calculations, not exercise completion\\n\")",
         "stopifnot(nrow(edu)==150,year_models$common$rank==4,year_models$intercept$rank==6,year_models$full$rank==12,\n year_test$q==8,year_test$df_full==138,abs(year_test$F-anova(year_models$common,year_models$full)$F[2])<1e-8,\n max(abs(year_trace$rows$fitted-fitted(year_models$full)))<1e-7,\n max(abs(fitted(year_models$full)-fitted(other_reference$full)))<1e-7)\ncat(\"W11B_STABILITY_RUNTIME_PASS: source calculations, not exercise completion\\n\")"
       ]
+    },
+    {
+      "id": "w12a",
+      "title": "W12A · 변수변환 실습 A/B",
+      "cells": [
+        {
+          "id": "w12a-1",
+          "code": "step <- 0:3\ncount <- c(100, 80, 64, 51.2)\nprint(data.frame(from = step[-4], to = step[-1],\n                 difference = diff(count), ratio = count[-1] / count[-4]))\n\n# A1 편집: x축과 y축 중 어느 쪽에 log()를 넣을지 먼저 예측합니다.\nx <- c(1, 2, 4, 8)\ny <- 3 * x^2\naxis_x <- function(x) x\naxis_y <- function(y) log(y)\ntx <- axis_x(x)\nty <- axis_y(y)\ntoy_slope <- sum((tx - mean(tx)) * (ty - mean(ty))) / sum((tx - mean(tx))^2)\ntoy <- lm(ty ~ tx)\nprint(data.frame(point = LETTERS[1:4], x, y, tx, ty, residual = residuals(toy)))\nprint(c(by_hand = toy_slope, by_lm = unname(coef(toy)[2])))\npar(mfrow = c(1, 2))\nplot(x, y, pch = 19, xlab = \"X\", ylab = \"Y\", main = \"Original\")\ntext(x, y, LETTERS[1:4], pos = 3)\nplot(tx, ty, pch = 19, xlab = \"Transformed X\", ylab = \"Transformed Y\", main = \"Edited axes\")\nabline(toy, col = \"#A84231\", lwd = 2)\ntext(tx, ty, LETTERS[1:4], pos = 3)\npar(mfrow = c(1, 1))",
+          "exercise": false
+        },
+        {
+          "id": "w12a-2",
+          "code": "# A2 편집: 0을 넣으면 어느 값이 유한하지 않을지 표시한 뒤 실행합니다.\nlog_input <- c(0, 1, 2, 4)\nlog_value <- suppressWarnings(log(log_input))\nprint(data.frame(log_input, log_value, usable = is.finite(log_value)))\n\nfraction <- c(0, .25, .5, .75, 1)\nodds <- fraction / (1 - fraction)\nprint(data.frame(fraction, odds, log_odds = log(odds),\n                 usable = fraction > 0 & fraction < 1))",
+          "exercise": false
+        },
+        {
+          "id": "w12a-3",
+          "code": "# Data columns: t is the observation index, N_t is in hundreds.\nread_bacteria <- function() {\n  file_name <- \"bacteria-w12a.csv\"\n  locations <- file.path(c(\".\", \"data\", \"../data\", \"labs/student/w12a/data\",\n                           \"../../labs/student/w12a/data\", \"../../../labs/student/w12a/data\"),\n                         file_name)\n  local <- locations[file.exists(locations)][1L]\n  url <- paste0(\"https://raw.githubusercontent.com/lunalab-ai/regre/2026-fall-w12a/\",\n                \"labs/student/w12a/data/\", file_name)\n  d <- read.csv(if (is.na(local)) url else local)\n  stopifnot(identical(d$t, 1:15), all(is.finite(d$N_t)), all(d$N_t > 0))\n  d\n}\n\nplot_decay <- function(d, curves, limit = range(c(d$N_t, unlist(curves)))) {\n  plot(d$t, d$N_t, pch = 19, col = \"#24374D\", ylim = limit,\n       xlab = \"Observation step (6 min)\", ylab = \"Count (hundreds)\")\n  abline(h = 0, lty = 3, col = \"#7992A3\")\n  colors <- c(\"#B64932\", \"#087D77\")\n  for (i in seq_along(curves)) {\n    lines(d$t, curves[[i]], col = colors[i], lwd = 3, lty = i)\n  }\n  legend(\"topright\", names(curves), col = colors[seq_along(curves)],\n         lwd = 3, lty = seq_along(curves), bty = \"n\")\n}\n\nplot_decay_residuals <- function(d, fit, title) {\n  residual <- rstandard(fit)\n  plot(d$t, residual, pch = 19, col = \"#185A76\",\n       xlab = \"Observation step (6 min)\", ylab = \"Standardized residual\",\n       main = title, ylim = c(-3.5, 3.5))\n  abline(h = 0, lty = 2, col = \"#8B4961\")\n  text(d$t[c(1, 15)], residual[c(1, 15)], d$t[c(1, 15)], pos = 3, cex = .8)\n}\n\n\nd <- read_bacteria()\nraw <- lm(N_t ~ t, data = d)\nprint(coef(raw))\nprint(data.frame(t = d$t, observed = d$N_t, straight = fitted(raw),\n                 standardized = rstandard(raw)), row.names = FALSE)\nplot_decay_residuals(d, raw, \"Count-scale fit\")",
+          "exercise": false
+        },
+        {
+          "id": "w12a-4",
+          "code": "fit_on_count_scale <- function(d, formula, inverse) {\n  fit <- lm(formula, data = d, na.action = na.fail)\n  prediction <- inverse(as.numeric(predict(fit, newdata = d)))\n  error <- d$N_t - prediction\n  rows <- data.frame(t = d$t, observed = d$N_t, fitted_count = prediction,\n                     count_error = error, squared_error = error^2,\n                     std_residual_fit_scale = as.numeric(rstandard(fit)))\n  list(fit = fit, rows = rows, rmse = sqrt(mean(rows$squared_error)))\n}\n\n\n# B2 편집: log(N_t) ~ t로 바꿀 때 inverse도 exp로 바꾸세요.\nstudent_formula <- function() N_t ~ t\nstudent_inverse <- identity\n\n\nbaseline <- fit_on_count_scale(d, N_t ~ t, identity)\ntested <- fit_on_count_scale(d, student_formula(), student_inverse)\nprint(data.frame(model = c(\"Raw line\", \"My edited model\"),\n                 last_fit = c(tail(baseline$rows$fitted_count, 1),\n                              tail(tested$rows$fitted_count, 1)),\n                 count_rmse = c(baseline$rmse, tested$rmse)))\nprint(tested$rows, row.names = FALSE)\nplot_decay(d, list(\"Raw count fit\" = baseline$rows$fitted_count,\n                   \"My edited fit\" = tested$rows$fitted_count))\nplot_decay_residuals(d, tested$fit, \"My edited fit\")",
+          "exercise": false
+        },
+        {
+          "id": "w12a-5",
+          "code": "log_fit <- lm(log(N_t) ~ t, data = d)\nbeta <- coef(log_fit)[[\"t\"]]\nprint(c(ratio_per_6_minutes = exp(beta), percent_drop = 100 * (1 - exp(beta))))\nprint(exp(confint(log_fit)[\"t\", ]))\n# B3 편집: 15를 0으로 바꾸고 관측된 t 범위 안인지 확인합니다.\nquery_t <- 15\nprint(data.frame(t = query_t, in_range = query_t >= min(d$t) && query_t <= max(d$t),\n                 fitted_count = exp(predict(log_fit, newdata = data.frame(t = query_t)))))",
+          "exercise": false
+        },
+        {
+          "id": "w12a-6",
+          "code": "stopifnot(all.equal(unname(diff(c(100,80,64))), c(-20,-16)),\n          all.equal(c(80/100,64/80), c(.8,.8)),\n          abs(coef(lm(log(3 * x^2) ~ log(x)))[2] - 2) < 1e-10,\n          !is.finite(log(0)), !is.finite(qlogis(1)))\ncat(\"W12A_A_OK\\n\")\n\nraw_check <- fit_on_count_scale(d, N_t ~ t, identity)\nlog_check <- fit_on_count_scale(d, log(N_t) ~ t, exp)\nX <- cbind(1, d$t)\nqr_log <- qr.coef(qr(X), log(d$N_t))\nstopifnot(nrow(d) == 15, abs(raw_check$rmse - 38.94387088) < 1e-6,\n          abs(log_check$rmse - 16.35593346) < 1e-6,\n          abs(tail(raw_check$rows$fitted_count, 1) + 32.3833333) < 1e-6,\n          abs(tail(log_check$rows$fitted_count, 1) - 14.831917) < 1e-6,\n          abs(exp(coef(log_check$fit)[2]) - .8037835558) < 1e-8,\n          max(abs(qr_log - coef(log_check$fit))) < 1e-10,\n          all(sign(raw_check$rows$std_residual_fit_scale) ==\n              c(1, rep(-1, 10), rep(1, 4))))\ncat(\"W12A_B_OK\\n\")",
+          "exercise": false
+        }
+      ],
+      "checks": [
+        "stopifnot(all.equal(unname(diff(c(100,80,64))), c(-20,-16)),\n          all.equal(c(80/100,64/80), c(.8,.8)),\n          abs(coef(lm(log(3 * x^2) ~ log(x)))[2] - 2) < 1e-10,\n          !is.finite(log(0)), !is.finite(qlogis(1)))\ncat(\"W12A_A_OK\\n\")",
+        "raw_check <- fit_on_count_scale(d, N_t ~ t, identity)\nlog_check <- fit_on_count_scale(d, log(N_t) ~ t, exp)\nX <- cbind(1, d$t)\nqr_log <- qr.coef(qr(X), log(d$N_t))\nstopifnot(nrow(d) == 15, abs(raw_check$rmse - 38.94387088) < 1e-6,\n          abs(log_check$rmse - 16.35593346) < 1e-6,\n          abs(tail(raw_check$rows$fitted_count, 1) + 32.3833333) < 1e-6,\n          abs(tail(log_check$rows$fitted_count, 1) - 14.831917) < 1e-6,\n          abs(exp(coef(log_check$fit)[2]) - .8037835558) < 1e-8,\n          max(abs(qr_log - coef(log_check$fit))) < 1e-10,\n          all(sign(raw_check$rows$std_residual_fit_scale) ==\n              c(1, rep(-1, 10), rep(1, 4))))\ncat(\"W12A_B_OK\\n\")"
+      ]
     }
   ],
   "source_sha256": {
@@ -1752,7 +1792,10 @@
     "labs/student/w11b/data/ski-sales-w11b.csv": "c33f0bfefc007fec6a093f478a6e0c561f0a4a1082c27a8b45ae198739fba69a",
     "labs/student/w11b/data/education-w11b.csv": "fed3287c2a2aaa4dae4233b4a068b4dadb62512f6a9279a09d8a6a09a4032fd8",
     "labs/student/w11b/data/fertilizer-w11b.csv": "7c84f0cde0c8eb7cb78baeba6c8e22ff920f5e2c969cd02a1f81b4cfc7ee1329",
-    "labs/student/w11b/w11b-applications.qmd": "130a07e44ec64287e1508cf7618ac5491c7293bbeeff9f993823d4afe0967cfe"
+    "labs/student/w11b/w11b-applications.qmd": "130a07e44ec64287e1508cf7618ac5491c7293bbeeff9f993823d4afe0967cfe",
+    "labs/student/w12a/data/bacteria-w12a.csv": "791246aa7da0a0ee32beb3aee985ac156c43065b542f08b39d13dfdb8b590013",
+    "labs/student/w12a/data/variable-transform-w12a.R": "46e1833851a053d57399d259b226639d416e43651cd7821f92638a14184cf79d",
+    "labs/student/w12a/w12a-transform.qmd": "2f4115fdb03f320ef7423ea3fd39e5784a4894894dc25f4a8d3b7e689d4da411"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

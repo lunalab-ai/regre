@@ -713,6 +713,50 @@ sessions:
   - '점검 질문PDF: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-check-questions.pdf'
   - '학생 전체ZIP: https://github.com/lunalab-ai/regre/releases/download/2026-fall-w11b/w11b-student-materials.zip'
   notion_url: https://fancy-ballcap-a15.notion.site/W11B-2026-11-10-4137fd00109f81dea6b6dba6399f68a0
+- id: w12a
+  date: '2026-11-16'
+  title: 변수변환으로 곡선을 직선화하고 잔차로 판단하기
+  pages:
+  - course/notion/w12a/w12a-core.md
+  - course/notion/w12a/w12a-transformations.md
+  - course/notion/w12a/w12a-bacteria.md
+  - course/notion/w12a/w12a-workbook.md
+  - course/notion/w12a/w12a-checkpoints.md
+  labs:
+  - labs/student/w12a/w12a-transform.R
+  - labs/student/w12a/w12a-transform.qmd
+  - labs/student/w12a/app/app.R
+  - notebooks/student/w12a_axes.ipynb
+  - notebooks/student/w12a_decay.ipynb
+  quiz: course/quiz/w12a.yml
+  runtime_label: R · WebR · 독립 R Colab A/B
+  browser_source: labs/student/w12a/w12a-transform.qmd
+  browser_title: W12A · 변수변환 실습 A/B
+  browser_resources: &id001
+  - labs/student/w12a/data/bacteria-w12a.csv
+  - labs/student/w12a/data/variable-transform-w12a.R
+  browser_checks:
+  - "stopifnot(all.equal(unname(diff(c(100,80,64))), c(-20,-16)),\n          all.equal(c(80/100,64/80),\
+    \ c(.8,.8)),\n          abs(coef(lm(log(3 * x^2) ~ log(x)))[2] - 2) < 1e-10,\n\
+    \          !is.finite(log(0)), !is.finite(qlogis(1)))\ncat(\"W12A_A_OK\\n\")"
+  - "raw_check <- fit_on_count_scale(d, N_t ~ t, identity)\nlog_check <- fit_on_count_scale(d,\
+    \ log(N_t) ~ t, exp)\nX <- cbind(1, d$t)\nqr_log <- qr.coef(qr(X), log(d$N_t))\n\
+    stopifnot(nrow(d) == 15, abs(raw_check$rmse - 38.94387088) < 1e-6,\n         \
+    \ abs(log_check$rmse - 16.35593346) < 1e-6,\n          abs(tail(raw_check$rows$fitted_count,\
+    \ 1) + 32.3833333) < 1e-6,\n          abs(tail(log_check$rows$fitted_count, 1)\
+    \ - 14.831917) < 1e-6,\n          abs(exp(coef(log_check$fit)[2]) - .8037835558)\
+    \ < 1e-8,\n          max(abs(qr_log - coef(log_check$fit))) < 1e-10,\n       \
+    \   all(sign(raw_check$rows$std_residual_fit_scale) ==\n              c(1, rep(-1,\
+    \ 10), rep(1, 4))))\ncat(\"W12A_B_OK\\n\")"
+  browser_url: https://lunalab-ai.github.io/regre/w12a.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a/notebooks/student/w12a_axes.ipynb
+  announcement_guidance:
+  - 11월 16일 수업은 주교재 7.1–7.3을 다룹니다.
+  - 독립 R Colab B https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12a/notebooks/student/w12a_decay.ipynb
+  - 편집형 실습 앱 https://lunalab-ai.github.io/regre/apps/w12a/edit/index.html
+  - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-student-book.pdf
+  - 학생 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-workbook-print.pdf
+  - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a/w12a-student-materials.zip
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -973,6 +1017,14 @@ browser:
     - selector: '#year_test'
       text: '9.422465'
     - selector: '#year_plot img'
+  - id: w12a
+    source: labs/student/w12a/app/app.R
+    data: *id001
+    browser_checks:
+    - selector: '#summary'
+      text: '38.943871'
+    - selector: '#curve img'
+    - selector: '#residual img'
   graph_labels:
     수리할 부품 수 (Units): Units
     수리 시간 (Minutes): Minutes
