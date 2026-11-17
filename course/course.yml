@@ -757,6 +757,47 @@ sessions:
   - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-student-book.pdf
   - 학생 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-workbook-print.pdf
   - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12a-v2/w12a-student-materials.zip
+- id: w12b
+  date: '2026-11-18'
+  title: 잔차의 퍼짐을 진단하고 변환과 가중치로 다루기
+  pages:
+  - course/notion/w12b/w12b-core.md
+  - course/notion/w12b/w12b-log-power.md
+  - course/notion/w12b/w12b-workbook.md
+  labs:
+  - labs/student/w12b/w12b-transform.R
+  - labs/student/w12b/w12b-transform.qmd
+  - labs/student/w12b/app/app.R
+  - notebooks/student/w12b_variance.ipynb
+  - notebooks/student/w12b_transform.ipynb
+  quiz: course/quiz/w12b.yml
+  runtime_label: R · WebR · 독립 R Colab A/B
+  duration_minutes: 75
+  browser_source: labs/student/w12b/w12b-browser.qmd
+  browser_title: W12B · 잔차 진단과 변수변환
+  browser_resources: []
+  browser_checks:
+  - "stopifnot(all(small$scaled==.1), all(abs(small$weighted-.01)<1e-12),\n      \
+    \    max(abs(from_divided-from_wls))<1e-9,\n          max(abs(unname(coef(divided)[2:1])-unname(coef(wls_two))))<1e-9,\n\
+    \          sum((residuals(wls_two)/d_factory$X)^2)<=sum((residuals(ols)/d_factory$X)^2)+1e-9)\n\
+    if (identical(attr(d_factory,\"mode\"),\"Official / Hadi RABE6\")) {\n  stopifnot(nrow(d_factory)==27L,abs(coef(wls_two)[[2]]-.1209903)<1e-7,\n\
+    \            abs(w12b_rmse(d_factory$Y,fitted(wls_two))-21.72517)<1e-5)\n}\ncat(\"\
+    W12B_A_OK\\n\")"
+  - "stopifnot(nrow(d_species)==28L, all(is.finite(pred_y)),\n          all.equal(basis_w12b(c(1,4,16),0),log(c(1,4,16))),\n\
+    \          inherits(try(basis_w12b(c(0,2),0),silent=TRUE),\"try-error\"),\n  \
+    \        max(abs(app_rows$weight*app_rows$residual^2-app_rows$weighted_squared_error))<1e-10)\n\
+    if (identical(attr(d_log,\"mode\"),\"Official / Hadi RABE6\")) {\n  f_q <- lm(log(Y)~X+I(X^2),d_log)\n\
+    \  stopifnot(abs(w12b_rmse(d_log$Y,exp(fitted(f_q)))-19.91208)<1e-5)\n}\ncat(\"\
+    W12B_B_OK\\n\")"
+  browser_url: https://lunalab-ai.github.io/regre/w12b.html
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12b/notebooks/student/w12b_variance.ipynb
+  announcement_guidance:
+  - 11월 18일 수업은 주교재 7.4–7.10을 다룹니다.
+  - 실습 B Colab https://colab.research.google.com/github/lunalab-ai/regre/blob/2026-fall-w12b/notebooks/student/w12b_transform.ipynb
+  - 편집 앱 https://lunalab-ai.github.io/regre/apps/w12b/edit/index.html
+  - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-student-book.pdf
+  - 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-workbook-print.pdf
+  - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-student-materials.zip
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
@@ -1023,6 +1064,14 @@ browser:
     browser_checks:
     - selector: '#summary'
       text: '38.943871'
+    - selector: '#curve img'
+    - selector: '#residual img'
+  - id: w12b
+    source: labs/student/w12b/app/app.R
+    data: []
+    browser_checks:
+    - selector: '#summary'
+      text: 'First weight: 1'
     - selector: '#curve img'
     - selector: '#residual img'
   graph_labels:

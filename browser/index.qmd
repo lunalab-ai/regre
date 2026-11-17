@@ -23,5 +23,6 @@ title: "회귀분석 · 온라인 R 실습"
 - [W11A · 식을 읽고 계산을 바꾸는 범주형 회귀](w11a.qmd)
 - [W11B · 평균·계절·시간 안정성의 실제 계산](w11b.qmd)
 - [W12A · 변수변환 실습 A/B](w12a.qmd)
+- [W12B · 잔차 진단과 변수변환](w12b.qmd)
 
 [강의자료·PDF·다운로드](https://github.com/lunalab-ai/regre)

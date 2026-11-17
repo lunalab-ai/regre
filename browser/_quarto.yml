@@ -22,6 +22,7 @@ project:
   - w11a.qmd
   - w11b.qmd
   - w12a.qmd
+  - w12b.qmd
 website:
   title: 회귀분석의 이해 · 온라인 실습
   site-url: https://lunalab-ai.github.io/regre/
@@ -67,6 +68,8 @@ website:
       href: w11b.qmd
     - text: w12a · W12A · 변수변환 실습 A/B
       href: w12a.qmd
+    - text: w12b · W12B · 잔차 진단과 변수변환
+      href: w12b.qmd
 lang: ko
 engine: knitr
 format:
