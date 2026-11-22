@@ -1773,6 +1773,35 @@
         "stopifnot(all(small$scaled==.1), all(abs(small$weighted-.01)<1e-12),\n          max(abs(from_divided-from_wls))<1e-9,\n          max(abs(unname(coef(divided)[2:1])-unname(coef(wls_two))))<1e-9,\n          sum((residuals(wls_two)/d_factory$X)^2)<=sum((residuals(ols)/d_factory$X)^2)+1e-9)\nif (identical(attr(d_factory,\"mode\"),\"Official / Hadi RABE6\")) {\n  stopifnot(nrow(d_factory)==27L,abs(coef(wls_two)[[2]]-.1209903)<1e-7,\n            abs(w12b_rmse(d_factory$Y,fitted(wls_two))-21.72517)<1e-5)\n}\ncat(\"W12B_A_OK\\n\")",
         "stopifnot(nrow(d_species)==28L, all(is.finite(pred_y)),\n          all.equal(basis_w12b(c(1,4,16),0),log(c(1,4,16))),\n          inherits(try(basis_w12b(c(0,2),0),silent=TRUE),\"try-error\"),\n          max(abs(app_rows$weight*app_rows$residual^2-app_rows$weighted_squared_error))<1e-10)\nif (identical(attr(d_log,\"mode\"),\"Official / Hadi RABE6\")) {\n  f_q <- lm(log(Y)~X+I(X^2),d_log)\n  stopifnot(abs(w12b_rmse(d_log$Y,exp(fitted(f_q)))-19.91208)<1e-5)\n}\ncat(\"W12B_B_OK\\n\")"
       ]
+    },
+    {
+      "id": "w13a",
+      "title": "W13A · 다중공선성과 VIF",
+      "cells": [
+        {
+          "id": "w13a-1",
+          "code": "# Setup. Advertising uses summary statistics from the companion data.\nad_fields <- strsplit(\"At Pt Et At.1 Pt.1\", \" \")[[1]]\nad_cor <- matrix(c(1, -0.3569538830678335, -0.1285210088426754, -0.139740194995107, -0.4959911856331961, -0.3569538830678335, 1, 0.06258872102214971, -0.3164654862970893, -0.2963644633379876, -0.1285210088426754, 0.06258872102214971, 1, -0.1664279411745599, 0.2081123651377036, -0.139740194995107, -0.3164654862970893, -0.1664279411745599, 1, -0.3577610467749312, -0.4959911856331961, -0.2963644633379876, 0.2081123651377036, -0.3577610467749312, 1), 5L, byrow = TRUE,\n                 dimnames = list(ad_fields, ad_fields))\nsales_cor <- setNames(c(-0.1704050760465737, 0.5401768621663774, 0.8108731825755273, -0.3051611443563373, -0.05203527359556251), ad_fields)\nsales_to_pt_sd <- 8.600968036261435\n\naux_r2_summary <- function(target, corr = ad_cor) {\n  rest <- setdiff(colnames(corr), target)\n  rel <- corr[rest, target]\n  drop(crossprod(rel, solve(corr[rest, rest, drop = FALSE], rel)))\n}\n\nfit_proxy <- function(noise, use_proxy = TRUE) {\n  stopifnot(is.numeric(noise), length(noise) == 1L, noise > 0)\n  d <- datasets::attitude\n  set.seed(1123)\n  fixed_z <- as.numeric(scale(rnorm(nrow(d))))\n  d$proxy <- d$complaints + noise * sd(d$complaints) * fixed_z\n  f <- if (use_proxy) rating ~ complaints + learning + proxy else rating ~ complaints + learning\n  lm(f, data = d)\n}\n\nsnapshot <- function(model) {\n  scores <- coef(summary(model))\n  bounds <- confint(model, \"complaints\")\n  data.frame(R2 = summary(model)$r.squared,\n             coefficient = scores[\"complaints\", 1L],\n             SE = scores[\"complaints\", 2L],\n             lower = bounds[1L], upper = bounds[2L])\n}",
+          "exercise": false
+        },
+        {
+          "id": "w13a-2",
+          "code": "# Q3/Q5. TODO: change At to Pt and compare the result.\nfocus <- \"At\"\naux_r2 <- aux_r2_summary(focus)\nmax_pair <- max(abs(ad_cor[upper.tri(ad_cor)]))\nprint(round(c(max_pair = max_pair, aux_R2 = aux_r2, VIF = 1 / (1 - aux_r2)), 4))",
+          "exercise": true
+        },
+        {
+          "id": "w13a-3",
+          "code": "# Q2/Q4. Predict the effect, then change 1.00 to 0.15.\nnoise <- 1.00\ncomparison <- rbind(reference = snapshot(fit_proxy(1)), changed = snapshot(fit_proxy(noise)))\nprint(round(comparison, 4))\nplot(seq_len(nrow(comparison)), comparison$SE, type = \"b\", pch = 19,\n     xaxt = \"n\", xlab = \"Scenario\", ylab = \"Coefficient standard error\",\n     ylim = c(0, max(0.75, comparison$SE)))\naxis(1, at = 1:2, labels = c(\"Reference\", \"Changed\"))",
+          "exercise": true
+        },
+        {
+          "id": "w13a-4",
+          "code": "# Q6. Predict the changes before switching TRUE to FALSE.\nkeep_at <- TRUE\nadvertising_model <- function(fields) {\n  ties <- sales_cor[fields]\n  standardized <- solve(ad_cor[fields, fields, drop = FALSE], ties)\n  c(R2 = drop(crossprod(ties, standardized)),\n    Pt = unname(standardized[\"Pt\"]) * sales_to_pt_sd)\n}\nchosen_fields <- if (keep_at) ad_fields else setdiff(ad_fields, \"At\")\nprint(round(rbind(full = advertising_model(ad_fields),\n                  chosen = advertising_model(chosen_fields)), 4))",
+          "exercise": true
+        }
+      ],
+      "checks": [
+        "stopifnot(isSymmetric(ad_cor), nobs(fit_proxy(.15)) == 30L, is.finite(aux_r2_summary('At')), all(is.finite(snapshot(fit_proxy(1))$SE)))"
+      ]
     }
   ],
   "source_sha256": {
@@ -1846,7 +1875,8 @@
     "labs/student/w12a/data/bacteria-w12a.csv": "791246aa7da0a0ee32beb3aee985ac156c43065b542f08b39d13dfdb8b590013",
     "labs/student/w12a/data/variable-transform-w12a.R": "46e1833851a053d57399d259b226639d416e43651cd7821f92638a14184cf79d",
     "labs/student/w12a/w12a-transform.qmd": "2f4115fdb03f320ef7423ea3fd39e5784a4894894dc25f4a8d3b7e689d4da411",
-    "labs/student/w12b/w12b-browser.qmd": "6ddce42b41b857b5d95d5df44fd15a282c41c17d94247d6d72c55cb3242c6ac4"
+    "labs/student/w12b/w12b-browser.qmd": "6ddce42b41b857b5d95d5df44fd15a282c41c17d94247d6d72c55cb3242c6ac4",
+    "labs/student/w13a/w13a-browser.qmd": "1016e9fb5fccccaec235aa68e35e727a26f7a872f24527e232bf3a6602774498"
   },
   "quarto_live_tag": "v0.2.0",
   "quarto_live_reset_patch": "remove-null-on-reset-v1",

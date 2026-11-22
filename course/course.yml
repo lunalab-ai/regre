@@ -798,6 +798,23 @@ sessions:
   - 학생 강의노트 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-student-book.pdf
   - 계산 기록지 PDF https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-workbook-print.pdf
   - 학생 전체 ZIP https://github.com/lunalab-ai/regre/releases/download/2026-fall-w12b/w12b-student-materials.zip
+- id: w13a
+  date: '2026-11-23'
+  title: '다중공선성: 잘 맞는 모형에서 왜 계수를 믿기 어려울까?'
+  pages: []
+  labs:
+  - labs/student/w13a/w13a-collinearity.R
+  - labs/student/w13a/w13a-collinearity.qmd
+  - notebooks/student/w13a_collinearity_a.ipynb
+  - notebooks/student/w13a_collinearity_b.ipynb
+  browser_source: labs/student/w13a/w13a-browser.qmd
+  browser_title: W13A · 다중공선성과 VIF
+  browser_url: https://lunalab-ai.github.io/regre/w13a.html
+  browser_checks:
+  - stopifnot(isSymmetric(ad_cor), nobs(fit_proxy(.15)) == 30L, is.finite(aux_r2_summary('At')),
+    all(is.finite(snapshot(fit_proxy(1))$SE)))
+  runtime_label: 온라인 R · RStudio · Colab A/B
+  colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/main/notebooks/student/w13a_collinearity_a.ipynb
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab

@@ -1,0 +1,132 @@
+---
+title: "W13A · 다중공선성 R 실습"
+format: html
+---
+
+
+
+<style>
+#quarto-header { display: none !important; }
+body.nav-fixed { padding-top: 0 !important; }
+#w13a-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 1rem;
+  padding: .38rem 0;
+  margin: 0 0 .9rem;
+  border-bottom: 1px solid #cbd5df;
+}
+#w13a-nav summary { cursor: pointer; }
+#w13a-nav details p { margin: .45rem 0 .25rem; }
+</style>
+
+<nav id="w13a-nav" aria-label="이번 차시 탐색">
+  <a href="index.html">실습 홈</a>
+  <details>
+    <summary>이번 차시 목차</summary>
+    <p><a href="#r-a">A · VIF</a> · <a href="#r-b">B · 표준오차</a> · <a href="#r-c">C · 변수 유지와 제외</a></p>
+  </details>
+</nav>
+
+<script>
+document.querySelectorAll('#w13a-nav details a').forEach(link => {
+  link.addEventListener('click', () => { link.closest('details').open = false; });
+});
+</script>
+
+
+슬라이드에서 예상한 결과를 먼저 줄 하나로 적고, R 결과와 대조하세요.
+
+[학생 슬라이드 PDF](https://raw.githubusercontent.com/lunalab-ai/regre/main/course/handouts/w13a-collinearity-slides.pdf)
+
+실습 A·C는 교재 광고비 자료의 요약 통계량으로 모형 결과를 재현합니다. B는 수업용 통제 실험입니다. 공식 광고비 원자료를 사용하는 계산은 RStudio·Colab에서 확인할 수 있습니다.
+
+## 자료 준비 {#start-r}
+
+먼저 이 셀을 실행하세요.
+
+```{r}
+# Setup. Advertising uses summary statistics from the companion data.
+ad_fields <- strsplit("At Pt Et At.1 Pt.1", " ")[[1]]
+ad_cor <- matrix(c(1, -0.3569538830678335, -0.1285210088426754, -0.139740194995107, -0.4959911856331961, -0.3569538830678335, 1, 0.06258872102214971, -0.3164654862970893, -0.2963644633379876, -0.1285210088426754, 0.06258872102214971, 1, -0.1664279411745599, 0.2081123651377036, -0.139740194995107, -0.3164654862970893, -0.1664279411745599, 1, -0.3577610467749312, -0.4959911856331961, -0.2963644633379876, 0.2081123651377036, -0.3577610467749312, 1), 5L, byrow = TRUE,
+                 dimnames = list(ad_fields, ad_fields))
+sales_cor <- setNames(c(-0.1704050760465737, 0.5401768621663774, 0.8108731825755273, -0.3051611443563373, -0.05203527359556251), ad_fields)
+sales_to_pt_sd <- 8.600968036261435
+
+aux_r2_summary <- function(target, corr = ad_cor) {
+  rest <- setdiff(colnames(corr), target)
+  rel <- corr[rest, target]
+  drop(crossprod(rel, solve(corr[rest, rest, drop = FALSE], rel)))
+}
+
+fit_proxy <- function(noise, use_proxy = TRUE) {
+  stopifnot(is.numeric(noise), length(noise) == 1L, noise > 0)
+  d <- datasets::attitude
+  set.seed(1123)
+  fixed_z <- as.numeric(scale(rnorm(nrow(d))))
+  d$proxy <- d$complaints + noise * sd(d$complaints) * fixed_z
+  f <- if (use_proxy) rating ~ complaints + learning + proxy else rating ~ complaints + learning
+  lm(f, data = d)
+}
+
+snapshot <- function(model) {
+  scores <- coef(summary(model))
+  bounds <- confint(model, "complaints")
+  data.frame(R2 = summary(model)$r.squared,
+             coefficient = scores["complaints", 1L],
+             SE = scores["complaints", 2L],
+             lower = bounds[1L], upper = bounds[2L])
+}
+```
+
+
+## 실습 A · VIF와 보조회귀 {#r-a}
+
+Q3·Q5. At를 Pt로 바꿉니다. 쌍별 상관이 작을 때에도 둘을 함께 점검할 이유를 적으세요.
+
+```{r}
+#| eval: false
+# Q3/Q5. TODO: change At to Pt and compare the result.
+focus <- "At"
+aux_r2 <- aux_r2_summary(focus)
+max_pair <- max(abs(ad_cor[upper.tri(ad_cor)]))
+print(round(c(max_pair = max_pair, aux_R2 = aux_r2, VIF = 1 / (1 - aux_r2)), 4))
+```
+
+
+## 실습 B · 계수의 표준오차 {#r-b}
+
+Q2·Q4. 겹침을 바꾸는 noise를 1.00에서 0.15로 바꾸어 두 그림과 수치를 읽으세요.
+
+```{r}
+#| eval: false
+# Q2/Q4. Predict the effect, then change 1.00 to 0.15.
+noise <- 1.00
+comparison <- rbind(reference = snapshot(fit_proxy(1)), changed = snapshot(fit_proxy(noise)))
+print(round(comparison, 4))
+plot(seq_len(nrow(comparison)), comparison$SE, type = "b", pch = 19,
+     xaxt = "n", xlab = "Scenario", ylab = "Coefficient standard error",
+     ylim = c(0, max(0.75, comparison$SE)))
+axis(1, at = 1:2, labels = c("Reference", "Changed"))
+```
+
+
+## 실습 C · 변수 유지와 제외 {#r-c}
+
+Q6. 표시한 TRUE를 FALSE로 바꿔 실행하세요. 적합도와 계수 변화를 각각 한 문장으로 적으세요.
+
+```{r}
+#| eval: false
+# Q6. Predict the changes before switching TRUE to FALSE.
+keep_at <- TRUE
+advertising_model <- function(fields) {
+  ties <- sales_cor[fields]
+  standardized <- solve(ad_cor[fields, fields, drop = FALSE], ties)
+  c(R2 = drop(crossprod(ties, standardized)),
+    Pt = unname(standardized["Pt"]) * sales_to_pt_sd)
+}
+chosen_fields <- if (keep_at) ad_fields else setdiff(ad_fields, "At")
+print(round(rbind(full = advertising_model(ad_fields),
+                  chosen = advertising_model(chosen_fields)), 4))
+```

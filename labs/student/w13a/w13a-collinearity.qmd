@@ -1,0 +1,108 @@
+---
+title: "W13A · 다중공선성 R 실습"
+format: html
+---
+
+
+슬라이드에서 예상한 결과를 먼저 줄 하나로 적고, R 결과와 대조하세요.
+
+```{r}
+# Setup. Advertising uses summary statistics from the companion data.
+ad_fields <- strsplit("At Pt Et At.1 Pt.1", " ")[[1]]
+ad_cor <- matrix(c(1, -0.3569538830678335, -0.1285210088426754, -0.139740194995107, -0.4959911856331961, -0.3569538830678335, 1, 0.06258872102214971, -0.3164654862970893, -0.2963644633379876, -0.1285210088426754, 0.06258872102214971, 1, -0.1664279411745599, 0.2081123651377036, -0.139740194995107, -0.3164654862970893, -0.1664279411745599, 1, -0.3577610467749312, -0.4959911856331961, -0.2963644633379876, 0.2081123651377036, -0.3577610467749312, 1), 5L, byrow = TRUE,
+                 dimnames = list(ad_fields, ad_fields))
+sales_cor <- setNames(c(-0.1704050760465737, 0.5401768621663774, 0.8108731825755273, -0.3051611443563373, -0.05203527359556251), ad_fields)
+sales_to_pt_sd <- 8.600968036261435
+
+aux_r2_summary <- function(target, corr = ad_cor) {
+  rest <- setdiff(colnames(corr), target)
+  rel <- corr[rest, target]
+  drop(crossprod(rel, solve(corr[rest, rest, drop = FALSE], rel)))
+}
+
+fit_proxy <- function(noise, use_proxy = TRUE) {
+  stopifnot(is.numeric(noise), length(noise) == 1L, noise > 0)
+  d <- datasets::attitude
+  set.seed(1123)
+  fixed_z <- as.numeric(scale(rnorm(nrow(d))))
+  d$proxy <- d$complaints + noise * sd(d$complaints) * fixed_z
+  f <- if (use_proxy) rating ~ complaints + learning + proxy else rating ~ complaints + learning
+  lm(f, data = d)
+}
+
+snapshot <- function(model) {
+  scores <- coef(summary(model))
+  bounds <- confint(model, "complaints")
+  data.frame(R2 = summary(model)$r.squared,
+             coefficient = scores["complaints", 1L],
+             SE = scores["complaints", 2L],
+             lower = bounds[1L], upper = bounds[2L])
+}
+# Companion-data route for RStudio and Colab.
+read_advertising <- function() {
+  data <- read.delim("https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Advertising.txt", check.names = TRUE)
+  stopifnot(nrow(data) == 22L, identical(names(data), c("St", ad_fields)))
+  data
+}
+
+fit_ad_aux <- function(data, target) {
+  rest <- setdiff(ad_fields, target)
+  lm(reformulate(rest, response = target), data)
+}
+```
+
+
+## 실습 A · VIF와 보조회귀 {#r-a}
+
+Q3·Q5. At를 Pt로 바꿉니다. 쌍별 상관이 작을 때에도 둘을 함께 점검할 이유를 적으세요.
+
+```{r}
+# Q3/Q5. TODO: change At to Pt and compare the result.
+ad <- read_advertising()
+focus <- "At"
+aux <- fit_ad_aux(ad, focus)
+aux_r2 <- summary(aux)$r.squared
+R <- cor(ad[ad_fields])
+print(round(c(max_pair = max(abs(R[upper.tri(R)])),
+              aux_R2 = aux_r2, VIF = 1 / (1 - aux_r2)), 4))
+```
+
+
+## 실습 B · 계수의 표준오차 {#r-b}
+
+Q2·Q4. 겹침을 바꾸는 noise를 1.00에서 0.15로 바꾸어 두 그림과 수치를 읽으세요.
+
+```{r}
+# Q2/Q4. Predict the effect, then change 1.00 to 0.15.
+noise <- 1.00
+comparison <- rbind(reference = snapshot(fit_proxy(1)), changed = snapshot(fit_proxy(noise)))
+print(round(comparison, 4))
+plot(seq_len(nrow(comparison)), comparison$SE, type = "b", pch = 19,
+     xaxt = "n", xlab = "Scenario", ylab = "Coefficient standard error",
+     ylim = c(0, max(0.75, comparison$SE)))
+axis(1, at = 1:2, labels = c("Reference", "Changed"))
+```
+
+
+## 실습 C · 변수 유지와 제외 {#r-c}
+
+Q6. 표시한 TRUE를 FALSE로 바꿔 실행하세요. 적합도와 계수 변화를 각각 한 문장으로 적으세요.
+
+```{r}
+# Q6. First run with TRUE, then change it to FALSE.
+ad <- read_advertising()
+keep_at <- TRUE
+full_model <- lm(St ~ At + Pt + Et + At.1 + Pt.1, data = ad)
+chosen_model <- lm(if (keep_at) St ~ At + Pt + Et + At.1 + Pt.1 else St ~ Pt + Et + At.1 + Pt.1,
+                   data = ad)
+print(round(rbind(full = c(R2 = summary(full_model)$r.squared, Pt = coef(full_model)[["Pt"]]),
+                  chosen = c(R2 = summary(chosen_model)$r.squared, Pt = coef(chosen_model)[["Pt"]])), 4))
+```
+
+
+```{r}
+stopifnot(identical(dim(ad_cor), c(5L, 5L)),
+          isSymmetric(ad_cor), all(is.finite(snapshot(fit_proxy(1))$SE)),
+          nobs(fit_proxy(.15)) == 30L)
+cat("W13A_SETUP_OK\n")
+```
