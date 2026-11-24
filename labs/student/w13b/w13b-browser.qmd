@@ -1,0 +1,94 @@
+---
+title: "W13B · 두 회귀모형 비교와 R 과제"
+format: html
+---
+
+```{=html}
+<style>
+#quarto-header { display: none !important; }
+body.nav-fixed { padding-top: 0 !important; }
+#w13b-nav { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: .45rem 0; margin: 0 0 1rem; border-bottom: 1px solid #cbd5df; }
+#w13b-nav summary { cursor: pointer; }
+#w13b-nav details p { margin: .45rem 0; }
+</style>
+<nav id="w13b-nav" aria-label="이번 차시 탐색">
+  <a href="index.html">실습 홈</a>
+  <details>
+    <summary>이번 차시 목차</summary>
+    <p><a href="#start-r">자료 준비</a> · <a href="#compare">모형 비교</a> · <a href="#assignment">과제</a></p>
+  </details>
+</nav>
+<script>
+document.querySelectorAll('#w13b-nav details a').forEach(link => {
+  link.addEventListener('click', () => { link.closest('details').open = false; });
+});
+</script>
+```
+
+[학생 슬라이드 PDF](https://raw.githubusercontent.com/lunalab-ai/regre/main/course/handouts/w13b-model-comparison-slides.pdf) · [W13A 다중공선성 복습](https://lunalab-ai.github.io/regre/w13a.html#r-c)
+
+## 자료 준비 {#start-r}
+
+먼저 아래 셀을 실행하세요. 교재 광고비 자료 22건의 평균과 중심화 교차곱으로 결과를 재현합니다. 개별 행과 잔차 그림은 개념 설명을 위한 재구성 예시입니다. [교재 저자 데이터](https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Advertising.txt)
+
+```{r}
+# W13B — 모형 두 개를 같은 자료에서 비교합니다.
+# 저자 자료: https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Advertising.txt
+# 이 코드는 원본 관측값 대신 평균과 중심화 교차곱을 사용합니다.
+# 22행으로 재구성하면 회귀계수, SSE, R², AIC가 원자료 적합과 일치합니다.
+# 각 행과 잔차 그림은 재구성 예시이므로 실제 관측의 잔차 진단에는 쓰지 않습니다.
+fields <- c("St", "At", "Pt", "Et", "At.1", "Pt.1")
+means <- c(22.4757913636364, 1.75295727272727, .754545454545455,
+           .493181818181818, 1.79609681818182, .709090909090909)
+centered <- matrix(c(
+  335.450487263659, -6.21691333321818, 21.0676973636364, 9.49185510454545, -10.4977151208045, -2.13067927272728,
+  -6.21691333321818, 3.96785820943636, -1.51410872727273, -.163619909090909, -.522818265290909, -2.20880845454545,
+  21.0676973636364, -1.51410872727273, 4.53454545454545, .0851818181818182, -1.26574018181818, -1.41090909090909,
+  9.49185510454545, -.163619909090909, .0851818181818182, .408477272727273, -.199784377272727, .297363636363636,
+  -10.4977151208045, -.522818265290909, -1.26574018181818, -.199784377272727, 3.52778954927727, -1.50227836363636,
+  -2.13067927272728, -2.20880845454545, -1.41090909090909, .297363636363636, -1.50227836363636, 4.99818181818182
+), 6, 6, byrow = TRUE)
+ad <- as.data.frame(sweep(poly(seq_len(22), length(fields)) %*% chol(centered), 2, means, "+"))
+names(ad) <- fields
+
+compare_models <- function(drop_term, data = ad) {
+  # drop_term은 완전모형에서 뺄 변수 이름입니다.
+  predictors <- setdiff(fields, "St")
+  stopifnot(length(drop_term) == 1L, drop_term %in% predictors)
+  common <- data[complete.cases(data[fields]), fields]
+  full <- lm(reformulate(predictors, "St"), data = common)
+  reduced <- lm(reformulate(setdiff(predictors, drop_term), "St"), data = common)
+  stopifnot(identical(rownames(model.frame(full)), rownames(model.frame(reduced))))
+  measures <- function(fit) {
+    c(n = nobs(fit), p = length(coef(fit)), SSE = deviance(fit),
+      R2 = summary(fit)$r.squared, Adj_R2 = summary(fit)$adj.r.squared, AIC = AIC(fit))
+  }
+  list(table = rbind(Full = measures(full), Reduced = measures(reduced)),
+       full = full, reduced = reduced)
+}
+```
+
+## 같은 자료에서 두 모형 비교 {#compare}
+
+슬라이드 Q3–Q4. `At`를 뺀 결과를 실행합니다. 먼저 `n`이 둘 다 22인지, R²와 수정 R²에서 큰 쪽이 어디인지, AIC에서 작은 쪽이 어디인지 읽으세요. 그다음 첫 줄의 `"At"`를 `"Pt"`로 고쳐 표가 어떻게 바뀌는지 확인합니다. 빠진 변수의 계수는 표에서 읽을 수 없습니다.
+
+```{r}
+drop_term <- "At"
+comparison <- compare_models(drop_term)
+print(round(comparison$table, 4))
+print(c(Full_Pt = unname(coef(comparison$full)["Pt"]),
+        Reduced_Pt = unname(coef(comparison$reduced)["Pt"])))
+plot(fitted(comparison$reduced), resid(comparison$reduced),
+     xlab = "Fitted values", ylab = "Residuals",
+     main = "Reconstructed data: example residual plot",
+     pch = 19, col = "#136D74")
+abline(h = 0, lty = 2)
+```
+
+출력에 오류가 뜨면 변수 이름 대소문자와 따옴표를 확인하세요. 처음 셀을 실행했는지도 확인합니다.
+
+## SmartClass 과제 {#assignment}
+
+과제는 SmartClass의 회귀분석의이해(01) 과제 메뉴에서 확인하고 제출하세요.
+
+[SmartClass 과제 메뉴 열기](https://eclass.dongduk.ac.kr/ilos/st/course/report_list_form.acl)

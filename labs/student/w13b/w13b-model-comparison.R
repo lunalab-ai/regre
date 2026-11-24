@@ -1,0 +1,47 @@
+# W13B — 모형 두 개를 같은 자료에서 비교합니다.
+# 저자 자료: https://www1.aucegypt.edu/faculty/hadi/RABE6/Data6/Advertising.txt
+# 이 코드는 원본 관측값 대신 평균과 중심화 교차곱을 사용합니다.
+# 22행으로 재구성하면 회귀계수, SSE, R², AIC가 원자료 적합과 일치합니다.
+# 각 행과 잔차 그림은 재구성 예시이므로 실제 관측의 잔차 진단에는 쓰지 않습니다.
+fields <- c("St", "At", "Pt", "Et", "At.1", "Pt.1")
+means <- c(22.4757913636364, 1.75295727272727, .754545454545455,
+           .493181818181818, 1.79609681818182, .709090909090909)
+centered <- matrix(c(
+  335.450487263659, -6.21691333321818, 21.0676973636364, 9.49185510454545, -10.4977151208045, -2.13067927272728,
+  -6.21691333321818, 3.96785820943636, -1.51410872727273, -.163619909090909, -.522818265290909, -2.20880845454545,
+  21.0676973636364, -1.51410872727273, 4.53454545454545, .0851818181818182, -1.26574018181818, -1.41090909090909,
+  9.49185510454545, -.163619909090909, .0851818181818182, .408477272727273, -.199784377272727, .297363636363636,
+  -10.4977151208045, -.522818265290909, -1.26574018181818, -.199784377272727, 3.52778954927727, -1.50227836363636,
+  -2.13067927272728, -2.20880845454545, -1.41090909090909, .297363636363636, -1.50227836363636, 4.99818181818182
+), 6, 6, byrow = TRUE)
+ad <- as.data.frame(sweep(poly(seq_len(22), length(fields)) %*% chol(centered), 2, means, "+"))
+names(ad) <- fields
+
+compare_models <- function(drop_term, data = ad) {
+  # drop_term은 완전모형에서 뺄 변수 이름입니다.
+  predictors <- setdiff(fields, "St")
+  stopifnot(length(drop_term) == 1L, drop_term %in% predictors)
+  common <- data[complete.cases(data[fields]), fields]
+  full <- lm(reformulate(predictors, "St"), data = common)
+  reduced <- lm(reformulate(setdiff(predictors, drop_term), "St"), data = common)
+  stopifnot(identical(rownames(model.frame(full)), rownames(model.frame(reduced))))
+  measures <- function(fit) {
+    c(n = nobs(fit), p = length(coef(fit)), SSE = deviance(fit),
+      R2 = summary(fit)$r.squared, Adj_R2 = summary(fit)$adj.r.squared, AIC = AIC(fit))
+  }
+  list(table = rbind(Full = measures(full), Reduced = measures(reduced)),
+       full = full, reduced = reduced)
+}
+
+# Q3. At를 뺀 결과를 본 뒤 "At"를 "Pt"로 바꾸어 비교합니다.
+drop_term <- "At"
+comparison <- compare_models(drop_term)
+print(round(comparison$table, 4))
+# Q4. 판촉비 Pt의 계수는 두 모형에서 어떻게 달라집니까?
+term_to_read <- "Pt"
+print(c(Full = unname(coef(comparison$full)[term_to_read]),
+        Reduced = unname(coef(comparison$reduced)[term_to_read])))
+plot(fitted(comparison$reduced), resid(comparison$reduced),
+     xlab = "Fitted values", ylab = "Residuals",
+     main = "Reconstructed data: example residual plot", pch = 19, col = "#136D74")
+abline(h = 0, lty = 2)

@@ -815,6 +815,22 @@ sessions:
     all(is.finite(snapshot(fit_proxy(1))$SE)))
   runtime_label: 온라인 R · RStudio · Colab A/B
   colab_url: https://colab.research.google.com/github/lunalab-ai/regre/blob/main/notebooks/student/w13a_collinearity_a.ipynb
+- id: w13b
+  date: '2026-11-25'
+  title: 변수선택의 첫 단계 — 모형 두 개를 어떻게 비교할까?
+  pages: []
+  labs:
+  - labs/student/w13b/w13b-model-comparison.R
+  - labs/student/w13b/w13b-model-comparison.qmd
+  browser_source: labs/student/w13b/w13b-browser.qmd
+  browser_title: W13B · 두 회귀모형 비교
+  browser_url: https://lunalab-ai.github.io/regre/w13b.html
+  browser_checks:
+  - stopifnot(nobs(compare_models('At')$full) == 22, abs(compare_models('At')$table['Full','AIC']
+    - 81.643348) < 0.00001)
+  runtime_label: 온라인 R · RStudio
+  announcement_guidance:
+  - SmartClass의 회귀분석의이해(01) 과제 메뉴에서 과제를 확인하세요.
 hero: course/notion/week01/assets/hero_regression.png
 supplements:
 - id: week01-lab
